@@ -23,4 +23,4 @@ jobs:
       displayName: 'dotnet test'
       inputs:
         command: 'test'
-        projects: src/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service.Unit.Tests.csproj
+        projects: src/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service.Unit.Tests/NBS.Appointments.Service.Unit.Tests.csproj
