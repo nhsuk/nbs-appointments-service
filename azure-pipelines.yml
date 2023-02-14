@@ -4,14 +4,23 @@ trigger:
       - main
       - releases/*
 
-pool:
-  vmImage: ubuntu-latest
-
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+jobs:
+  - job: "Build"
+    pool:
+      vmImage: "windows-latest"
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet restore'
+      inputs:
+        command: restore
+        projects: src/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service.csproj
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build'
+      inputs:
+        projects: src/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service.csproj
+        arguments: '--output publish_output --configuration Release'
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet test'
+      inputs:
+        command: 'test'
+        projects: src/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service.Unit.Tests.csproj
