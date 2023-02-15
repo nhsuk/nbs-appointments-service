@@ -24,3 +24,9 @@ jobs:
       inputs:
         command: 'test'
         projects: src/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service.Unit.Tests/NBS.Appointments.Service.Unit.Tests.csproj
+    - task: PublishBuildArtifacts@1
+      displayName: "Publish Terraform"
+      inputs:
+          PathtoPublish: "terraform"
+          ArtifactName: "drop_terraform"
+          publishLocation: "Container"
