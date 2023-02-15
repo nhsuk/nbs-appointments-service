@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBS.Appointments.Service", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBS.Appointments.Service.Unit.Tests", "NBS.Appointments.Service.Unit.Tests\NBS.Appointments.Service.Unit.Tests.csproj", "{C5DB60F0-4BB8-4254-8B79-91189B087E79}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBS.Appointments.Service.Api.Tests", "NBS.Appointments.Service.Api.Tests\NBS.Appointments.Service.Api.Tests.csproj", "{F602DF8B-B966-4336-84EB-12EBAE026EF9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C5DB60F0-4BB8-4254-8B79-91189B087E79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5DB60F0-4BB8-4254-8B79-91189B087E79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5DB60F0-4BB8-4254-8B79-91189B087E79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F602DF8B-B966-4336-84EB-12EBAE026EF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F602DF8B-B966-4336-84EB-12EBAE026EF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F602DF8B-B966-4336-84EB-12EBAE026EF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F602DF8B-B966-4336-84EB-12EBAE026EF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
