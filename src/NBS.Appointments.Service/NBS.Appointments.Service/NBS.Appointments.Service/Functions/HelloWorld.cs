@@ -9,9 +9,9 @@ namespace NBS.Appointments.Service.Functions
 {
     public static class HelloWorld
     {
-        [FunctionName("HelloWorld")]
+        [FunctionName("hello-world")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "hello-world")] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
