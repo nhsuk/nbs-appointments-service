@@ -9,8 +9,8 @@
     "paths":{
         "/hello-world": {
             "get": {
-                    "tags": ["hello-world"],
-                    "summary": "Appointments HelloWorld query",
+                    "tags": [],
+                    "summary": "Appointments HelloWorld endpoint",
                     "operationId": "get-hello-world",
                     "produces": [
                         "application/json"
