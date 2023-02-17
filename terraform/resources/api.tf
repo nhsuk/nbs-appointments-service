@@ -5,7 +5,7 @@
 
 resource "azurerm_resource_group" "nbs_appts_rg" {
   name     = "${var.application}-rg-${var.environment}-${var.loc}"
-  location = "${vat.location}"
+  location = "${var.location}"
   tags = local.allTags
 }
 

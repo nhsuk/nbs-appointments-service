@@ -10,10 +10,17 @@ variable "application_short" {
 
 variable "environment" {
   type = string
+  default = "dev"
 }
 
 variable "location" {
   type = string
+  default = "uk south"
+}
+
+variable "loc" {
+  type = string
+  default = "uks"
 }
 
 variable "tags" {
