@@ -19,8 +19,25 @@ jobs:
       inputs:
         projects: src/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service.csproj
         arguments: '--output publish_output --configuration Release'
+    - task: ArchiveFiles@2
+      displayName: 'Archive files'
+      inputs:
+        rootFolderOrFile: 'publish_output/'
+        includeRootFolder: false
     - task: DotNetCoreCLI@2
       displayName: 'dotnet test'
       inputs:
         command: 'test'
         projects: src/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service.Unit.Tests/NBS.Appointments.Service.Unit.Tests.csproj
+    - task: PublishBuildArtifacts@1
+      displayName: "Publish Terraform"
+      inputs:
+          PathtoPublish: "terraform"
+          ArtifactName: "drop_terraform"
+          publishLocation: "Container"
+    - task: PublishBuildArtifacts@1
+      displayName: "Publish Function App"
+      inputs:
+          PathtoPublish: "publish_output"
+          ArtifactName: "drop_App"
+          publishLocation: "Container"

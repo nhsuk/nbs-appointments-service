@@ -9,7 +9,7 @@ namespace NBS.Appointments.Service.Functions
 {
     public static class HelloWorld
     {
-        [FunctionName("HelloWorld")]
+        [FunctionName("hello-world")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "hello-world")] HttpRequest req,
             ILogger log)
