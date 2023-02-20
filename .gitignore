@@ -245,3 +245,4 @@ __pycache__/
 /src/covid19.Reporting.Web/covid19.Reporting.Web
 /AcceptanceTests/common/.env
 /src/Covid19.VaccineBooking.Web/Covid19.VaccineBooking.Web/appsettings.json
+*.terraform*
