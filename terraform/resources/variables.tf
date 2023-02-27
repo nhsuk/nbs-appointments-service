@@ -35,12 +35,12 @@ variable "registry_name" {
 }
 
 variable "docker_image" {
-  type = "string"
+  type = string
   default = "appointments-service"
 }
 
 variable "docker_image_tag" {
-  type = "string"
+  type = string
 }
 
 variable "tags" {
