@@ -20,6 +20,10 @@ provider "azurerm" {
   features {}
 }
 
+variable "docker_image_tag" {
+  type = string
+}
+
 module "api" {
   source = "../../resources"
   location = "uksouth"
