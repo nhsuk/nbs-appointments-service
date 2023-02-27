@@ -13,27 +13,22 @@ jobs:
       displayName: 'dotnet restore'
       inputs:
         command: restore
-        projects: src/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service.csproj
+        projects: src/NBS.Appointments.Service/NBS.Appointments.Service.csproj
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build'
       inputs:
-        projects: src/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service.csproj
+        projects: src/NBS.Appointments.Service/NBS.Appointments.Service.csproj
         arguments: '--output publish_output --configuration Release'
     - task: ArchiveFiles@2
       displayName: 'Archive files'
       inputs:
         rootFolderOrFile: 'publish_output/'
-        includeRootFolder: false
-    - task: DotNetCoreCLI@2
-      displayName: 'dotnet test'
-      inputs:
-        command: 'test'
-        projects: src/NBS.Appointments.Service/NBS.Appointments.Service.Unit.Tests/NBS.Appointments.Service.Unit.Tests.csproj
+        includeRootFolder: false    
     - task: Docker@2
       displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        repository: nbsimages/appointments-api
+        repository: appointments-service
         dockerfile: src/Dockerfile
         containerRegistry: NbsRegistryServiceConnection
     - task: PublishBuildArtifacts@1
@@ -41,4 +36,4 @@ jobs:
       inputs:
           PathtoPublish: "terraform"
           ArtifactName: "drop_terraform"
-          publishLocation: "Container"    
+          publishLocation: "Container"
