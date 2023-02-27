@@ -1,18 +1,25 @@
 ﻿using NBS.Appointments.Service.Dtos.Qflow;
 using NBS.Appointments.Service.Core.Interfaces.Services;
 using Microsoft.AspNetCore.WebUtilities;
+using Polly;
+using Microsoft.Extensions.Options;
 
 namespace NBS.Appointments.Service.Core.Services
 {
     public class QflowService : IQflowService
     {
-        private const string QflowUrl = "http://mock-api";
-
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IQflowSessionManager _sessionManager;
+        private readonly QflowOptions _options;
 
-        public QflowService(IHttpClientFactory httpClientFactory)
+        public QflowService(
+            IOptions<QflowOptions> options,
+            IHttpClientFactory httpClientFactory, 
+            IQflowSessionManager sessionManager)
         {
+            _options = options.Value;
             _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+            _sessionManager = sessionManager ?? throw new ArgumentNullException(nameof(sessionManager));
         }
 
         public async Task<SiteAvailabilityResponse[]> GetSiteAvailability(IEnumerable<string> siteIds, DateTime startDate, DateTime endDate,
@@ -27,14 +34,33 @@ namespace NBS.Appointments.Service.Core.Services
                 { "Days", endDate.DaysBetween(startDate).ToString() },
                 { "ExternalReference", externalReference ?? "" }
             };
-            var endpointUrl = QueryHelpers.AddQueryString($"{QflowUrl}/svcCustomAppointment.svc/rest/", query);
-            
+
             using var client = _httpClientFactory.CreateClient();
-            var response = await client.GetAsync(endpointUrl);
+            var context = new Dictionary<string, object>
+            {
+                {"SessionId", await _sessionManager.GetSessionId()}
+            };
+
+            var policy = GetRetryPolicy();
+            var response = await policy.ExecuteAsync(async (context) => {
+                query["apiSessionId"] = context["SessionId"].ToString();
+                var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest/", query);
+                return await client.GetAsync(endpointUrl);
+            }, context);            
 
             var responseBody = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(responseBody);
             return Newtonsoft.Json.JsonConvert.DeserializeObject<SiteAvailabilityResponse[]>(responseBody);
         }
-    }    
+
+        private AsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return Policy
+                .HandleResult<HttpResponseMessage>(rsp => rsp.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                .RetryAsync(3, onRetryAsync: async (exception, retryCount, context) => {
+                    Console.WriteLine("Session Invalid - retrying");
+                    _sessionManager.Invalidate(context["SessionId"].ToString());
+                    context["SessionId"] = await _sessionManager.GetSessionId();
+                });
+        }
+    }
 }
