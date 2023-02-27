@@ -22,4 +22,8 @@ provider "azurerm" {
 
 module "api" {
   source = "../../resources"
+  location = "uksouth"
+  environment = "dev"
+  loc = "uks"
+  sku_name = "B1"
 }

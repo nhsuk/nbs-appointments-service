@@ -9,18 +9,39 @@ variable "application_short" {
 }
 
 variable "environment" {
-  type = string
-  default = "dev"
+  type = string  
 }
 
 variable "location" {
-  type = string
-  default = "uk south"
+  type = string  
 }
 
 variable "loc" {
+  type = string  
+}
+
+variable "sku_name" {
   type = string
-  default = "uks"
+}
+
+variable "registry_group" {
+  type = string
+  default = "covid19-booking-rg-dev-uks"
+}
+
+variable "registry_name" {
+  type = string
+  default = "nbsimages"
+}
+
+variable "docker_image" {
+  type = "string"
+  default = "nbs/appointments-api"
+}
+
+variable "docker_image_tag" {
+  type = "string"
+  default = "latest"
 }
 
 variable "tags" {
