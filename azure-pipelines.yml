@@ -34,7 +34,7 @@ jobs:
       inputs:
         command: buildAndPush
         repository: nbsimages/appointments-api
-        dockerfile: src/NBS.Appointments.Service/Dockerfile
+        dockerfile: src/Dockerfile
         containerRegistry: NbsRegistryServiceConnection
     - task: PublishBuildArtifacts@1
       displayName: "Publish Terraform"
