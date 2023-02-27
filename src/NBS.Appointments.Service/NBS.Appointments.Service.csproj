@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NBS.Appointments.Service.Infrastructure\NBS.Appointments.Service.Infrastructure.csproj" />
+    <ProjectReference Include="..\NBS.Appointments.Service.Core\NBS.Appointments.Service.Core.csproj" />
   </ItemGroup>
 
 

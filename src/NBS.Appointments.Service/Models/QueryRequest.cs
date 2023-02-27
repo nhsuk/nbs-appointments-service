@@ -13,10 +13,5 @@ namespace NBS.Appointments.Service.Models
         public DateTime Until { get; set; }
         [JsonProperty("service")] 
         public string Service { get; set; }
-
-        public string[] GetServices()
-        {
-            return Service.Split(":");
-        }
     }
 }

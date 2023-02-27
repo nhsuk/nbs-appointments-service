@@ -1,0 +1,20 @@
+[    
+    {
+        "Path": "/svcCustomAppointment.svc/rest",
+        "Method": "GET",
+        "Status": 200,
+        "Response": [{
+            "SiteId": 100,
+            "SiteName": "Robin Lane Medical Centre",
+            "SiteAddress": "Pudsey, Leeds",
+            "VaccineType": "39114911000001105",
+            "Availability": [
+                {
+                    "Date": "2022-11-10",
+                    "AM": 1000,
+                    "PM": 0
+                }
+            ]
+        }]
+    }
+]

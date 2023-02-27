@@ -3,7 +3,7 @@ WORKDIR /App
 
 # Copy everything
 COPY ./NBS.Appointments.Service ./NBS.Appointments.Service
-COPY ./NBS.Appointments.Service.Infrastructure ./NBS.Appointments.Service.Infrastructure
+COPY ./NBS.Appointments.Service.Core ./NBS.Appointments.Service.Core
 
 WORKDIR /App/NBS.Appointments.Service
 # Restore as distinct layers
