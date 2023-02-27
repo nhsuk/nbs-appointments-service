@@ -26,12 +26,12 @@ variable "sku_name" {
 
 variable "registry_group" {
   type = string
-  default = "nhsuk-dockerregistry"
+  default = "covid19-booking-rg-dev-uks"
 }
 
 variable "registry_name" {
   type = string
-  default = "nhsuk"
+  default = "nbsimages"
 }
 
 variable "docker_image" {
