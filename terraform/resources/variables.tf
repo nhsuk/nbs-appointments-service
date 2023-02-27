@@ -36,12 +36,11 @@ variable "registry_name" {
 
 variable "docker_image" {
   type = "string"
-  default = "nbs/appointments-api"
+  default = "appointments-service"
 }
 
 variable "docker_image_tag" {
   type = "string"
-  default = "latest"
 }
 
 variable "tags" {
