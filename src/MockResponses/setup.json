@@ -16,5 +16,11 @@
                 }
             ]
         }]
+    },
+    {
+        "Path": "/svcAppUser.svc/rest/FormsSignIn",
+        "Method": "POST",
+        "Status": 200,
+        "Response": "12345"
     }
 ]

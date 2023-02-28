@@ -27,7 +27,8 @@ namespace NBS.Appointments.Service
         {
             services.AddHttpClient();
             services.AddControllers();
-            services.AddQflowClient("http://mock-api", "", "");
+            services.AddQflowClient("http://localhost:4010", "", "");
+            services.AddInMemoryStoreMutex();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

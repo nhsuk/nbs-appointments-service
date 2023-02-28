@@ -38,7 +38,7 @@ namespace NBS.Appointments.Service.Core.Services
             using var client = _httpClientFactory.CreateClient();
             var context = new Dictionary<string, object>
             {
-                {"SessionId", await _sessionManager.GetSessionId()}
+                {"SessionId", _sessionManager.GetSessionId()}
             };
 
             var policy = GetRetryPolicy();
@@ -56,10 +56,10 @@ namespace NBS.Appointments.Service.Core.Services
         {
             return Policy
                 .HandleResult<HttpResponseMessage>(rsp => rsp.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                .RetryAsync(3, onRetryAsync: async (exception, retryCount, context) => {
+                .RetryAsync(1, onRetry: (exception, retryCount, context) => {
                     Console.WriteLine("Session Invalid - retrying");
                     _sessionManager.Invalidate(context["SessionId"].ToString());
-                    context["SessionId"] = await _sessionManager.GetSessionId();
+                    context["SessionId"] =  _sessionManager.GetSessionId();
                 });
         }
     }
