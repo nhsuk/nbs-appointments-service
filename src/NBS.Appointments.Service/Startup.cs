@@ -1,15 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Azure;
 
 namespace NBS.Appointments.Service
 {
@@ -27,8 +21,12 @@ namespace NBS.Appointments.Service
         {
             services.AddHttpClient();
             services.AddControllers();
-            services.AddQflowClient("http://localhost:4010", "", "");
-            services.AddInMemoryStoreMutex();
+            services.AddQflowClient("http://mock-api", "", "");
+            services.AddAzureBlobStoreMutex("sessions");
+
+            services.AddAzureClients(c => {
+                c.AddBlobServiceClient("DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

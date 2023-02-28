@@ -1,4 +1,5 @@
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs.Specialized;
 using Microsoft.Extensions.Options;
 
@@ -18,7 +19,11 @@ namespace NBS.Appointments.Service.Core
         public IMutexRecordAccess Acquire(string fileName)
         {
             var containerClient = _blobServiceClient.GetBlobContainerClient(_options.ContainerName);
+            containerClient.CreateIfNotExists();
+
             var blobClient = containerClient.GetBlobClient(fileName);
+            if(blobClient.Exists() == false)
+                blobClient.Upload(BinaryData.FromString(""));
             return new FileAccess(blobClient);
         }
 
@@ -46,7 +51,14 @@ namespace NBS.Appointments.Service.Core
 
             public void Write(string content)
             {
-                _blobClient.Upload(BinaryData.FromString(content));
+                var options = new BlobUploadOptions
+                {
+                    Conditions = new BlobRequestConditions()
+                    {
+                        LeaseId = _leaseManager.LeaseId
+                    }
+                };
+                _blobClient.Upload(BinaryData.FromString(content), options);
             }
         }
 

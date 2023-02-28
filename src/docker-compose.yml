@@ -7,6 +7,11 @@ services:
     ports:
       - "4000:80"
 
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    ports:
+      - "10000:10000"
+
   mock-api:
     image: xmlsolutions/mock-api:3.0
     environment:
