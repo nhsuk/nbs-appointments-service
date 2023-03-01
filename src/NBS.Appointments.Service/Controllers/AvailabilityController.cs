@@ -22,7 +22,7 @@ namespace NBS.Appointments.Service.Controllers
 
         [HttpPost]
         [Route("query")]
-        public async Task<IActionResult> Query([FromBody] QueryRequest request)
+        public async Task<IActionResult> Query([FromBody] AvailabilityQueryRequest request)
         {
             QflowServiceDescriptor serviceDescriptor;
             IEnumerable<SiteUrn> siteUrns;
@@ -48,19 +48,7 @@ namespace NBS.Appointments.Service.Controllers
                 serviceDescriptor.Vaccine,
                 serviceDescriptor.Reference);
 
-            var apiResponse = qflowResponse.Select(item => new AvailabilityResponse
-            {
-                Site = $"qflow:{item.SiteId}",
-                Service = request.Service,
-                Availability = item.Availability.Select(av => new Availability
-                {
-                    Date = av.Date.ToString("yyyy-MM-dd"),
-                    Am = av.Am,
-                    Pm = av.Pm,
-                }).ToArray()
-            });
-
-            return new OkObjectResult(apiResponse);
+            return new OkObjectResult(qflowResponse.Select(x => AvailabilityQueryResponse.FromQflowResponse(x, request.Service)));
         }
     }
 }
