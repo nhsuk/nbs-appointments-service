@@ -7,16 +7,8 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class ServiceRegistration
     {
         public static IServiceCollection AddQflowClient(
-            this IServiceCollection services,
-            string baseUrl,
-            string userName,
-            string password)
-        {
-            services.Configure<QflowOptions>(opts => {
-                opts.BaseUrl = baseUrl;
-                opts.UserName = userName;
-                opts.Password = password;
-            });
+            this IServiceCollection services)
+        {            
             return services
                 .AddSingleton<IQflowSessionManager, QflowSessionManager>()
                 .AddTransient<IQflowService, QflowService>();            

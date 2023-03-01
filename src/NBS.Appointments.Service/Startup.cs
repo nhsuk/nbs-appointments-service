@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Azure;
+using NBS.Appointments.Service.Core;
 
 namespace NBS.Appointments.Service
 {
@@ -19,13 +20,16 @@ namespace NBS.Appointments.Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string blobServiceConnectionString = Configuration.GetConnectionString("SessionBlobService");
+            services.Configure<QflowOptions>(Configuration.GetSection("Qflow"));
+
             services.AddHttpClient();
             services.AddControllers();
-            services.AddQflowClient("http://mock-api", "", "");
+            services.AddQflowClient();
             services.AddAzureBlobStoreMutex("sessions");
 
             services.AddAzureClients(c => {
-                c.AddBlobServiceClient("DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;");
+                c.AddBlobServiceClient(blobServiceConnectionString);
             });
         }
 

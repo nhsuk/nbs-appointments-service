@@ -40,14 +40,27 @@ namespace NBS.Appointments.Service.Controllers
             if(siteUrns.Any(urn => urn.Scheme != "qflow"))
                 return BadRequest(new {Message = "Only qflow sites are currently supported"});
 
-            var response = await _qflowService.GetSiteAvailability(
+            var qflowResponse = await _qflowService.GetSiteAvailability(
                 siteUrns.Select(urn => urn.Identifier), 
                 request.From, 
                 request.Until, 
                 serviceDescriptor.Dose,
                 serviceDescriptor.Vaccine,
                 serviceDescriptor.Reference);
-            return new OkObjectResult(response);
+
+            var apiResponse = qflowResponse.Select(item => new AvailabilityResponse
+            {
+                Site = $"qflow:{item.SiteId}",
+                Service = request.Service,
+                Availability = item.Availability.Select(av => new Availability
+                {
+                    Date = av.Date.ToString("yyyy-MM-dd"),
+                    Am = av.Am,
+                    Pm = av.Pm,
+                }).ToArray()
+            });
+
+            return new OkObjectResult(apiResponse);
         }
     }
 }
