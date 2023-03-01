@@ -1,11 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NBS.Appointments.Service.Core.Interfaces.Services;
 using NBS.Appointments.Service.Models;
 using NBS.Appointments.Service.Core.Dtos.Qflow;
+using NBS.Appointments.Service.Core;
+using System;
+using System.Collections.Generic;
 
 namespace NBS.Appointments.Service.Controllers
 {
+    [ApiController]
     [Route("availability")]
     public class AvailabilityController : Controller
     {
@@ -17,19 +22,26 @@ namespace NBS.Appointments.Service.Controllers
 
         [HttpPost]
         [Route("query")]
-        public async Task<IActionResult> Query([FromBody]QueryRequest request)
-        {            
-            request = new QueryRequest
+        public async Task<IActionResult> Query([FromBody] QueryRequest request)
+        {
+            QflowServiceDescriptor serviceDescriptor;
+            IEnumerable<SiteUrn> siteUrns;
+
+            try
             {
-                Sites = new [] {"site:1"},
-                From = System.DateTime.Today,
-                Until= System.DateTime.Today.AddDays(10),
-                Service = "covid:booster:snomed:none"
-            };
-            var serviceDescriptor = QflowCovidServiceDescriptor.FromString(request.Service);
+                serviceDescriptor = QflowServiceDescriptor.FromString(request.Service);
+                siteUrns = request.Sites.Select(s => SiteUrnParser.Parse(s)).ToList();
+            }
+            catch (FormatException)
+            {
+                return BadRequest();
+            }
+
+            if(siteUrns.Any(urn => urn.Scheme != "qflow"))
+                return BadRequest(new {Message = "Only qflow sites are currently supported"});
 
             var response = await _qflowService.GetSiteAvailability(
-                request.Sites, 
+                siteUrns.Select(urn => urn.Identifier), 
                 request.From, 
                 request.Until, 
                 serviceDescriptor.Dose,

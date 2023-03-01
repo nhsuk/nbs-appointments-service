@@ -25,13 +25,26 @@ namespace NBS.Appointments.Service.Core.Services
         public async Task<SiteAvailabilityResponse[]> GetSiteAvailability(IEnumerable<string> siteIds, DateTime startDate, DateTime endDate,
             string dose, string vaccine, string externalReference)
         {
+            if(siteIds.Any() == false)
+                throw new ArgumentException("At least one site must be provided", nameof(siteIds));
+
+            if (String.IsNullOrEmpty(dose))
+                throw new ArgumentException("A value must be provided", nameof(dose));
+
+            if (String.IsNullOrEmpty(vaccine))
+                throw new ArgumentException("A value must be provided", nameof(vaccine));
+
+            int days = startDate.DaysBetween(endDate);
+            if (days < 1)
+                throw new ArgumentOutOfRangeException("The specified date range was not valid " + days);
+
             var query = new Dictionary<string, string>
             {
-                { "Dose", dose.ToString() },
+                { "Dose", dose },
                 { "Vaccine", vaccine },
                 { "SiteId", string.Join(",", siteIds)},
                 { "StartDate", $"{startDate:yyyy-MM-dd}" },
-                { "Days", endDate.DaysBetween(startDate).ToString() },
+                { "Days", days.ToString() },
                 { "ExternalReference", externalReference ?? "" }
             };
 

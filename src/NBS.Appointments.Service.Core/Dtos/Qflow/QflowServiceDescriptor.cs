@@ -1,17 +1,21 @@
 namespace NBS.Appointments.Service.Core.Dtos.Qflow
 {
-    public class QflowCovidServiceDescriptor
+    public class QflowServiceDescriptor
     {
-        public static QflowCovidServiceDescriptor FromString(string descriptor)
+        public static QflowServiceDescriptor FromString(string descriptor)
         {
             var parts = descriptor.Split(":");
-            if(parts[0] != "covid")
-                throw new FormatException("String was not a covid service descriptor");
 
-            return new QflowCovidServiceDescriptor(parts[1], parts[2], parts[3]);
+            if (parts.Length != 4)
+                throw new FormatException("Descriptor is not formatted correctly");
+
+            if(parts[0] != "qflow")
+                throw new FormatException("String was not a qflow service descriptor");
+
+            return new QflowServiceDescriptor(parts[1], parts[2], parts[3]);
         }        
 
-        public QflowCovidServiceDescriptor(string dose, string vaccine, string reference)
+        public QflowServiceDescriptor(string dose, string vaccine, string reference)
         {
             Dose = dose;
             Vaccine = vaccine;
