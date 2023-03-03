@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using NBS.Appointments.Service.Core.Interfaces.Services;
 using NBS.Appointments.Service.Models;
 using NBS.Appointments.Service.Core.Dtos.Qflow;
+using System.Threading.Tasks;
 
 namespace NBS.Appointments.Service.Controllers
 {

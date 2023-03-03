@@ -1,4 +1,4 @@
-[    
+[
     {
         "Path": "/svcCustomAppointment.svc/rest",
         "Method": "GET",
@@ -16,5 +16,36 @@
                 }
             ]
         }]
+    },
+    {
+        "Path": "/GetSiteDoseAvailability",
+        "Method": "GET",
+        "Status": 200,
+        "Response": {
+            "SiteId": 100,
+            "Type": "18TO65COVID",
+            "Date": "2023-03-25",
+            "AvailabilityByHour": [
+                {
+                    "Hour": "09",
+                    "Count": 10
+                },{
+                    "Hour": "10",
+                    "Count": 10
+                },
+                {
+                    "Hour": "11",
+                    "Count": 12
+                },
+                {
+                    "Hour": "13",
+                    "Count": 6
+                },
+                {
+                    "Hour": "15",
+                    "Count": 7
+                }
+            ]
+        }
     }
 ]
