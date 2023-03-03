@@ -13,7 +13,7 @@ resource "azurerm_role_assignment" "appconf_dataowner" {
 }
 
 resource "azurerm_key_vault" "nbs_appts_key_vault" {
-  name                       = "${var.application}-key-vault-${var.environment}-${var.loc}"
+  name                       = "${var.application}kv${var.environment}${var.loc}"
   resource_group_name        = azurerm_resource_group.nbs_appts_rg.name
   location                   = azurerm_resource_group.nbs_appts_rg.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
