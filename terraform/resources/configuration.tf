@@ -55,7 +55,6 @@ resource "azurerm_app_configuration_key" "config_qflow_username" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
   key                    = "Qflow:UserName"
   type                   = "vault"
-  label                  = "Qflow UserName"
   vault_key_reference    = azurerm_key_vault_secret.kv_qflow_username.versionless_id
 
   depends_on = [
@@ -67,7 +66,6 @@ resource "azurerm_app_configuration_key" "config_qflow_password" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
   key                    = "Qflow:Password"
   type                   = "vault"
-  label                  = "Qflow Password"
   vault_key_reference    = azurerm_key_vault_secret.kv_qflow_password.versionless_id
 
   depends_on = [

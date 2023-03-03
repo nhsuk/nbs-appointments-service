@@ -44,7 +44,9 @@ namespace NBS.Appointments.Service.Core
                             var payload = new
                             {
                                 UserName = _options.UserName,
-                                Password = _options.Password
+                                Password = _options.Password,
+                                ForceSignIn = forceSignIn,
+                                IpAddress = ipAddress
                             };
                             var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(payload));
                             var response = httpClient.PostAsync($"{_options.BaseUrl}/svcAppUser.svc/rest/FormsSignIn", content).GetAwaiter().GetResult();
