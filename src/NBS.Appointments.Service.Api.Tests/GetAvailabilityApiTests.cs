@@ -56,7 +56,7 @@ namespace NBS.Appointments.Service.Api.Tests
             yield return new object[] { new ApiRequest(new[] { "otherflow:1234" }, "2023-05-20", "2023-05-25", "qflow:0:12345:NotSet") };
             yield return new object[] { new ApiRequest(new[] { "qflow:1234" }, "not-a-date", "2023-05-25", "qflow:0:12345:NotSet") };
             yield return new object[] { new ApiRequest(new[] { "qflow:1234" }, "2023-05-25", "not-a-date", "qflow:0:12345:NotSet") };
-            yield return new object[] { new ApiRequest(new[] { "qflow:1234" }, "2023-05-25", "not-a-date", "bad-data") };
+            yield return new object[] { new ApiRequest(new[] { "qflow:1234" }, "2023-05-25", "2023-05-25", "bad-data") };
         }
 
         public record ApiRequest(string[] Sites, string From, string Until, string Service);

@@ -20,17 +20,12 @@ namespace NBS.Appointments.Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string blobServiceConnectionString = Configuration.GetConnectionString("SessionBlobService");
             services.Configure<QflowOptions>(Configuration.GetSection("Qflow"));
 
             services.AddHttpClient();
             services.AddControllers();
             services.AddQflowClient();
-            services.AddAzureBlobStoreMutex("sessions");
-
-            services.AddAzureClients(c => {
-                c.AddBlobServiceClient(blobServiceConnectionString);
-            });
+            services.AddInMemoryStoreMutex();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
