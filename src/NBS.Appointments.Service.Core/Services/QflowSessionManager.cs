@@ -24,6 +24,16 @@ namespace NBS.Appointments.Service.Core
             _invalidSessionId = String.Empty;
         }
 
+        private static readonly JsonSerializerOptions Config = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            PropertyNameCaseInsensitive = true,
+            Converters =
+            {
+                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
+            },
+        };
+
         public string GetSessionId()
         {
             lock(_gate) // Prevent multiple threads on the same client colliding
@@ -48,7 +58,7 @@ namespace NBS.Appointments.Service.Core
                                 ForceSignIn = forceSignIn,
                                 IpAddress = ipAddress
                             };
-                            var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(payload));
+                            var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(payload, Config));
                             var response = httpClient.PostAsync($"{_options.BaseUrl}/svcAppUser.svc/rest/FormsSignIn", content).GetAwaiter().GetResult();
                             if(response.StatusCode != System.Net.HttpStatusCode.OK)
                                 throw new UnauthorizedAccessException();
