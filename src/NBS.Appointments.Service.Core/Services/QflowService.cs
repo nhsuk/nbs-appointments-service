@@ -57,7 +57,7 @@ namespace NBS.Appointments.Service.Core.Services
             var policy = GetRetryPolicy();
             var response = await policy.ExecuteAsync(async (context) => {
                 query["apiSessionId"] = context["SessionId"].ToString();
-                var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest/", query);
+                var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest/availability", query);
                 return await client.GetAsync(endpointUrl);
             }, context);
 
