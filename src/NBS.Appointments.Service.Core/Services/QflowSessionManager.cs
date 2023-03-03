@@ -1,4 +1,6 @@
 using Microsoft.Extensions.Options;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace NBS.Appointments.Service.Core
 {
@@ -58,7 +60,7 @@ namespace NBS.Appointments.Service.Core
                                 ForceSignIn = true,
                                 IpAddress = "127.0.0.1"
                             };
-                            var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(payload, Config));
+                            var content = new StringContent(JsonSerializer.Serialize(payload, Config));
                             var response = httpClient.PostAsync($"{_options.BaseUrl}/svcAppUser.svc/rest/FormsSignIn", content).GetAwaiter().GetResult();
                             if(response.StatusCode != System.Net.HttpStatusCode.OK)
                                 throw new UnauthorizedAccessException();
