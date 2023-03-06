@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NBS.Appointments.Service.Core;
 
 namespace NBS.Appointments.Service
 {
@@ -18,12 +19,15 @@ namespace NBS.Appointments.Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<QflowOptions>(Configuration.GetSection("Qflow"));
+
+            services.AddHttpClient();
             services.AddControllers();
+            services.AddQflowClient();
+            services.AddInMemoryStoreMutex();
             services
-                .AddHttpClient()
-                .AddQflowClient()
-                .RegisterValidators()
-                .AddSwaggerGen();
+               .RegisterValidators()
+               .AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

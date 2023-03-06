@@ -6,7 +6,7 @@ namespace NBS.Appointments.Service.Models
     public class Availability
     {
         [JsonProperty("date")]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         [JsonProperty("AM")]
         public int Am { get; set; }
         [JsonProperty("PM")]

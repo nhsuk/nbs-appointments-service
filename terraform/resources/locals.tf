@@ -1,3 +1,3 @@
 locals {
-  allTags =  merge(var.tags, {environment = var.environment}) 
+  allTags = merge(var.tags, { environment = var.environment })
 }

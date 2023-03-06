@@ -1,0 +1,7 @@
+POST http://localhost:4010/svcCustomAppointment.svc/rest
+MockApi-Action: Setup
+MockApi-Method: GET
+MockApi-Status: 401
+MockApi-Flag-Once: true
+
+{}
