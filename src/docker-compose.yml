@@ -1,0 +1,26 @@
+version: "3.4"
+
+services:
+  api:
+    build: .
+    image: appointments-service
+    environment:
+      - "ConnectionStrings:SessionBlobService=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;"
+      - "Qflow:BaseUrl=http://mock-api"
+    ports:
+      - "4000:80"
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    ports:
+      - "10000:10000"
+
+  mock-api:
+    image: xmlsolutions/mock-api:3.0
+    environment:
+      - DataSource=local:./config
+      - RoutesFile=setup.json      
+    volumes:
+      - "./MockResponses:/app/config"
+    ports:
+      - "4010:80"

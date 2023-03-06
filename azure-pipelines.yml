@@ -7,37 +7,28 @@ trigger:
 jobs:
   - job: "Build"
     pool:
-      vmImage: "windows-latest"
+      vmImage: "ubuntu-latest"
     steps:
     - task: DotNetCoreCLI@2
       displayName: 'dotnet restore'
       inputs:
         command: restore
-        projects: src/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service.csproj
+        projects: src/NBS.Appointments.Service/NBS.Appointments.Service.csproj
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build'
       inputs:
-        projects: src/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service.csproj
+        projects: src/NBS.Appointments.Service/NBS.Appointments.Service.csproj
         arguments: '--output publish_output --configuration Release'
-    - task: ArchiveFiles@2
-      displayName: 'Archive files'
+    - task: Docker@2
+      displayName: Build and push an image to container registry
       inputs:
-        rootFolderOrFile: 'publish_output/'
-        includeRootFolder: false
-    - task: DotNetCoreCLI@2
-      displayName: 'dotnet test'
-      inputs:
-        command: 'test'
-        projects: src/NBS.Appointments.Service/NBS.Appointments.Service/NBS.Appointments.Service.Unit.Tests/NBS.Appointments.Service.Unit.Tests.csproj
+        command: buildAndPush
+        repository: appointments-service
+        dockerfile: src/Dockerfile
+        containerRegistry: NbsRegistryServiceConnection
     - task: PublishBuildArtifacts@1
       displayName: "Publish Terraform"
       inputs:
           PathtoPublish: "terraform"
           ArtifactName: "drop_terraform"
-          publishLocation: "Container"
-    - task: PublishBuildArtifacts@1
-      displayName: "Publish Function App"
-      inputs:
-          PathtoPublish: "publish_output"
-          ArtifactName: "drop_App"
           publishLocation: "Container"

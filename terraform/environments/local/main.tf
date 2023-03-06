@@ -15,4 +15,10 @@ provider "azurerm" {
 
 module "api" {
   source = "../../resources"
+  location = "uksouth"
+  environment = "dev"
+  loc = "uks"
+  sku_name = "B1"
+  docker_image = "test"
+  docker_image_tag = "test"
 }

@@ -10,30 +10,50 @@ variable "application_short" {
 
 variable "environment" {
   type = string
-  default = "dev"
 }
 
 variable "location" {
   type = string
-  default = "uk south"
 }
 
 variable "loc" {
   type = string
-  default = "uks"
+}
+
+variable "sku_name" {
+  type = string
+}
+
+variable "registry_group" {
+  type    = string
+  default = "covid19-booking-rg-dev-uks"
+}
+
+variable "registry_name" {
+  type    = string
+  default = "nbsimages"
+}
+
+variable "docker_image" {
+  type    = string
+  default = "appointments-service"
+}
+
+variable "docker_image_tag" {
+  type = string
 }
 
 variable "tags" {
   description = "A map of the tags to use for the resources that are deployed"
   type        = map(string)
-  default     = { 
-    product = "covid19-booking"
-    "cost code" = "PO724/34"
-    "created by" = "Terraform"
-    "created date" = "2021-02-15"
-    "product owner" = "James Spirit"
-    "requested by" = "NBS"
+  default = {
+    product           = "covid19-booking"
+    "cost code"       = "PO724/34"
+    "created by"      = "Terraform"
+    "created date"    = "2021-02-15"
+    "product owner"   = "James Spirit"
+    "requested by"    = "NBS"
     "service-product" = "National Booking Service"
-    team = "NBS"
+    team              = "NBS"
   }
 }
