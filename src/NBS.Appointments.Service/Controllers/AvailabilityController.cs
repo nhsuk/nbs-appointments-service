@@ -32,9 +32,9 @@ namespace NBS.Appointments.Service.Controllers
                 serviceDescriptor = QflowServiceDescriptor.FromString(request.Service);
                 siteUrns = request.Sites.Select(s => SiteUrnParser.Parse(s)).ToList();
             }
-            catch (FormatException)
+            catch (FormatException ex)
             {
-                return BadRequest();
+                return BadRequest(new {Message = ex.Message});
             }
 
             if(siteUrns.Any(urn => urn.Scheme != "qflow"))
