@@ -19,11 +19,6 @@ jobs:
       inputs:
         projects: src/NBS.Appointments.Service/NBS.Appointments.Service.csproj
         arguments: '--output publish_output --configuration Release'
-    - task: ArchiveFiles@2
-      displayName: 'Archive files'
-      inputs:
-        rootFolderOrFile: 'publish_output/'
-        includeRootFolder: false    
     - task: Docker@2
       displayName: Build and push an image to container registry
       inputs:

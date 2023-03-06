@@ -1,0 +1,21 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Appointments API",
+        "description": "",
+        "version": "1.0"
+    },
+    "basePath": "/api",
+    "paths":{
+        "/hello-world": {
+            "get": {
+                    "tags": [],
+                    "summary": "Appointments HelloWorld endpoint",
+                    "operationId": "get-hello-world",
+                    "produces": [
+                        "application/json"
+                    ]
+            }
+        }
+    }
+}

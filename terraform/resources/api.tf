@@ -1,4 +1,4 @@
-﻿data "azurerm_container_registry" "container_registry" {
+data "azurerm_container_registry" "container_registry" {
   resource_group_name = var.registry_group
   name                = var.registry_name
 }
