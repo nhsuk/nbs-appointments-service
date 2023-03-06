@@ -59,7 +59,7 @@ namespace NBS.Appointments.Service.Core.Services
             var policy = GetRetryPolicy();
             var response = await policy.ExecuteAsync(async (context) => {
                 query["apiSessionId"] = context["SessionId"].ToString();
-                var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest/availability", query);
+                var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest", query);
                 return await client.GetAsync(endpointUrl);
             }, context);
 
@@ -76,10 +76,20 @@ namespace NBS.Appointments.Service.Core.Services
                 { "VaccineType", appointmentType },
                 { "ExternalReference", "NotSet" }
             };
-            var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/GetSiteDoseAvailability", query);
 
             using var client = _httpClientFactory.CreateClient();
-            var response = await client.GetAsync(endpointUrl);
+            var context = new Dictionary<string, object>
+            {
+                {"SessionId", _sessionManager.GetSessionId()}
+            };
+
+            var policy = GetRetryPolicy();
+            var response = await policy.ExecuteAsync(async (context) =>
+            {
+                query["apiSessionId"] = context["SessionId"].ToString();
+                var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/GetSiteDoseAvailability", query);
+                return await client.GetAsync(endpointUrl);
+            }, context);
 
             var responseBody = await response.Content.ReadAsStringAsync();
 

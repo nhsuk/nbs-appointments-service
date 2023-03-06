@@ -2,23 +2,18 @@
 {
     public class QFlowSiteDescriptor
     {
-        public QFlowSiteDescriptor(int siteId, string? odsCode)
+        public QFlowSiteDescriptor(int siteId)
         {
-            OdsCode = odsCode;
             SiteId = siteId;
         }
 
+        // Validation for descriptor done before here in SlotAvailabilityRequestValidator
         public static QFlowSiteDescriptor FromString(string descriptor)
         {
             var parts = descriptor.Split(':');
-
-            int.TryParse(parts.FirstOrDefault(x => x == "siteid"), out var siteId);
-            var odsCode = parts.FirstOrDefault(x => x == "ods");
-
-            return new QFlowSiteDescriptor(siteId, odsCode);
+            return new QFlowSiteDescriptor(int.Parse(parts[1]));
         }
 
-        public string? OdsCode { get; set; }
         public int SiteId { get; set; }
     }
 }

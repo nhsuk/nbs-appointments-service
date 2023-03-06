@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using NBS.Appointments.Service.Models;
 using System;
+using System.Linq;
 
 namespace NBS.Appointments.Service.Validators
 {
@@ -10,7 +11,9 @@ namespace NBS.Appointments.Service.Validators
         {
             RuleFor(x => x.SiteIdentifier)
                 .NotEmpty()
-                .WithMessage("Site identifier must be provided.");
+                .WithMessage("Site identifier must be provided.")
+                .Must(BeValidSiteIdentifier)
+                .WithMessage("Site identifier is not valid.");
 
             RuleFor(x => x.Date)
                 .NotEmpty()
@@ -33,6 +36,17 @@ namespace NBS.Appointments.Service.Validators
         private bool BeDateInTheFuture(DateTime date)
         {
             return DateTime.Compare(date, DateTime.Today) > 0;
+        }
+
+        private bool BeValidSiteIdentifier(string siteIdentifier)
+        {
+            var parts = siteIdentifier.Split(':');
+            var siteId = parts.FirstOrDefault(x => x == "siteId");
+
+            if (siteId is null)
+                return false;
+
+            return int.TryParse(parts[1], out _);
         }
     }
 }
