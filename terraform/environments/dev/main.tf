@@ -20,7 +20,6 @@ provider "azurerm" {
   features {}
 }
 
-<<<<<<< HEAD
 variable "docker_image_tag" {
   type = string
 }
@@ -32,8 +31,4 @@ module "api" {
   loc = "uks"
   sku_name = "B1"
   docker_image_tag = var.docker_image_tag
-=======
-module "api" {
-  source = "../../resources"
->>>>>>> origin
 }
