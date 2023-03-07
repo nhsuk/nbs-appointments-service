@@ -5,15 +5,15 @@ using System.Linq;
 
 namespace NBS.Appointments.Service.Validators
 {
-    public class SlotAvailabilityRequestValidator : AbstractValidator<SlotAvailabilityRequest>
+    public class AvailabilityByHourRequestValidator : AbstractValidator<AvailabilityByHourRequest>
     {
-        public SlotAvailabilityRequestValidator()
+        public AvailabilityByHourRequestValidator()
         {
-            RuleFor(x => x.SiteIdentifier)
+            RuleFor(x => x.Site)
                 .NotEmpty()
-                .WithMessage("Site identifier must be provided.")
+                .WithMessage("SiteId must be provided.")
                 .Must(BeValidSiteIdentifier)
-                .WithMessage("Site identifier is not valid.");
+                .WithMessage("SiteId is not valid.");
 
             RuleFor(x => x.Date)
                 .NotEmpty()
@@ -41,7 +41,7 @@ namespace NBS.Appointments.Service.Validators
         private bool BeValidSiteIdentifier(string siteIdentifier)
         {
             var parts = siteIdentifier.Split(':');
-            var siteId = parts.FirstOrDefault(x => x == "siteId");
+            var siteId = parts.FirstOrDefault(x => x == "qflow");
 
             if (siteId is null)
                 return false;

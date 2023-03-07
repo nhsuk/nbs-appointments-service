@@ -7,6 +7,8 @@ using NBS.Appointments.Service.Core.Dtos.Qflow;
 using NBS.Appointments.Service.Core;
 using System;
 using System.Collections.Generic;
+using NBS.Appointments.Service.Validators;
+using NBS.Appointments.Service.Extensions;
 
 namespace NBS.Appointments.Service.Controllers
 {
@@ -15,9 +17,14 @@ namespace NBS.Appointments.Service.Controllers
     public class AvailabilityController : Controller
     {
         private readonly IQflowService _qflowService;
-        public AvailabilityController(IQflowService qflowService)
+        private readonly AvailabilityByHourRequestValidator _availabilityByHourRequestValidator;
+
+        public AvailabilityController(IQflowService qflowService, AvailabilityByHourRequestValidator availabilityByHourRequestValidator)
         {
             _qflowService = qflowService;
+
+            _availabilityByHourRequestValidator = availabilityByHourRequestValidator
+                ?? throw new ArgumentNullException(nameof(availabilityByHourRequestValidator));
         }
 
         [HttpPost]
@@ -49,6 +56,28 @@ namespace NBS.Appointments.Service.Controllers
                 serviceDescriptor.Reference);
 
             return new OkObjectResult(qflowResponse.Select(x => AvailabilityQueryResponse.FromQflowResponse(x, request.Service)));
+        }
+
+        [HttpPost]
+        [Route("hours")]
+        public async Task<IActionResult> Hours([FromBody] AvailabilityByHourRequest request)
+        {
+            var validationResult = _availabilityByHourRequestValidator.Validate(request);
+
+            if (!validationResult.IsValid)
+            {
+                var errorMessages = validationResult.Errors.ToErrorMessages();
+                return BadRequest(errorMessages);
+            }
+
+            var siteDescriptor = QFlowSiteDescriptor.FromString(request.Site);
+
+            var result = await _qflowService.GetSiteSlotAvailabilityAsync(
+                siteDescriptor.SiteId,
+                request.Date,
+                request.AppointmentType);
+
+            return Ok(result);
         }
     }
 }

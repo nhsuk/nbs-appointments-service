@@ -2,7 +2,7 @@
 using NBS.Appointments.Service.Core.Dtos.Qflow;
 using Xunit;
 
-namespace NBS.Appointments.Service.Core.Unit.Tests
+namespace NBS.Appointments.Service.Core.Unit.Tests.Dtos.Qflow
 {
     public class QflowServiceDescriptorTests
     {

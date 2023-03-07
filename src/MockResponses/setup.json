@@ -1,6 +1,6 @@
 [
     {
-        "Path": "/svcCustomAppointment.svc/rest",
+        "Path": "/svcCustomAppointment.svc/rest/availability",
         "Method": "GET",
         "Status": 200,
         "Response": [{

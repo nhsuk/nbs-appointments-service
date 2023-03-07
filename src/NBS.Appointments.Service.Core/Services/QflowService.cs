@@ -49,26 +49,19 @@ namespace NBS.Appointments.Service.Core.Services
                 { "Days", days.ToString() },
                 { "ExternalReference", externalReference ?? "" }
             };
+            var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest/availability", query);
 
-            using var client = _httpClientFactory.CreateClient();
-            var context = new Dictionary<string, object>
-            {
-                {"SessionId", _sessionManager.GetSessionId()}
-            };
-
-            var policy = GetRetryPolicy();
-            var response = await policy.ExecuteAsync(async (context) => {
-                query["apiSessionId"] = context["SessionId"].ToString();
-                var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest", query);
-                return await client.GetAsync(endpointUrl);
-            }, context);
-
+            var response = await ExecuteAsync(query, endpointUrl);
             var responseBody = await response.Content.ReadAsStringAsync();
+
             return JsonConvert.DeserializeObject<SiteAvailabilityResponse[]>(responseBody);
         }
 
-        public async Task<SiteSlotAvailabilityByHourResponse> GetSiteSlotAvailabilityAsync(int siteId, DateTime date, string appointmentType)
+        public async Task<AvailabilityByHourResponse> GetSiteSlotAvailabilityAsync(int siteId, DateTime date, string appointmentType)
         {
+            if (string.IsNullOrWhiteSpace(appointmentType))
+                throw new ArgumentException($"A value for {nameof(appointmentType)} must be provided.");
+
             var query = new Dictionary<string, string>
             {
                 { "Date", $"{date:yyyy-MM-dd}" },
@@ -76,7 +69,16 @@ namespace NBS.Appointments.Service.Core.Services
                 { "VaccineType", appointmentType },
                 { "ExternalReference", "NotSet" }
             };
+            var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/GetSiteDoseAvailability", query);
 
+            var response = await ExecuteAsync(query, endpointUrl);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<AvailabilityByHourResponse>(responseBody);
+        }
+
+        private async Task<HttpResponseMessage> ExecuteAsync(Dictionary<string, string> query, string endpointUrl)
+        {
             using var client = _httpClientFactory.CreateClient();
             var context = new Dictionary<string, object>
             {
@@ -84,16 +86,11 @@ namespace NBS.Appointments.Service.Core.Services
             };
 
             var policy = GetRetryPolicy();
-            var response = await policy.ExecuteAsync(async (context) =>
+            return await policy.ExecuteAsync(async (context) =>
             {
                 query["apiSessionId"] = context["SessionId"].ToString();
-                var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/GetSiteDoseAvailability", query);
                 return await client.GetAsync(endpointUrl);
             }, context);
-
-            var responseBody = await response.Content.ReadAsStringAsync();
-
-            return JsonConvert.DeserializeObject<SiteSlotAvailabilityByHourResponse>(responseBody);
         }
 
         private AsyncPolicy<HttpResponseMessage> GetRetryPolicy()
@@ -103,7 +100,7 @@ namespace NBS.Appointments.Service.Core.Services
                 .RetryAsync(1, onRetry: (exception, retryCount, context) => {
                     Console.WriteLine("Session Invalid - retrying");
                     _sessionManager.Invalidate(context["SessionId"].ToString());
-                    context["SessionId"] =  _sessionManager.GetSessionId();
+                    context["SessionId"] = _sessionManager.GetSessionId();
                 });
         }
     }

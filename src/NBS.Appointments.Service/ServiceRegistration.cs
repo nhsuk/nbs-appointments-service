@@ -7,7 +7,7 @@ namespace NBS.Appointments.Service
     {
         public static IServiceCollection RegisterValidators(this IServiceCollection services)
         {
-            services.AddTransient<SlotAvailabilityRequestValidator>();
+            services.AddTransient<AvailabilityByHourRequestValidator>();
 
             return services;
         }
