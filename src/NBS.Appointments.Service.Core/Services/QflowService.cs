@@ -3,6 +3,8 @@ using NBS.Appointments.Service.Core.Interfaces.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using Polly;
 using Microsoft.Extensions.Options;
+using NBS.Appointments.Service.Core.Dtos.Qflow;
+using Newtonsoft.Json;
 
 namespace NBS.Appointments.Service.Core.Services
 {
@@ -47,7 +49,37 @@ namespace NBS.Appointments.Service.Core.Services
                 { "Days", days.ToString() },
                 { "ExternalReference", externalReference ?? "" }
             };
+            var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest/availability", query);
 
+            var response = await Execute(query, endpointUrl);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<SiteAvailabilityResponse[]>(responseBody);
+        }
+
+        public async Task<AvailabilityByHourResponse> GetSiteSlotAvailability(int siteId, DateTime date, int dose, string vaccineType, string externalReference)
+        {
+            if (string.IsNullOrWhiteSpace(vaccineType))
+                throw new ArgumentException($"A value for {nameof(vaccineType)} must be provided.");
+
+            var query = new Dictionary<string, string>
+            {
+                { "Date", $"{date:yyyy-MM-dd}" },
+                { "SiteId", siteId.ToString() },
+                { "Dose", dose.ToString() },
+                { "VaccineType", vaccineType },
+                { "ExternalReference", externalReference }
+            };
+            var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/GetSiteDoseAvailability", query);
+
+            var response = await Execute(query, endpointUrl);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<AvailabilityByHourResponse>(responseBody);
+        }
+
+        private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl)
+        {
             using var client = _httpClientFactory.CreateClient();
             var context = new Dictionary<string, object>
             {
@@ -55,14 +87,11 @@ namespace NBS.Appointments.Service.Core.Services
             };
 
             var policy = GetRetryPolicy();
-            var response = await policy.ExecuteAsync(async (context) => {
+            return await policy.ExecuteAsync(async (context) =>
+            {
                 query["apiSessionId"] = context["SessionId"].ToString();
-                var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest/availability", query);
                 return await client.GetAsync(endpointUrl);
             }, context);
-
-            var responseBody = await response.Content.ReadAsStringAsync();
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<SiteAvailabilityResponse[]>(responseBody);
         }
 
         private AsyncPolicy<HttpResponseMessage> GetRetryPolicy()
@@ -72,7 +101,7 @@ namespace NBS.Appointments.Service.Core.Services
                 .RetryAsync(1, onRetry: (exception, retryCount, context) => {
                     Console.WriteLine("Session Invalid - retrying");
                     _sessionManager.Invalidate(context["SessionId"].ToString());
-                    context["SessionId"] =  _sessionManager.GetSessionId();
+                    context["SessionId"] = _sessionManager.GetSessionId();
                 });
         }
     }

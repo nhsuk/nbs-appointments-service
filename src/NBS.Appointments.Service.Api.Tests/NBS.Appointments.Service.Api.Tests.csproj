@@ -22,4 +22,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\NBS.Appointments.Service\NBS.Appointments.Service.csproj" />
+  </ItemGroup>
+
 </Project>

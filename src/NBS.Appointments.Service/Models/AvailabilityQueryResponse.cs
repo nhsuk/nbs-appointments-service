@@ -26,7 +26,7 @@ namespace NBS.Appointments.Service.Models
         {
             Site = $"qflow:{qflowResponse.SiteId}",
             Service = service,
-            Availability = qflowResponse.Availability.Select(av => new AvailabilityQueryResponse.AvailabilityEntry
+            Availability = qflowResponse.Availability.Select(av => new AvailabilityEntry
             {
                 Date = av.Date.ToString("yyyy-MM-dd"),
                 Am = av.Am,
