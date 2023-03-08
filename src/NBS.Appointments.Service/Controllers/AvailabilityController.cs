@@ -72,10 +72,12 @@ namespace NBS.Appointments.Service.Controllers
 
             var siteDescriptor = QFlowSiteDescriptor.FromString(request.Site);
 
-            var result = await _qflowService.GetSiteSlotAvailabilityAsync(
+            var result = await _qflowService.GetSiteSlotAvailability(
                 siteDescriptor.SiteId,
                 request.Date,
-                request.AppointmentType);
+                request.Dose,
+                request.VaccineType,
+                request.ExternalReference);
 
             return Ok(result);
         }

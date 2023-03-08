@@ -64,7 +64,7 @@ namespace NBS.Appointments.Service.Core.Unit.Tests.Servicves
         [InlineData(" ")]
         public void GetSiteSlotAvailabilityAsync_ThrowsArgumentException_WhenNoAppointmentTypeProvided(string appointmentType)
         {
-            Assert.ThrowsAsync<ArgumentException>(() => _sut.GetSiteSlotAvailabilityAsync(123, DateTime.Today.AddDays(2), appointmentType));
+            Assert.ThrowsAsync<ArgumentException>(() => _sut.GetSiteSlotAvailability(123, DateTime.Today.AddDays(2), appointmentType));
         }
     }
 }

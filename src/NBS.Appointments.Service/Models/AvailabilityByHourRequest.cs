@@ -9,7 +9,11 @@ namespace NBS.Appointments.Service.Models
         public string Site { get; set; }
         [JsonProperty("date")]
         public DateTime Date { get; set; }
-        [JsonProperty("appointmentType")]
-        public string AppointmentType { get; set; }
+        [JsonProperty("vaccineType")]
+        public string VaccineType { get; set; }
+        [JsonProperty("dose")]
+        public int Dose { get; set; }
+        [JsonProperty("externalReference")]
+        public string ExternalReference { get; set; }
     }
 }

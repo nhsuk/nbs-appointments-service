@@ -21,11 +21,19 @@ namespace NBS.Appointments.Service.Validators
                 .Must(BeAValidDate)
                 .WithMessage("The date you provided must be a valid date.")
                 .Must(BeDateInTheFuture)
-                .WithMessage("The date must be in the future.");
+                .WithMessage("The date must be the current date or a date in the future.");
 
-            RuleFor(x => x.AppointmentType)
+            RuleFor(x => x.Dose)
+                .GreaterThan(-1)
+                .WithMessage("Invalid dose value.");
+
+            RuleFor(x => x.VaccineType)
                 .NotEmpty()
-                .WithMessage("Appointment type must be provided.");
+                .WithMessage("Vaccine type must be provided.");
+
+            RuleFor(x => x.ExternalReference)
+                .NotEmpty()
+                .WithMessage("External reference must be provided.");
         }
 
         private bool BeAValidDate(DateTime date)

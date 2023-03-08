@@ -51,33 +51,34 @@ namespace NBS.Appointments.Service.Core.Services
             };
             var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest/availability", query);
 
-            var response = await ExecuteAsync(query, endpointUrl);
+            var response = await Execute(query, endpointUrl);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<SiteAvailabilityResponse[]>(responseBody);
         }
 
-        public async Task<AvailabilityByHourResponse> GetSiteSlotAvailabilityAsync(int siteId, DateTime date, string appointmentType)
+        public async Task<AvailabilityByHourResponse> GetSiteSlotAvailability(int siteId, DateTime date, int dose, string vaccineType, string externalReference)
         {
-            if (string.IsNullOrWhiteSpace(appointmentType))
-                throw new ArgumentException($"A value for {nameof(appointmentType)} must be provided.");
+            if (string.IsNullOrWhiteSpace(vaccineType))
+                throw new ArgumentException($"A value for {nameof(vaccineType)} must be provided.");
 
             var query = new Dictionary<string, string>
             {
                 { "Date", $"{date:yyyy-MM-dd}" },
                 { "SiteId", siteId.ToString() },
-                { "VaccineType", appointmentType },
-                { "ExternalReference", "NotSet" }
+                { "Dose", dose.ToString() },
+                { "VaccineType", vaccineType },
+                { "ExternalReference", externalReference }
             };
             var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/GetSiteDoseAvailability", query);
 
-            var response = await ExecuteAsync(query, endpointUrl);
+            var response = await Execute(query, endpointUrl);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<AvailabilityByHourResponse>(responseBody);
         }
 
-        private async Task<HttpResponseMessage> ExecuteAsync(Dictionary<string, string> query, string endpointUrl)
+        private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl)
         {
             using var client = _httpClientFactory.CreateClient();
             var context = new Dictionary<string, object>

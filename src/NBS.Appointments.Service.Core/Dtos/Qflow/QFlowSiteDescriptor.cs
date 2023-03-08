@@ -14,8 +14,8 @@
 
             var parts = descriptor.Split(':');
 
-            var siteId = parts.FirstOrDefault(x => x == "qflow")
-                ?? throw new FormatException("String was not a qflow site descriptor");
+            if (parts[0] != "qflow")
+                throw new FormatException("String was not a qflow site descriptor");
 
             if (!int.TryParse(parts[1], out _))
                 throw new FormatException("SiteId must be a number");
