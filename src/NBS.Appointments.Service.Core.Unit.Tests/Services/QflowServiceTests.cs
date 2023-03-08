@@ -4,7 +4,7 @@ using NBS.Appointments.Service.Core.Interfaces.Services;
 using NBS.Appointments.Service.Core.Services;
 using Xunit;
 
-namespace NBS.Appointments.Service.Core.Unit.Tests.Servicves
+namespace NBS.Appointments.Service.Core.Unit.Tests.Services
 {
     public class QflowServiceTests
     {
