@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Azure;
 using NBS.Appointments.Service.Core;
 
 namespace NBS.Appointments.Service
@@ -26,6 +25,9 @@ namespace NBS.Appointments.Service
             services.AddControllers();
             services.AddQflowClient();
             services.AddInMemoryStoreMutex();
+            services
+               .RegisterValidators()
+               .AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +36,8 @@ namespace NBS.Appointments.Service
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
