@@ -22,11 +22,11 @@ namespace NBS.Appointments.Service.Api.Tests
         }
 
         [Fact]
-        public async Task AvailableSlotsAsync_ShouldReturnBadRequest_WhenRequestModelFailsValidation()
+        public async Task AvailabilityByHours_ShouldReturnBadRequest_WhenRequestModelFailsValidation()
         {
             var request = new AvailabilityByHourRequest
             {
-                AppointmentType = string.Empty,
+                Service = string.Empty,
                 Date = DateTime.Today,
                 Site = "siteId:150"
             };
@@ -38,13 +38,13 @@ namespace NBS.Appointments.Service.Api.Tests
         }
 
         [Fact]
-        public async Task AvailableSlotsAsync_ShouldReturnOkResponse_WhenRequestIsValid()
+        public async Task AvailabilityByHours_ShouldReturnOkResponse_WhenRequestIsValid()
         {
             var request = new AvailabilityByHourRequest
             {
-                AppointmentType = "FLU18TO65",
+                Service = "qflow:0:FLU18TO65:NotSet",
                 Date = DateTime.Today.AddDays(1),
-                Site = "siteId:150"
+                Site = "qflow:150"
             };
 
             var payload = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
