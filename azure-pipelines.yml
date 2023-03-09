@@ -19,6 +19,16 @@ jobs:
       inputs:
         projects: src/NBS.Appointments.Service/NBS.Appointments.Service.csproj
         arguments: '--output publish_output --configuration Release'
+    - task: DotNetCoreCLI@2
+      displayName: 'Run unit tests'
+      inputs:
+        command: 'test'
+        projects: |
+          src/NBS.Appointments.Service.Unit.Tests/NBS.Appointments.Service.Unit.Tests.csproj
+          src/NBS.Appointments.Service.Core.Unit.Tests/NBS.Appointments.Service.Core.Unit.Tests.csproj
+    - task: ShellScript@2
+      inputs:
+        scriptPath: ./src/run-api-tests.sh
     - task: Docker@2
       displayName: Build and push an image to container registry
       inputs:

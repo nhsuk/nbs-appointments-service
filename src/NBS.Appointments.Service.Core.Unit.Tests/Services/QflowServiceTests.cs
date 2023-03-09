@@ -62,9 +62,9 @@ namespace NBS.Appointments.Service.Core.Unit.Tests.Services
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void GetSiteSlotAvailabilityAsync_ThrowsArgumentException_WhenNoAppointmentTypeProvided(string appointmentType)
+        public void GetSiteSlotAvailabilityAsync_ThrowsArgumentException_WhenNoVaccineIsProvided(string appointmentType)
         {
-            Assert.ThrowsAsync<ArgumentException>(() => _sut.GetSiteSlotAvailability(123, DateTime.Today.AddDays(2), appointmentType));
+            Assert.ThrowsAsync<ArgumentException>(() => _sut.GetSiteSlotAvailability(123, DateTime.Today.AddDays(2), "0", appointmentType, ""));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using NBS.Appointments.Service.Core.Dtos.Qflow;
 using NBS.Appointments.Service.Models;
 using System;
 using System.Linq;
@@ -23,17 +24,11 @@ namespace NBS.Appointments.Service.Validators
                 .Must(BeDateInTheFuture)
                 .WithMessage("The date must be the current date or a date in the future.");
 
-            RuleFor(x => x.Dose)
-                .GreaterThan(-1)
-                .WithMessage("Invalid dose value.");
-
-            RuleFor(x => x.VaccineType)
+            RuleFor(x => x.Service)
                 .NotEmpty()
-                .WithMessage("Vaccine type must be provided.");
-
-            RuleFor(x => x.ExternalReference)
-                .NotEmpty()
-                .WithMessage("External reference must be provided.");
+                .WithMessage("Service must be specified.")
+                .Must(BeValidServiceDescriptor)
+                .WithMessage("Service descriptor is not valid");
         }
 
         private bool BeAValidDate(DateTime date)
@@ -55,6 +50,19 @@ namespace NBS.Appointments.Service.Validators
                 return false;
 
             return int.TryParse(parts[1], out _);
+        }
+
+        private bool BeValidServiceDescriptor(string serviceDescriptor)
+        {
+            try
+            {
+                QflowServiceDescriptor.FromString(serviceDescriptor);
+                return true;
+            }
+            catch(FormatException)
+            {
+                return false;
+            }
         }
     }
 }
