@@ -51,7 +51,7 @@ namespace NBS.Appointments.Service.Core.Services
             };
             var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest/availability", query);
 
-            var response = await Execute(query, endpointUrl);
+            var response = await Execute(query, endpointUrl, HttpMethod.Get);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<SiteAvailabilityResponse[]>(responseBody);
@@ -72,13 +72,32 @@ namespace NBS.Appointments.Service.Core.Services
             };
             var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/GetSiteDoseAvailability", query);
 
-            var response = await Execute(query, endpointUrl);
+            var response = await Execute(query, endpointUrl, HttpMethod.Get);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<AvailabilityByHourResponse>(responseBody);
         }
 
-        private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl)
+        public async Task<ReserveSlotResponse> ReserveSlot(int calendarId, int startTime, int endTime, int lockDuration)
+        {
+            var request = new ReserveSlotRequestContent
+            {
+                CalendarId = calendarId,
+                StartTime = startTime,
+                EndTime = endTime,
+                LockDuration = lockDuration
+            };
+
+            var endpointUrl = $"{_options.BaseUrl}/LockDynamicSlots";
+            var requestContent = new StringContent(JsonConvert.SerializeObject(request));
+
+            var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, requestContent);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<ReserveSlotResponse>(responseBody);
+        }
+
+        private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl, HttpMethod method, HttpContent? content = null)
         {
             using var client = _httpClientFactory.CreateClient();
             var context = new Dictionary<string, object>
@@ -86,11 +105,16 @@ namespace NBS.Appointments.Service.Core.Services
                 {"SessionId", _sessionManager.GetSessionId()}
             };
 
+            var requestMessage = new HttpRequestMessage(method, endpointUrl);
+
+            if (content != null)
+                requestMessage.Content = content;
+
             var policy = GetRetryPolicy();
             return await policy.ExecuteAsync(async (context) =>
             {
                 query["apiSessionId"] = context["SessionId"].ToString();
-                return await client.GetAsync(endpointUrl);
+                return await client.SendAsync(requestMessage);
             }, context);
         }
 

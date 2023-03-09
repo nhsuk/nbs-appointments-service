@@ -53,5 +53,13 @@
                 }
             ]
         }
+    },
+    {
+        "Path": "/LockDynamicSlots",
+        "Method": "POST",
+        "Status": 200,
+        "Response": {
+            "SlotOrdinalNumber": 12345
+        }
     }
 ]
