@@ -32,7 +32,7 @@ namespace NBS.Appointments.Service.Api.Tests
         [Fact]
         public async Task GetAvailability_RespondsOk_WithValidRequest()
         {
-            var from = DateTime.Today.AddDays(1);
+            var from = DateTime.Today;
             var until = from.AddDays(10);
             var payload = new ApiRequest(new[] { "qflow:1234" }, from.ToString("yyyy-MM-dd"), until.ToString("yyyy-MM-dd"), "qflow:0:12345:NotSet");
             var jsonContent = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");

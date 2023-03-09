@@ -51,7 +51,7 @@ namespace NBS.Appointments.Service.Validators
 
         private bool BeDateInTheFuture(DateTime date)
         {
-            return DateTime.Compare(date, DateTime.Today) > 0;
+            return DateTime.Compare(date, DateTime.Today) >= 0;
         }
 
         private bool BeValidSiteIdentifier(string[] siteIdentifiers)
