@@ -57,7 +57,7 @@ namespace NBS.Appointments.Service.Core.Services
             return JsonConvert.DeserializeObject<SiteAvailabilityResponse[]>(responseBody);
         }
 
-        public async Task<AvailabilityByHourResponse> GetSiteSlotAvailability(int siteId, DateTime date, int dose, string vaccineType, string externalReference)
+        public async Task<AvailabilityByHourResponse> GetSiteSlotAvailability(int siteId, DateTime date, string dose, string vaccineType, string externalReference)
         {
             if (string.IsNullOrWhiteSpace(vaccineType))
                 throw new ArgumentException($"A value for {nameof(vaccineType)} must be provided.");
@@ -66,7 +66,7 @@ namespace NBS.Appointments.Service.Core.Services
             {
                 { "Date", $"{date:yyyy-MM-dd}" },
                 { "SiteId", siteId.ToString() },
-                { "Dose", dose.ToString() },
+                { "Dose", dose },
                 { "VaccineType", vaccineType },
                 { "ExternalReference", externalReference }
             };
