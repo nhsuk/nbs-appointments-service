@@ -55,7 +55,7 @@ namespace NBS.Appointments.Service.Controllers
                 serviceDescriptor.Vaccine,
                 serviceDescriptor.Reference);
 
-            return new OkObjectResult(qflowResponse.Select(x => AvailabilityByDaysResponse.FromQflowResponse(x, request.Service)));
+            return new OkObjectResult(qflowResponse.Select(x => AvailabilityByDayResponse.FromQflowResponse(x, request.Service)));
         }
 
         [HttpPost]
