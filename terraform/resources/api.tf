@@ -55,3 +55,9 @@ resource "azurerm_role_assignment" "acrpull_role" {
   role_definition_name = "AcrPull"
   principal_id         = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
 }
+
+resource "azurerm_role_assignment" "keyvault_secrets_user" {
+  scope = azurerm_key_vault.nbs_appts_key_vault.id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
+}
