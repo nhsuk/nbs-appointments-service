@@ -55,7 +55,7 @@
         }
     },
     {
-        "Path": "/LockDynamicSlots",
+        "Path": "/svcCalendar.svc/rest/LockDynamicSlots",
         "Method": "POST",
         "Status": 200,
         "Response": {

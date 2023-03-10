@@ -88,7 +88,7 @@ namespace NBS.Appointments.Service.Core.Services
                 LockDuration = lockDuration
             };
 
-            var endpointUrl = $"{_options.BaseUrl}/LockDynamicSlots";
+            var endpointUrl = $"{_options.BaseUrl}/svcCalendar.svc/rest/LockDynamicSlots";
             var requestContent = new StringContent(JsonConvert.SerializeObject(request));
 
             var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, requestContent);
