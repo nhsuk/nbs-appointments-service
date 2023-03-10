@@ -3,8 +3,7 @@
     public class AvailabilityByHourResponse
     {
         public int SiteId { get; set; }
-        public string Type { get; set; }
-        public DateTime Date { get; set; }
-        public IList<AvailabilityHourResponse> AvailabilityByHour { get; set; }
+        public string VaccineType { get; set; }
+        public List<QflowAvailabilityHourResponse> Availability { get; set; }
     }
 }

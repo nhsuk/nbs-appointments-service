@@ -70,7 +70,7 @@ namespace NBS.Appointments.Service.Core.Services
                 { "VaccineType", vaccineType },
                 { "ExternalReference", externalReference }
             };
-            var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/GetSiteDoseAvailability", query);
+            var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/qflow/GetSiteDoseAvailability", query);
 
             var response = await Execute(query, endpointUrl);
             var responseBody = await response.Content.ReadAsStringAsync();

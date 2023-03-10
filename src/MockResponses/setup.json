@@ -24,32 +24,54 @@
         "Response": "12345"
     },
     {
-        "Path": "/GetSiteDoseAvailability",
+        "Path": "/qflow/GetSiteDoseAvailability",
         "Method": "GET",
         "Status": 200,
         "Response": {
-            "SiteId": 100,
-            "Type": "18TO65COVID",
-            "Date": "2023-03-25",
-            "AvailabilityByHour": [
+            "SiteId": 151,
+            "VaccineType": "39115611000001103",
+            "Availability": [
                 {
-                    "Hour": "09",
-                    "Count": 10
-                },{
-                    "Hour": "10",
-                    "Count": 10
+                    "ServiceId": 1080,
+                    "CalendarId": 108468,
+                    "AppointmentTypeId": 2,
+                    "Duration": 5,
+                    "Time": "09:00:00"
                 },
                 {
-                    "Hour": "11",
-                    "Count": 12
+                    "ServiceId": 1080,
+                    "CalendarId": 108468,
+                    "AppointmentTypeId": 2,
+                    "Duration": 5,
+                    "Time": "09:05:00"
                 },
                 {
-                    "Hour": "13",
-                    "Count": 6
+                    "ServiceId": 1080,
+                    "CalendarId": 108468,
+                    "AppointmentTypeId": 2,
+                    "Duration": 5,
+                    "Time": "09:10:00"
                 },
                 {
-                    "Hour": "15",
-                    "Count": 7
+                    "ServiceId": 1080,
+                    "CalendarId": 108468,
+                    "AppointmentTypeId": 2,
+                    "Duration": 5,
+                    "Time": "10:15:00"
+                },
+                {
+                    "ServiceId": 1080,
+                    "CalendarId": 108468,
+                    "AppointmentTypeId": 2,
+                    "Duration": 5,
+                    "Time": "11:20:00"
+                },
+                {
+                    "ServiceId": 1080,
+                    "CalendarId": 108468,
+                    "AppointmentTypeId": 2,
+                    "Duration": 5,
+                    "Time": "12:25:00"
                 }
             ]
         }
