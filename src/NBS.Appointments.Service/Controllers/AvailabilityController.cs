@@ -80,7 +80,7 @@ namespace NBS.Appointments.Service.Controllers
                 serviceDescriptor.Vaccine,
                 serviceDescriptor.Reference);
 
-            return Ok(AvailabilityHourResponse.FromQflowResponse(qflowResponse, request.Service, request.Date));
+            return base.Ok(Models.AvailabilityHourResponse.FromQflowResponse(qflowResponse, request.Service, request.Date));
         }
     }
 }

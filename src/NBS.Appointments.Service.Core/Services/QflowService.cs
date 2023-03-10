@@ -57,7 +57,7 @@ namespace NBS.Appointments.Service.Core.Services
             return JsonConvert.DeserializeObject<SiteAvailabilityResponse[]>(responseBody);
         }
 
-        public async Task<AvailabilityByHourResponse> GetSiteSlotAvailability(int siteId, DateTime date, string dose, string vaccineType, string externalReference)
+        public async Task<SiteSlotsResponse> GetSiteSlotAvailability(int siteId, DateTime date, string dose, string vaccineType, string externalReference)
         {
             if (string.IsNullOrWhiteSpace(vaccineType))
                 throw new ArgumentException($"A value for {nameof(vaccineType)} must be provided.");
@@ -70,12 +70,12 @@ namespace NBS.Appointments.Service.Core.Services
                 { "VaccineType", vaccineType },
                 { "ExternalReference", externalReference }
             };
-            var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/qflow/GetSiteDoseAvailability", query);
+            var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest/GetSiteDoseAvailability", query);
 
             var response = await Execute(query, endpointUrl);
             var responseBody = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<AvailabilityByHourResponse>(responseBody);
+            return JsonConvert.DeserializeObject<SiteSlotsResponse>(responseBody);
         }
 
         private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl)

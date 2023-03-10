@@ -1,6 +1,6 @@
 ﻿namespace NBS.Appointments.Service.Core.Dtos.Qflow
 {
-    public class QflowAvailabilityHourResponse
+    public class SiteSlotAvailabilityResponse
     {
         public int ServiceId { get; set; }
         public int CalendarId { get; set; }

@@ -31,7 +31,7 @@ namespace NBS.Appointments.Service.Models
             public int Count { get; set; }
         }
 
-        public static AvailabilityHourResponse FromQflowResponse(AvailabilityByHourResponse qflowResponse, string vaccineType, DateTime date)
+        public static AvailabilityHourResponse FromQflowResponse(SiteSlotsResponse qflowResponse, string vaccineType, DateTime date)
         {
             var response = new AvailabilityHourResponse
             {

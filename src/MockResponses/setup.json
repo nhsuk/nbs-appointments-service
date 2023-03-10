@@ -24,7 +24,7 @@
         "Response": "12345"
     },
     {
-        "Path": "/qflow/GetSiteDoseAvailability",
+        "Path": "/svcCustomAppointment.svc/rest/GetSiteDoseAvailability",
         "Method": "GET",
         "Status": 200,
         "Response": {
