@@ -27,15 +27,15 @@ namespace NBS.Appointments.Service.Unit.Tests
                 }
             };
 
-            var actual = AvailabilityQueryResponse.FromQflowResponse(testData, "test-service");
+            var actual = AvailabilityByDayResponse.FromQflowResponse(testData, "test-service");
 
-            var expected = new AvailabilityQueryResponse
+            var expected = new AvailabilityByDayResponse
             {
                 Site = "qflow:12",
                 Service = "test-service",
-                Availability = new AvailabilityQueryResponse.AvailabilityEntry[]
+                Availability = new AvailabilityByDayResponse.AvailabilityEntry[]
                 {
-                    new AvailabilityQueryResponse.AvailabilityEntry
+                    new AvailabilityByDayResponse.AvailabilityEntry
                     {
                         Date = "2023-01-01",
                         Am = 10,

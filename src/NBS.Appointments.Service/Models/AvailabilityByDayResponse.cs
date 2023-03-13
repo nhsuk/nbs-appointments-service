@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace NBS.Appointments.Service.Models
 {
-    public class AvailabilityQueryResponse
+    public class AvailabilityByDayResponse
     {
         [JsonProperty("site")]
         public string Site { get; set; }
@@ -22,7 +22,7 @@ namespace NBS.Appointments.Service.Models
             public int Pm { get; set; }
         }
 
-        public static AvailabilityQueryResponse FromQflowResponse(Dtos.Qflow.SiteAvailabilityResponse qflowResponse, string service) => new AvailabilityQueryResponse
+        public static AvailabilityByDayResponse FromQflowResponse(Dtos.Qflow.SiteAvailabilityResponse qflowResponse, string service) => new AvailabilityByDayResponse
         {
             Site = $"qflow:{qflowResponse.SiteId}",
             Service = service,
