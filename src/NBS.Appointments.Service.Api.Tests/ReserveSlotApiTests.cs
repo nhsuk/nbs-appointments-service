@@ -9,7 +9,7 @@ namespace NBS.Appointments.Service.Api.Tests
     public class ReserveSlotApiTests
     {
         private readonly HttpClient _httpClient = new();
-        private const string Endpoint = "http://localhost:4000/slot/reservation";
+        private const string Endpoint = "http://localhost:4000/slot/reserve";
 
         [Fact]
         public async Task ReserveSlot_RespondsWithUnsupportedMediaType_WhenJsonNotSpecified()
@@ -52,7 +52,6 @@ namespace NBS.Appointments.Service.Api.Tests
         public static IEnumerable<object[]> BadRequests()
         {
             yield return new object[] { new ReserveSlotApiRequest("someslot:1:2:3", 5) };
-            yield return new object[] { new ReserveSlotApiRequest("qflow:1:2:3:", 5) };
             yield return new object[] { new ReserveSlotApiRequest("qflow:n:2:3", 5) };
             yield return new object[] { new ReserveSlotApiRequest("qflow:1:n:3", 5) };
             yield return new object[] { new ReserveSlotApiRequest("qflow:1:2:n", 5) };

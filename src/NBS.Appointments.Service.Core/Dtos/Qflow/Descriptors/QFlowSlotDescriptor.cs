@@ -2,12 +2,12 @@
 {
     public class QFlowSlotDescriptor
     {
-        public static QFlowSlotDescriptor FromString(string slotUrn)
+        public static QFlowSlotDescriptor FromString(string descriptor)
         {
-            var parts = slotUrn.Split(':');
+            var parts = descriptor.Split(':');
 
             if (parts.Length != 4)
-                throw new FormatException("Slot urn is not formatted correctly.");
+                throw new FormatException("Slot descriptor is not formatted correctly.");
 
             if (parts[0] != "qflow")
                 throw new FormatException("String was not a qflow slot descriptor.");
@@ -20,6 +20,9 @@
 
             if (!int.TryParse(parts[3], out var endTime))
                 throw new FormatException("End time is in invalid format.");
+
+            if (startTime >= endTime)
+                throw new ArgumentException("Start time must be before end time.");
 
             return new QFlowSlotDescriptor(calendarId, startTime, endTime);
         }

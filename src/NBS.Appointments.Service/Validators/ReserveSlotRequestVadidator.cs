@@ -5,7 +5,7 @@ using System;
 
 namespace NBS.Appointments.Service.Validators
 {
-    public class ReserveSlotRequestVadidator : AbstractValidator<LockSlotRequest>
+    public class ReserveSlotRequestVadidator : AbstractValidator<ReserveSlotRequest>
     {
         public ReserveSlotRequestVadidator()
         {
@@ -27,7 +27,7 @@ namespace NBS.Appointments.Service.Validators
                 QFlowSlotDescriptor.FromString(slotDescriptor);
                 return true;
             }
-            catch (FormatException)
+            catch (Exception)
             {
                 return false;
             }

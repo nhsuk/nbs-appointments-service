@@ -14,22 +14,23 @@ namespace NBS.Appointments.Service.Controllers
     public class SlotController : ControllerBase
     {
         private readonly IQflowService _qflowService;
-        private readonly ReserveSlotRequestVadidator _lockSlotRequestVadidator;
+        private readonly RequestValidatorFactory _requestValidatorFactory;
 
-        public SlotController(IQflowService qflowService, ReserveSlotRequestVadidator lockSlotRequestValidator)
+        public SlotController(IQflowService qflowService, RequestValidatorFactory requestValidatorFactory)
         {
             _qflowService = qflowService
                 ?? throw new ArgumentNullException(nameof(qflowService));
 
-            _lockSlotRequestVadidator = lockSlotRequestValidator
-                ?? throw new ArgumentNullException(nameof(lockSlotRequestValidator));
+            _requestValidatorFactory = requestValidatorFactory
+                ?? throw new ArgumentNullException(nameof(requestValidatorFactory));
         }
 
         [HttpPost]
-        [Route("reservation")]
-        public async Task<IActionResult> ReserveSlot([FromBody] LockSlotRequest request)
+        [Route("reserve")]
+        public async Task<IActionResult> ReserveSlot([FromBody] ReserveSlotRequest request)
         {
-            var validationResult = _lockSlotRequestVadidator.Validate(request);
+            var validator = _requestValidatorFactory.GetValidator<ReserveSlotRequest>();
+            var validationResult = validator.Validate(request);
 
             if (!validationResult.IsValid)
             {

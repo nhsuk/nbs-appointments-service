@@ -2,7 +2,7 @@
 
 namespace NBS.Appointments.Service.Models
 {
-    public class LockSlotRequest
+    public class ReserveSlotRequest
     {
         [JsonProperty("slot")]
         public string Slot { get; set; }

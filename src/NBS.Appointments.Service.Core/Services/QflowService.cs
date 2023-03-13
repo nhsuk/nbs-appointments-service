@@ -96,8 +96,7 @@ namespace NBS.Appointments.Service.Core.Services
 
             _ = int.TryParse(responseBody, out var slotOrdinalNumber);
 
-            var responseModel = new ReserveSlotResponse(slotOrdinalNumber);
-            return responseModel;
+            return new ReserveSlotResponse(slotOrdinalNumber);
         }
 
         private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl, HttpMethod method, HttpContent? content = null)
