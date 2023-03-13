@@ -94,7 +94,10 @@ namespace NBS.Appointments.Service.Core.Services
             var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, requestContent);
             var responseBody = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<ReserveSlotResponse>(responseBody);
+            _ = int.TryParse(responseBody, out var slotOrdinalNumber);
+
+            var responseModel = new ReserveSlotResponse(slotOrdinalNumber);
+            return responseModel;
         }
 
         private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl, HttpMethod method, HttpContent? content = null)

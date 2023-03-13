@@ -58,8 +58,6 @@
         "Path": "/svcCalendar.svc/rest/LockDynamicSlots",
         "Method": "POST",
         "Status": 200,
-        "Response": {
-            "SlotOrdinalNumber": 12345
-        }
+        "Response": "12345"
     }
 ]

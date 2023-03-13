@@ -2,6 +2,11 @@
 {
     public class ReserveSlotResponse
     {
+        public ReserveSlotResponse(int slotOrdinalNumber)
+        {
+            SlotOrdinalNumber = slotOrdinalNumber;
+        }
+
         public int SlotOrdinalNumber { get; set; }
     }
 }
