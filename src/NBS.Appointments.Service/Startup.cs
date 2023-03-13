@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NBS.Appointments.Service.Core;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NBS.Appointments.Service
 {
@@ -22,12 +26,28 @@ namespace NBS.Appointments.Service
             services.Configure<QflowOptions>(Configuration.GetSection("Qflow"));
 
             services.AddHttpClient();
-            services.AddControllers();
+            services.AddControllers().ConfigureApiBehaviorOptions(options =>
+            {
+                options.InvalidModelStateResponseFactory = context => new BadRequestObjectResult(CreateErrorInfo(context.ModelState));
+            });
             services.AddQflowClient();
             services.AddInMemoryStoreMutex();
             services
                .RegisterValidators()
                .AddSwaggerGen();
+        }
+
+        private IEnumerable<string> CreateErrorInfo(ModelStateDictionary modelState)
+        {
+            var errors = new List<string>();
+            foreach (var key in modelState.Keys)
+            { 
+                foreach(var error in modelState[key].Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }                
+            }
+            return errors;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
