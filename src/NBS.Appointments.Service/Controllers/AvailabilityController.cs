@@ -1,14 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using NBS.Appointments.Service.Core.Interfaces.Services;
 using NBS.Appointments.Service.Models;
 using NBS.Appointments.Service.Core.Dtos.Qflow;
 using NBS.Appointments.Service.Core;
-using System;
-using System.Collections.Generic;
-using NBS.Appointments.Service.Validators;
 using NBS.Appointments.Service.Extensions;
+using NBS.Appointments.Service.Validators;
 
 namespace NBS.Appointments.Service.Controllers
 {
@@ -16,33 +16,33 @@ namespace NBS.Appointments.Service.Controllers
     [Route("availability")]
     public class AvailabilityController : Controller
     {
-        private readonly IQflowService _qflowService;
-        private readonly AvailabilityByHourRequestValidator _availabilityByHourRequestValidator;
+        private readonly IQflowService _qflowService;        
+        private readonly RequestValidatorFactory _validatorFactory;
 
-        public AvailabilityController(IQflowService qflowService, AvailabilityByHourRequestValidator availabilityByHourRequestValidator)
+        public AvailabilityController(
+            IQflowService qflowService,
+            RequestValidatorFactory validatorFactory)
         {
-            _qflowService = qflowService;
-
-            _availabilityByHourRequestValidator = availabilityByHourRequestValidator
-                ?? throw new ArgumentNullException(nameof(availabilityByHourRequestValidator));
+            _qflowService = qflowService ?? throw new ArgumentNullException(nameof(qflowService));
+            _validatorFactory = validatorFactory ?? throw new ArgumentNullException(nameof(validatorFactory));
         }
 
         [HttpPost]
-        [Route("query")]
-        public async Task<IActionResult> Query([FromBody] AvailabilityQueryRequest request)
+        [Route("days")]
+        public async Task<IActionResult> Days([FromBody] AvailabilityByDayRequest request)
         {
-            QflowServiceDescriptor serviceDescriptor;
-            IEnumerable<SiteUrn> siteUrns;
+            var validator = _validatorFactory.GetValidator<AvailabilityByDayRequest>();
+            
+            var validationResult = validator.Validate(request);
 
-            try
+            if (!validationResult.IsValid)
             {
-                serviceDescriptor = QflowServiceDescriptor.FromString(request.Service);
-                siteUrns = request.Sites.Select(s => SiteUrnParser.Parse(s)).ToList();
+                var errorMessages = validationResult.Errors.ToErrorMessages();
+                return BadRequest(errorMessages);
             }
-            catch (FormatException ex)
-            {
-                return BadRequest(new {Message = ex.Message});
-            }
+
+            QflowServiceDescriptor serviceDescriptor = QflowServiceDescriptor.FromString(request.Service);
+            IEnumerable<SiteUrn> siteUrns = request.Sites.Select(s => SiteUrnParser.Parse(s)).ToList();
 
             if(siteUrns.Any(urn => urn.Scheme != "qflow"))
                 return BadRequest(new {Message = "Only qflow sites are currently supported"});
@@ -55,14 +55,15 @@ namespace NBS.Appointments.Service.Controllers
                 serviceDescriptor.Vaccine,
                 serviceDescriptor.Reference);
 
-            return new OkObjectResult(qflowResponse.Select(x => AvailabilityQueryResponse.FromQflowResponse(x, request.Service)));
+            return new OkObjectResult(qflowResponse.Select(x => AvailabilityByDayResponse.FromQflowResponse(x, request.Service)));
         }
 
         [HttpPost]
         [Route("hours")]
         public async Task<IActionResult> Hours([FromBody] AvailabilityByHourRequest request)
         {
-            var validationResult = _availabilityByHourRequestValidator.Validate(request);
+            var validator = _validatorFactory.GetValidator<AvailabilityByHourRequest>();
+            var validationResult = validator.Validate(request);
 
             if (!validationResult.IsValid)
             {

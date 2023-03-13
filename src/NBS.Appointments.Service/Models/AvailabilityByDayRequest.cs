@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace NBS.Appointments.Service.Models
 {
-    public class AvailabilityQueryRequest
+    public class AvailabilityByDayRequest
     {
         [JsonProperty("sites")]
         public string[] Sites { get; set; }
