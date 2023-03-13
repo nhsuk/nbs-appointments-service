@@ -30,7 +30,6 @@ namespace NBS.Appointments.Service.Validators
                 .Must(BeAValidDate)
                 .WithMessage("Until date must be a valid date.")
                 .Must((req, until) => AfterAnotherDate(until, req.From))
-                .WithMessage("Until must be the current date or a date in the future.");
 
             RuleFor(x => x.Service)
                 .NotEmpty()
