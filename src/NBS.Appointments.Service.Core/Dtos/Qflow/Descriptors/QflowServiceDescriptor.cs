@@ -1,4 +1,4 @@
-namespace NBS.Appointments.Service.Core.Dtos.Qflow
+namespace NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors
 {
     public class QflowServiceDescriptor
     {
@@ -9,11 +9,11 @@ namespace NBS.Appointments.Service.Core.Dtos.Qflow
             if (parts.Length != 4)
                 throw new FormatException("Descriptor is not formatted correctly");
 
-            if(parts[0] != "qflow")
+            if (parts[0] != "qflow")
                 throw new FormatException("String was not a qflow service descriptor");
 
             return new QflowServiceDescriptor(parts[1], parts[2], parts[3]);
-        }        
+        }
 
         public QflowServiceDescriptor(string dose, string vaccine, string reference)
         {
@@ -23,7 +23,7 @@ namespace NBS.Appointments.Service.Core.Dtos.Qflow
         }
 
         public string Dose { get; init; }
-        public string Vaccine {get;init;}
-        public string Reference {get;init;}
+        public string Vaccine { get; init; }
+        public string Reference { get; init; }
     }
 }

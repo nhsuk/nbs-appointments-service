@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using NBS.Appointments.Service.Core.Interfaces.Services;
 using NBS.Appointments.Service.Models;
-using NBS.Appointments.Service.Core.Dtos.Qflow;
 using NBS.Appointments.Service.Core;
-using NBS.Appointments.Service.Extensions;
+using System.Collections.Generic;
 using NBS.Appointments.Service.Validators;
+using NBS.Appointments.Service.Extensions;
+using NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors;
 
 namespace NBS.Appointments.Service.Controllers
 {
@@ -16,7 +16,7 @@ namespace NBS.Appointments.Service.Controllers
     [Route("availability")]
     public class AvailabilityController : Controller
     {
-        private readonly IQflowService _qflowService;        
+        private readonly IQflowService _qflowService;
         private readonly RequestValidatorFactory _validatorFactory;
 
         public AvailabilityController(

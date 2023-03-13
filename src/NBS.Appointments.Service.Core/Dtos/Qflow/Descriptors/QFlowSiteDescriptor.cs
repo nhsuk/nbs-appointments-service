@@ -1,4 +1,4 @@
-﻿namespace NBS.Appointments.Service.Core.Dtos.Qflow
+﻿namespace NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors
 {
     public class QFlowSiteDescriptor
     {

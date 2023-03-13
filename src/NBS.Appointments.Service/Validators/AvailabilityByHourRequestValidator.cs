@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using NBS.Appointments.Service.Core.Dtos.Qflow;
+using NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors;
 using NBS.Appointments.Service.Models;
 using System;
 using System.Linq;
