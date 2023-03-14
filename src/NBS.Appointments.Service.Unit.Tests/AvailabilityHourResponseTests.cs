@@ -15,9 +15,9 @@ namespace NBS.Appointments.Service.Unit.Tests
             {
                 SiteId = 123,
                 VaccineType = "39115611000001103",
-                Availability = new List<Core.Dtos.Qflow.SiteSlotAvailabilityResponse>
+                Availability = new List<SiteSlotAvailabilityResponse>
                 {
-                    new Core.Dtos.Qflow.SiteSlotAvailabilityResponse
+                    new SiteSlotAvailabilityResponse
                     {
                         AppointmentTypeId = 1,
                         CalendarId = 1,
@@ -25,7 +25,7 @@ namespace NBS.Appointments.Service.Unit.Tests
                         ServiceId = 1,
                         Time = new TimeSpan(9, 0, 0)
                     },
-                    new Core.Dtos.Qflow.SiteSlotAvailabilityResponse
+                    new SiteSlotAvailabilityResponse
                     {
                         AppointmentTypeId = 1,
                         CalendarId = 1,
@@ -33,7 +33,7 @@ namespace NBS.Appointments.Service.Unit.Tests
                         ServiceId = 1,
                         Time = new TimeSpan(10, 0, 0)
                     },
-                    new Core.Dtos.Qflow.SiteSlotAvailabilityResponse
+                    new SiteSlotAvailabilityResponse
                     {
                         AppointmentTypeId = 1,
                         CalendarId = 1,
@@ -44,20 +44,21 @@ namespace NBS.Appointments.Service.Unit.Tests
                 }
             };
 
-            var expected = new Models.AvailabilityHourResponse
+            var expected = new AvailabilityHourResponse
             {
                 SiteId = "123",
                 Date = DateTime.Today,
                 Type = "39115611000001103",
                 AvailabilityByHour = new List<AvailabilityHour>
                 {
-                    new AvailabilityHour("9", 1),
                     new AvailabilityHour("10", 1),
                     new AvailabilityHour("11", 1)
                 }
             };
 
-            var actual = Models.AvailabilityHourResponse.FromQflowResponse(testData, testData.VaccineType, DateTime.Today);
+            var currentTestDate = new DateTime(2023, 03, 15, 10, 00, 00);
+
+            var actual = FromQflowResponse(testData, testData.VaccineType, DateTime.Today, currentTestDate);
 
             actual.Should().BeEquivalentTo(expected);
         }
