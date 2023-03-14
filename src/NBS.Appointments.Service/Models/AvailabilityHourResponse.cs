@@ -55,15 +55,11 @@ namespace NBS.Appointments.Service.Models
                 return response;
             }
 
-            var currentHour = currentDate.Hour;
-            var currentMinute = currentDate.Minute;
+            var currentTime = currentDate.TimeOfDay;
 
             foreach (var slotTime in availableSlotTimes)
             {
-                if (slotTime.Hours < currentHour)
-                    continue;
-
-                if (slotTime.Hours == currentHour && slotTime.Minutes < currentMinute)
+                if (slotTime < currentTime)
                     continue;
 
                 var count = qflowResponse.Availability
