@@ -31,7 +31,7 @@ namespace NBS.Appointments.Service.Models
             public int Count { get; set; }
         }
 
-        public static AvailabilityHourResponse FromQflowResponse(SiteSlotsResponse qflowResponse, string vaccineType, DateTime date)
+        public static AvailabilityHourResponse FromQflowResponse(SiteSlotsResponse qflowResponse, string vaccineType, DateTime date, DateTime currentDate)
         {
             var response = new AvailabilityHourResponse
             {
@@ -40,28 +40,37 @@ namespace NBS.Appointments.Service.Models
                 Type = vaccineType
             };
 
-            var availableHours = qflowResponse.Availability
+            var availableSlotTimes = qflowResponse.Availability
                 .Select(x => x)
-                .OrderBy(x => x.Time.Hours)
-                .GroupBy(x => x.Time.Hours)
+                .OrderBy(x => x.Time)
+                .GroupBy(x => x.Time)
                 .Select(x => x.Key)
                 .ToList();
 
             var availabilityByHour = new List<AvailabilityHour>();
 
-            if (!availableHours.Any())
+            if (!availableSlotTimes.Any())
             {
                 response.AvailabilityByHour = availabilityByHour;
                 return response;
             }
 
-            foreach (var hour in availableHours)
+            var currentHour = currentDate.Hour;
+            var currentMinute = currentDate.Minute;
+
+            foreach (var slotTime in availableSlotTimes)
             {
+                if (slotTime.Hours < currentHour)
+                    continue;
+
+                if (slotTime.Hours == currentHour && slotTime.Minutes < currentMinute)
+                    continue;
+
                 var count = qflowResponse.Availability
-                    .Where(x => x.Time.Hours == hour)
+                    .Where(x => x.Time.Hours == slotTime.Hours)
                     .Count();
 
-                availabilityByHour.Add(new AvailabilityHour(hour.ToString(), count));
+                availabilityByHour.Add(new AvailabilityHour(slotTime.Hours.ToString(), count));
             }
 
             response.AvailabilityByHour = availabilityByHour;
