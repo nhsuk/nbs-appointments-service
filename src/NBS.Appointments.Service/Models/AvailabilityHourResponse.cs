@@ -41,8 +41,6 @@ namespace NBS.Appointments.Service.Models
             };
 
             var availableSlotTimes = qflowResponse.Availability
-                .Select(x => x)
-                .OrderBy(x => x.Time)
                 .GroupBy(x => x.Time)
                 .Select(x => x.Key)
                 .ToList();
@@ -57,9 +55,11 @@ namespace NBS.Appointments.Service.Models
 
             var currentTime = currentDate.TimeOfDay;
 
+            var isDateInTheFuture = DateTime.Compare(date, currentDate) > 0;
+
             foreach (var slotTime in availableSlotTimes)
             {
-                if (slotTime < currentTime)
+                if (!isDateInTheFuture && slotTime < currentTime)
                     continue;
 
                 var count = qflowResponse.Availability
