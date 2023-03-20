@@ -8,5 +8,6 @@ namespace NBS.Appointments.Service.Core.Interfaces.Services
         public Task<SiteAvailabilityResponse[]> GetSiteAvailability(IEnumerable<string> siteIds, DateTime startDate, DateTime endDate, string dose, string vaccine, string externalReference);
 
         public Task<SiteSlotsResponse> GetSiteSlotAvailability(int siteId, DateTime date, string dose, string vaccineType, string externalReference);
+        public Task<ReserveSlotResponse> ReserveSlot(int calendarId, int startTime, int endTime, int lockDuration);
     }
 }
