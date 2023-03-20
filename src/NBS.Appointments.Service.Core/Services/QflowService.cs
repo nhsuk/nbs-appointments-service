@@ -93,8 +93,7 @@ namespace NBS.Appointments.Service.Core.Services
 
             var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, requestContent);
             var responseBody = await response.Content.ReadAsStringAsync();
-
-            _ = int.TryParse(responseBody, out var slotOrdinalNumber);
+            var slotOrdinalNumber = int.Parse(responseBody);
 
             return new ReserveSlotResponse(slotOrdinalNumber);
         }
