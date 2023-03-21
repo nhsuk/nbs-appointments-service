@@ -40,13 +40,20 @@ namespace NBS.Appointments.Service.Controllers
 
             var slotDescriptor = QFlowSlotDescriptor.FromString(request.Slot);
 
-            var response = await _qflowService.ReserveSlot(
-                slotDescriptor.CalendarId,
-                slotDescriptor.StartTime,
-                slotDescriptor.EndTime,
-                request.LockDuration);
+            try
+            {
+                var response = await _qflowService.ReserveSlot(
+                    slotDescriptor.CalendarId,
+                    slotDescriptor.StartTime,
+                    slotDescriptor.EndTime,
+                    request.LockDuration);
 
-            return Ok(response);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
