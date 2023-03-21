@@ -44,7 +44,7 @@ namespace NBS.Appointments.Service.Unit.Tests
                 }
             };
 
-            var currentTestDate = new DateTime(2023, 03, 15, 10, 00, 00);
+            var currentTestDate = new DateTime(2023, 03, 15, 09, 55, 00);
 
             var expected = new AvailabilityHourResponse
             {

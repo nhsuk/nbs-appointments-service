@@ -31,17 +31,22 @@ namespace NBS.Appointments.Service.Models
             public int Count { get; set; }
         }
 
-        public static AvailabilityHourResponse FromQflowResponse(SiteSlotsResponse qflowResponse, string vaccineType, DateTime date, DateTime currentDate)
+        public static AvailabilityHourResponse FromQflowResponse(SiteSlotsResponse qflowResponse, string vaccineType, DateTime requestDate, DateTime currentDate)
         {
             var response = new AvailabilityHourResponse
             {
-                Date = date,
+                Date = requestDate,
                 SiteId = qflowResponse.SiteId.ToString(),
                 Type = vaccineType
             };
 
             var availableSlotTimes = qflowResponse.Availability
                 .GroupBy(x => x.Time)
+                .Select(x => x.Key)
+                .ToList();
+
+            var availableHours = qflowResponse.Availability
+                .GroupBy(x => x.Time.Hours)
                 .Select(x => x.Key)
                 .ToList();
 
@@ -55,18 +60,21 @@ namespace NBS.Appointments.Service.Models
 
             var currentTime = currentDate.TimeOfDay;
 
-            var isDateInTheFuture = DateTime.Compare(date, currentDate) > 0;
+            var isDateInTheFuture = DateTime.Compare(requestDate.Date, currentDate.Date) >= 0;
 
-            foreach (var slotTime in availableSlotTimes)
+            foreach (var hour in availableHours)
             {
-                if (!isDateInTheFuture && slotTime < currentTime)
+                if (!isDateInTheFuture)
                     continue;
 
-                var count = qflowResponse.Availability
-                    .Where(x => x.Time.Hours == slotTime.Hours)
+                var slotTimesInHour = availableSlotTimes
+                    .Where(x => x.Hours == hour && x > currentTime)
                     .Count();
 
-                availabilityByHour.Add(new AvailabilityHour(slotTime.Hours.ToString(), count));
+                if (slotTimesInHour == 0)
+                    continue;
+
+                availabilityByHour.Add(new AvailabilityHour(hour.ToString(), slotTimesInHour));
             }
 
             response.AvailabilityByHour = availabilityByHour;
