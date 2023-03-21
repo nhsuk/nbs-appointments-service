@@ -33,6 +33,10 @@ resource "azurerm_key_vault_secret" "kv_qflow_username" {
   value        = "default"
   key_vault_id = azurerm_key_vault.nbs_appts_key_vault.id
 
+  depends_on = [
+    azurerm_role_assignment.keyvault_dataowner
+  ]
+
   lifecycle {
     ignore_changes = [
       value      
@@ -44,6 +48,10 @@ resource "azurerm_key_vault_secret" "kv_qflow_password" {
   name         = "qflowpassword"
   value        = "default"
   key_vault_id = azurerm_key_vault.nbs_appts_key_vault.id
+
+  depends_on = [
+    azurerm_role_assignment.keyvault_dataowner
+  ]
 
   lifecycle {
     ignore_changes = [
