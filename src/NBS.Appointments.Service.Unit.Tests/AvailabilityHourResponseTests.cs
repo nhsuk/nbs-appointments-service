@@ -44,10 +44,12 @@ namespace NBS.Appointments.Service.Unit.Tests
                 }
             };
 
+            var currentTestDate = new DateTime(2023, 03, 15, 10, 00, 00);
+
             var expected = new AvailabilityHourResponse
             {
                 SiteId = "123",
-                Date = DateTime.Today,
+                Date = currentTestDate,
                 Type = "39115611000001103",
                 AvailabilityByHour = new List<AvailabilityHour>
                 {
@@ -56,9 +58,7 @@ namespace NBS.Appointments.Service.Unit.Tests
                 }
             };
 
-            var currentTestDate = new DateTime(2023, 03, 15, 10, 00, 00);
-
-            var actual = FromQflowResponse(testData, testData.VaccineType, DateTime.Today, currentTestDate);
+            var actual = FromQflowResponse(testData, testData.VaccineType, currentTestDate, currentTestDate);
 
             actual.Should().BeEquivalentTo(expected);
         }
