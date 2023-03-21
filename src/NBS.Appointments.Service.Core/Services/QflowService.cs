@@ -5,6 +5,8 @@ using Polly;
 using Microsoft.Extensions.Options;
 using NBS.Appointments.Service.Core.Dtos.Qflow;
 using Newtonsoft.Json;
+using System.Text;
+using System.Net.Mime;
 
 namespace NBS.Appointments.Service.Core.Services
 {
@@ -89,7 +91,7 @@ namespace NBS.Appointments.Service.Core.Services
             };
 
             var endpointUrl = $"{_options.BaseUrl}/svcCalendar.svc/rest/LockDynamicSlots";
-            var requestContent = new StringContent(JsonConvert.SerializeObject(request));
+            var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, MediaTypeNames.Application.Json);
 
             var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, requestContent);
             var responseBody = await response.Content.ReadAsStringAsync();
