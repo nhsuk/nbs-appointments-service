@@ -24,7 +24,7 @@ namespace NBS.Appointments.Service.Api.Tests
         [Fact]
         public async Task AvailabilityByHours_ShouldReturnBadRequest_WhenRequestModelFailsValidation()
         {
-            var request = new AvailabilityByHourRequest
+            var request = new SiteAvailabilityRequest
             {
                 Service = string.Empty,
                 Date = DateTime.Today,
@@ -40,7 +40,7 @@ namespace NBS.Appointments.Service.Api.Tests
         [Fact]
         public async Task AvailabilityByHours_ShouldReturnOkResponse_WhenRequestIsValid()
         {
-            var request = new AvailabilityByHourRequest
+            var request = new SiteAvailabilityRequest
             {
                 Service = "qflow:0:FLU18TO65:NotSet",
                 Date = DateTime.Today.AddDays(1),

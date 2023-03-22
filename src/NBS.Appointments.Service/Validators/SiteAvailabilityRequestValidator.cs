@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace NBS.Appointments.Service.Validators
 {
-    public class AvailabilityByHourRequestValidator : AbstractValidator<AvailabilityByHourRequest>
+    public class SiteAvailabilityRequestValidator : AbstractValidator<SiteAvailabilityRequest>
     {
-        public AvailabilityByHourRequestValidator()
+        public SiteAvailabilityRequestValidator()
         {
             RuleFor(x => x.Site)
                 .NotEmpty()
