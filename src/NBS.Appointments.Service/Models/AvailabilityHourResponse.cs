@@ -60,16 +60,27 @@ namespace NBS.Appointments.Service.Models
 
             var currentTime = currentDate.TimeOfDay;
 
-            var isDateInTheFuture = DateTime.Compare(requestDate.Date, currentDate.Date) >= 0;
+            var dateDifference = DateTime.Compare(requestDate.Date, currentDate.Date);
 
             foreach (var hour in availableHours)
             {
-                if (!isDateInTheFuture)
+                if (dateDifference < 0)
                     continue;
 
-                var slotTimesInHour = availableSlotTimes
-                    .Where(x => x.Hours == hour && x > currentTime)
-                    .Count();
+                int slotTimesInHour;
+
+                if (dateDifference == 0)
+                {
+                    slotTimesInHour = availableSlotTimes
+                        .Where(x => x.Hours == hour && x > currentTime)
+                        .Count();
+                }
+                else
+                {
+                    slotTimesInHour = availableSlotTimes
+                        .Where(x => x.Hours == hour)
+                        .Count();
+                }
 
                 if (slotTimesInHour == 0)
                     continue;
