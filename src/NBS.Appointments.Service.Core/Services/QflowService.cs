@@ -55,7 +55,7 @@ namespace NBS.Appointments.Service.Core.Services
                 { "Days", days.ToString() },
                 { "ExternalReference", externalReference ?? "" }
             };
-            var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest/availability", query);
+            var endpointUrl = $"{_options.BaseUrl}/svcCustomAppointment.svc/rest/availability";
 
             var response = await Execute(query, endpointUrl, HttpMethod.Get, null);
             var responseBody = await response.Content.ReadAsStringAsync();
@@ -76,7 +76,7 @@ namespace NBS.Appointments.Service.Core.Services
                 { "VaccineType", vaccineType },
                 { "ExternalReference", externalReference }
             };
-            var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest/GetSiteDoseAvailability", query);
+            var endpointUrl = $"{_options.BaseUrl}/svcCustomAppointment.svc/rest/GetSiteDoseAvailability";
 
             var response = await Execute(query, endpointUrl, HttpMethod.Get, null);
             var responseBody = await response.Content.ReadAsStringAsync();

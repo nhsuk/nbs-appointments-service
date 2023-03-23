@@ -64,7 +64,7 @@ namespace NBS.Appointments.Service.Core
                             var response = httpClient.PostAsync($"{_options.BaseUrl}/svcAppUser.svc/rest/FormsSignIn", content).GetAwaiter().GetResult();
                             if(response.StatusCode != System.Net.HttpStatusCode.OK)
                                 throw new UnauthorizedAccessException();
-                            _sessionId = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                            _sessionId = response.Content.ReadAsStringAsync().GetAwaiter().GetResult().Replace("\"", "");
                             mutexFileAccess.Write(_sessionId);
                         }
                     }
