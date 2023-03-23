@@ -2,7 +2,7 @@
 
 namespace NBS.Appointments.Service.Core.Dtos.Qflow
 {
-    public class ReserveSlotRequestContent
+    public class ReserveSlotRequestContent : BasePayload
     {
         [JsonProperty("calendarId")]
         public int CalendarId { get; set; }
@@ -15,5 +15,7 @@ namespace NBS.Appointments.Service.Core.Dtos.Qflow
 
         [JsonProperty("lockDuration")]
         public int LockDuration { get; set; }
+        [JsonProperty("userId")]
+        public int UserId { get; set; }
     }
 }
