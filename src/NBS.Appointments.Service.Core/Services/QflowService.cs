@@ -123,13 +123,15 @@ namespace NBS.Appointments.Service.Core.Services
             var policy = GetRetryPolicy();
             return await policy.ExecuteAsync(async (context) =>
             {
-                query["apiSessionId"] = context["SessionId"].ToString();
-
-                if (content != null)
+                if (method == HttpMethod.Post)
                 {
-                    SetApiSessionId(content, query["apiSessionId"]);
-                    requestMessage.RequestUri = new Uri(QueryHelpers.AddQueryString(endpointUrl, query));
+                    SetApiSessionId(content, context["SessionId"].ToString());
                     requestMessage.Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, MediaTypeNames.Application.Json);
+                }
+                else
+                {
+                    query["apiSessionId"] = context["SessionId"].ToString();
+                    requestMessage.RequestUri = new Uri(QueryHelpers.AddQueryString(endpointUrl, query));
                 }
 
                 return await client.SendAsync(requestMessage);
