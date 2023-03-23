@@ -99,9 +99,15 @@ namespace NBS.Appointments.Service.Core.Services
 
             var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var slotOrdinalNumber = int.Parse(responseBody);
 
-            return new ReserveSlotResponse(slotOrdinalNumber);
+            // temporary if statements
+            if (!response.IsSuccessStatusCode)
+                return new ReserveSlotResponse(0, responseBody);
+
+            if (!int.TryParse(responseBody, out var slotOrdinalNumber))
+                return new ReserveSlotResponse(0, responseBody);
+
+            return new ReserveSlotResponse(slotOrdinalNumber, null);
         }
 
         private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl, HttpMethod method, object? content)
