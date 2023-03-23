@@ -149,8 +149,12 @@ namespace NBS.Appointments.Service.Core.Services
 
         private static void SetApiSessionId(object obj, string apiSessionId)
         {
-            var prop = obj.GetType().GetProperty(ApiSessionId, BindingFlags.Public | BindingFlags.Instance);
-            prop?.SetValue(obj, apiSessionId, null);
+            var basePayload = obj as BasePayload;
+
+            if (basePayload != null)
+            {
+                basePayload.ApiSessionId = apiSessionId;
+            }
         }
     }
 }
