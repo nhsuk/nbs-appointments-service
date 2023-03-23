@@ -95,7 +95,7 @@ namespace NBS.Appointments.Service.Core.Services
                 UserId = _options.UserId
             };
 
-            var endpointUrl = $"{_options.BaseUrl}/rest/LockDynamicSlots";
+            var endpointUrl = $"{_options.BaseUrl}/svcCalendar.svc/rest/LockDynamicSlots";
 
             var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, request);
             var responseBody = await response.Content.ReadAsStringAsync();
