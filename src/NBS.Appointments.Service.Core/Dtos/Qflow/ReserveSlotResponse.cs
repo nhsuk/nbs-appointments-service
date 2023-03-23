@@ -2,13 +2,11 @@
 {
     public class ReserveSlotResponse
     {
-        public ReserveSlotResponse(int slotOrdinalNumber, string? responseErrors)
+        public ReserveSlotResponse(int slotOrdinalNumber)
         {
             SlotOrdinalNumber = slotOrdinalNumber;
-            ResponseErrors = responseErrors;
         }
 
         public int SlotOrdinalNumber { get; set; }
-        public string? ResponseErrors { get; set; }
     }
 }
