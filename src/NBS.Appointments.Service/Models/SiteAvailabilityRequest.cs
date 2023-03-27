@@ -3,7 +3,7 @@ using System;
 
 namespace NBS.Appointments.Service.Models
 {
-    public class AvailabilityByHourRequest
+    public class SiteAvailabilityRequest
     {
         [JsonProperty("site")]
         public string Site { get; set; }
@@ -11,5 +11,5 @@ namespace NBS.Appointments.Service.Models
         public DateTime Date { get; set; }
         [JsonProperty("service")]
         public string Service { get; set; }
-    }
+    }    
 }

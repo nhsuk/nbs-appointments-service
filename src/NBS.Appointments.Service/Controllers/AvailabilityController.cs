@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using NBS.Appointments.Service.Validators;
 using NBS.Appointments.Service.Extensions;
 using NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors;
+using NBS.Appointments.Service.Core.Dtos.Qflow;
 
 namespace NBS.Appointments.Service.Controllers
 {
@@ -60,9 +61,21 @@ namespace NBS.Appointments.Service.Controllers
 
         [HttpPost]
         [Route("hours")]
-        public async Task<IActionResult> Hours([FromBody] AvailabilityByHourRequest request)
+        public Task<IActionResult> Hours([FromBody] SiteAvailabilityRequest request)
+        {            
+            return LookupAvailability(request, (qflowResponse) => Ok(AvailabilityHourResponse.FromQflowResponse(qflowResponse, request.Service, request.Date, DateTime.UtcNow)));
+        }
+
+        [HttpPost]
+        [Route("slots")]
+        public Task<IActionResult> Slots([FromBody] SiteAvailabilityRequest request)
+        {            
+            return LookupAvailability(request, (qflowResponse) => Ok(AvailabilitySlotResponse.FromQflowResponse(request.Site, request.Service, request.Date, qflowResponse)));
+        }
+
+        private async Task<IActionResult> LookupAvailability(SiteAvailabilityRequest request, Func<SiteSlotsResponse, IActionResult> responseConversion)
         {
-            var validator = _validatorFactory.GetValidator<AvailabilityByHourRequest>();
+            var validator = _validatorFactory.GetValidator<SiteAvailabilityRequest>();
             var validationResult = validator.Validate(request);
 
             if (!validationResult.IsValid)
@@ -81,7 +94,7 @@ namespace NBS.Appointments.Service.Controllers
                 serviceDescriptor.Vaccine,
                 serviceDescriptor.Reference);
 
-            return base.Ok(AvailabilityHourResponse.FromQflowResponse(qflowResponse, request.Service, request.Date, DateTime.UtcNow));
+            return responseConversion(qflowResponse);
         }
     }
 }
