@@ -11,36 +11,23 @@ namespace NBS.Appointments.Service.Unit.Tests
         [Fact]
         public void FromQflowResponse_MapsDataCorrectly()
         {
-            var testData = new SiteSlotsResponse
+            var slots = new List<SiteSlotAvailabilityResponse>
             {
-                SiteId = 123,
-                VaccineType = "39115611000001103",
-                Availability = new List<SiteSlotAvailabilityResponse>
+                new SiteSlotAvailabilityResponse
                 {
-                    new SiteSlotAvailabilityResponse
-                    {
-                        AppointmentTypeId = 1,
-                        CalendarId = 1,
-                        Duration = 5,
-                        ServiceId = 1,
-                        Time = new TimeSpan(9, 0, 0)
-                    },
-                    new SiteSlotAvailabilityResponse
-                    {
-                        AppointmentTypeId = 1,
-                        CalendarId = 1,
-                        Duration = 5,
-                        ServiceId = 1,
-                        Time = new TimeSpan(10, 0, 0)
-                    },
-                    new SiteSlotAvailabilityResponse
-                    {
-                        AppointmentTypeId = 1,
-                        CalendarId = 1,
-                        Duration = 5,
-                        ServiceId = 1,
-                        Time = new TimeSpan(11, 0, 0)
-                    }
+                    AppointmentTypeId = 1,
+                    CalendarId = 1,
+                    Duration = 5,
+                    ServiceId = 1,
+                    Time = new TimeSpan(10, 0, 0)
+                },
+                new SiteSlotAvailabilityResponse
+                {
+                    AppointmentTypeId = 1,
+                    CalendarId = 1,
+                    Duration = 5,
+                    ServiceId = 1,
+                    Time = new TimeSpan(11, 0, 0)
                 }
             };
 
@@ -58,7 +45,7 @@ namespace NBS.Appointments.Service.Unit.Tests
                 }
             };
 
-            var actual = FromQflowResponse(testData, testData.VaccineType, currentTestDate, currentTestDate);
+            var actual = FromQflowResponse("123", "39115611000001103", currentTestDate, slots);
 
             actual.Should().BeEquivalentTo(expected);
         }

@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NBS.Appointments.Service.Core;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace NBS.Appointments.Service
 {
@@ -24,17 +23,20 @@ namespace NBS.Appointments.Service
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<QflowOptions>(Configuration.GetSection("Qflow"));
+            var dateTimeProvider = Configuration.GetValue<string>("DateTimeProvider", "system");
 
             services.AddHttpClient();
             services.AddControllers().ConfigureApiBehaviorOptions(options =>
             {
                 options.InvalidModelStateResponseFactory = context => new BadRequestObjectResult(CreateErrorInfo(context.ModelState));
             });
-            services.AddQflowClient();
-            services.AddInMemoryStoreMutex();
+
             services
-               .RegisterValidators()
-               .AddSwaggerGen();
+                .AddQflowClient()
+                .AddInMemoryStoreMutex()
+                .AddDateTimeProvider(dateTimeProvider)
+                .RegisterValidators()
+                .AddSwaggerGen();
         }
 
         private IEnumerable<string> CreateErrorInfo(ModelStateDictionary modelState)

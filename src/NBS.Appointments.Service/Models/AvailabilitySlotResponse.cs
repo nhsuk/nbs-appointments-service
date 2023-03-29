@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System;
 using NBS.Appointments.Service.Core.Dtos.Qflow;
-using Azure.Core;
 using System.Linq;
 
 namespace NBS.Appointments.Service.Models
@@ -33,12 +32,12 @@ namespace NBS.Appointments.Service.Models
             public string Reference { get; set; }
         }        
         
-        public static AvailabilitySlotResponse FromQflowResponse(string site, string service, DateTime date, SiteSlotsResponse slots) => new AvailabilitySlotResponse
+        public static AvailabilitySlotResponse FromQflowResponse(string site, string service, DateTime date, IEnumerable<SiteSlotAvailabilityResponse> slots) => new AvailabilitySlotResponse
         {
             Service = service,
             SiteId = site,
             Date = date,
-            Slots = slots.Availability.Select(qs => new SlotInfo
+            Slots = slots.Select(qs => new SlotInfo
             {
                 From = date.Date.Add(qs.Time),
                 Duration = qs.Duration,

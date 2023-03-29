@@ -31,46 +31,16 @@ namespace NBS.Appointments.Service.Models
             public int Count { get; set; }
         }
 
-        public static AvailabilityHourResponse FromQflowResponse(SiteSlotsResponse qflowResponse, string vaccineType, DateTime date, DateTime currentDate)
-        {
-            var response = new AvailabilityHourResponse
+        public static AvailabilityHourResponse FromQflowResponse(string site, string service, DateTime date, IEnumerable<SiteSlotAvailabilityResponse> slots) => new AvailabilityHourResponse
             {
                 Date = date,
-                SiteId = qflowResponse.SiteId.ToString(),
-                Type = vaccineType
-            };
-
-            var availableSlotTimes = qflowResponse.Availability
-                .GroupBy(x => x.Time)
-                .Select(x => x.Key)
-                .ToList();
-
-            var availabilityByHour = new List<AvailabilityHour>();
-
-            if (!availableSlotTimes.Any())
-            {
-                response.AvailabilityByHour = availabilityByHour;
-                return response;
-            }
-
-            var currentTime = currentDate.TimeOfDay;
-
-            var isDateInTheFuture = DateTime.Compare(date, currentDate) > 0;
-
-            foreach (var slotTime in availableSlotTimes)
-            {
-                if (!isDateInTheFuture && slotTime < currentTime)
-                    continue;
-
-                var count = qflowResponse.Availability
-                    .Where(x => x.Time.Hours == slotTime.Hours)
-                    .Count();
-
-                availabilityByHour.Add(new AvailabilityHour(slotTime.Hours.ToString(), count));
-            }
-
-            response.AvailabilityByHour = availabilityByHour;
-            return response;
-        }
+                SiteId = site,
+                Type = service,
+                AvailabilityByHour = slots
+                    .GroupBy(x => x.Time.Hours)
+                    .Select(x => new AvailabilityHour(x.Key.ToString(), x.Count()))
+                    .ToList()
+            };            
+        
     }
 }

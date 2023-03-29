@@ -1,13 +1,11 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 using NBS.Appointments.Service.Models;
+using NBS.Appointments.Service.Dtos.Qflow;
+using NBS.Appointments.Service.Core.Dtos.Qflow;
 
 namespace NBS.Appointments.Service.Api.Tests
 {
@@ -48,6 +46,49 @@ namespace NBS.Appointments.Service.Api.Tests
 
             actualResponseData.SiteId.Should().Be("qflow:1234");
             actualResponseData.Service.Should().Be("qflow:0:12345:NotSet");
+        }
+
+        [Theory]
+        [InlineData(855, 4)]
+        [InlineData(905, 3)]
+        [InlineData(915, 2)]
+        [InlineData(1005, 1)]
+        [InlineData(1100, 0)]
+        public async Task GetAvailabilityBySlots_RestictsSlotsToFutureSlots(int time, int expectedCount)
+        {
+            var mockApiClient = new MockApi.Client("http://localhost:4010");
+            await mockApiClient
+                .SetupOnce("GET", "/svcCustomAppointment.svc/rest/GetSiteDoseAvailability")
+                .ReturnsJson(new SiteSlotsResponse
+                {
+                    SiteId = 1234,
+                    VaccineType = "12345",
+                    Availability = new List<SiteSlotAvailabilityResponse>
+                    {
+                        new SiteSlotAvailabilityResponse { AppointmentTypeId = 1, CalendarId = 1, ServiceId = 1, Duration = 5, Time = new TimeSpan(9,0,0)},
+                        new SiteSlotAvailabilityResponse { AppointmentTypeId = 1, CalendarId = 1, ServiceId = 1, Duration = 5, Time = new TimeSpan(9,10,0)},
+                        new SiteSlotAvailabilityResponse { AppointmentTypeId = 1, CalendarId = 1, ServiceId = 1, Duration = 5, Time = new TimeSpan(10,0,0)},
+                        new SiteSlotAvailabilityResponse { AppointmentTypeId = 1, CalendarId = 1, ServiceId = 1, Duration = 5, Time = new TimeSpan(10,10,0)}
+                    }
+                });
+
+            var serverTime = DateTime.Today.Add(new TimeSpan(time/100, time%100, 0));
+            await mockApiClient
+                .SetupOnce("GET", "/time")
+                .Returns(200, serverTime.ToString("yyyy-MM-dd hh:mm"));
+
+            var from = DateTime.Today;
+            var payload = new ApiRequest("qflow:1234", from.ToString("yyyy-MM-dd"), "qflow:0:12345:NotSet");
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(Endpoint, jsonContent);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var actualResponseData = JsonConvert.DeserializeObject<AvailabilitySlotResponse>(responseBody);
+
+            actualResponseData.SiteId.Should().Be("qflow:1234");
+            actualResponseData.Service.Should().Be("qflow:0:12345:NotSet");
+            actualResponseData.Slots.Should().HaveCount(expectedCount);
         }
 
         [Theory]

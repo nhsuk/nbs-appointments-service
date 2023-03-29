@@ -11,17 +11,14 @@ namespace NBS.Appointments.Service.Unit.Tests
         public void FromQflowResponse_MapsDataCorrectly()
         {
             var testDate = DateTime.Today;
-            var testSlots = new SiteSlotsResponse
+            var testSlots =  new List<SiteSlotAvailabilityResponse>
             {
-                Availability = new List<SiteSlotAvailabilityResponse>
+                new SiteSlotAvailabilityResponse
                 {
-                    new SiteSlotAvailabilityResponse
-                    {
-                        CalendarId = 99,
-                        Duration = 20,
-                        Time = new TimeSpan(9, 0, 0)
-                    }
-                }
+                    CalendarId = 99,
+                    Duration = 20,
+                    Time = new TimeSpan(9, 0, 0)
+                }                
             };
             var actual = AvailabilitySlotResponse.FromQflowResponse("test-site", "test-service", testDate, testSlots);
 
