@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using NBS.Appointments.Service.Core;
 using NBS.Appointments.Service.Core.Interfaces;
 using NBS.Appointments.Service.Core.Interfaces.Services;
@@ -28,15 +29,15 @@ namespace Microsoft.Extensions.DependencyInjection
             return services.AddSingleton<IMutexRecordStore, InMemoryMutexRecordStore>();
         }
 
-        public static IServiceCollection AddDateTimeProvider(this IServiceCollection services, string configString)
+        public static IServiceCollection AddDateTimeProvider(this IServiceCollection services)
         {
-            var config = configString.Split("@");
-            switch (config[0].ToLower())
+            var opts = services.BuildServiceProvider().GetRequiredService<IOptions<DateTimeProviderOptions>>();
+            
+            switch (opts.Value.Type.ToLower())
             {
                 case "system":
                     return services.AddTransient<IDateTimeProvider, SystemDateTimeProvider>();
                 case "remote":
-                    services.Configure<RemoteDateTimeProviderOptions>(opts => opts.Endpoint = config[1]);
                     return services.AddSingleton<IDateTimeProvider, RemoteDateTimeProvider>();
                 default:
                     throw new NotSupportedException("Unsupported date time proivder");

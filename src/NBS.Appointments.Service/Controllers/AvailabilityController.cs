@@ -35,12 +35,11 @@ namespace NBS.Appointments.Service.Controllers
         [HttpGet]
         [Route("time")]
         public IActionResult Time() 
-        {
-            var d = _dateTimeProvider.UtcNow;
+        {            
             return Ok(new
             {
-                Utc = d.Hour,
-                Now = d.ToLocalTime().Hour
+                Utc = _dateTimeProvider.UtcNow.Hour,
+                Local = _dateTimeProvider.LocalNow.Hour
             });
         }
 
@@ -78,8 +77,8 @@ namespace NBS.Appointments.Service.Controllers
         [HttpPost]
         [Route("hours")]
         public Task<IActionResult> Hours([FromBody] SiteAvailabilityRequest request)
-        {            
-            var localDateTime = _dateTimeProvider.UtcNow.ToLocalTime();
+        {
+            var localDateTime = _dateTimeProvider.LocalNow;
             return LookupAvailability(request, localDateTime.TimeOfDay, (slots) => Ok(AvailabilityHourResponse.FromQflowResponse(request.Site, request.Service, request.Date, slots)));
         }
 
@@ -87,7 +86,7 @@ namespace NBS.Appointments.Service.Controllers
         [Route("slots")]
         public Task<IActionResult> Slots([FromBody] SiteAvailabilityRequest request)
         {
-            var localDateTime = _dateTimeProvider.UtcNow.ToLocalTime();
+            var localDateTime = _dateTimeProvider.LocalNow;
             return LookupAvailability(request, localDateTime.TimeOfDay, (slots) => Ok(AvailabilitySlotResponse.FromQflowResponse(request.Site, request.Service, request.Date, slots)));
         }
 

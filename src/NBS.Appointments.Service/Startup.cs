@@ -23,7 +23,7 @@ namespace NBS.Appointments.Service
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<QflowOptions>(Configuration.GetSection("Qflow"));
-            var dateTimeProvider = Configuration.GetValue<string>("DateTimeProvider", "system");
+            services.Configure<DateTimeProviderOptions>(Configuration.GetSection("DateTimeProvider"));
 
             services.AddHttpClient();
             services.AddControllers().ConfigureApiBehaviorOptions(options =>
@@ -34,7 +34,7 @@ namespace NBS.Appointments.Service
             services
                 .AddQflowClient()
                 .AddInMemoryStoreMutex()
-                .AddDateTimeProvider(dateTimeProvider)
+                .AddDateTimeProvider()
                 .RegisterValidators()
                 .AddSwaggerGen();
         }
