@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using NBS.Appointments.Service.Core.Dtos.Qflow;
+using Azure.Core;
 using System.Linq;
 
 namespace NBS.Appointments.Service.Models

@@ -5,6 +5,10 @@ using Polly;
 using Microsoft.Extensions.Options;
 using NBS.Appointments.Service.Core.Dtos.Qflow;
 using Newtonsoft.Json;
+using System.Text;
+using System.Net.Mime;
+using System.Reflection;
+using Azure.Core;
 
 namespace NBS.Appointments.Service.Core.Services
 {
@@ -13,6 +17,8 @@ namespace NBS.Appointments.Service.Core.Services
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IQflowSessionManager _sessionManager;
         private readonly QflowOptions _options;
+
+        private const string ApiSessionId = "ApiSessionId";
 
         public QflowService(
             IOptions<QflowOptions> options,
@@ -49,9 +55,9 @@ namespace NBS.Appointments.Service.Core.Services
                 { "Days", days.ToString() },
                 { "ExternalReference", externalReference ?? "" }
             };
-            var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest/availability", query);
+            var endpointUrl = $"{_options.BaseUrl}/svcCustomAppointment.svc/rest/availability";
 
-            var response = await Execute(query, endpointUrl, HttpMethod.Get);
+            var response = await Execute(query, endpointUrl, HttpMethod.Get, null);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<SiteAvailabilityResponse[]>(responseBody);
@@ -70,9 +76,9 @@ namespace NBS.Appointments.Service.Core.Services
                 { "VaccineType", vaccineType },
                 { "ExternalReference", externalReference }
             };
-            var endpointUrl = QueryHelpers.AddQueryString($"{_options.BaseUrl}/svcCustomAppointment.svc/rest/GetSiteDoseAvailability", query);
+            var endpointUrl = $"{_options.BaseUrl}/svcCustomAppointment.svc/rest/GetSiteDoseAvailability";
 
-            var response = await Execute(query, endpointUrl, HttpMethod.Get);
+            var response = await Execute(query, endpointUrl, HttpMethod.Get, null);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<SiteSlotsResponse>(responseBody);
@@ -85,20 +91,21 @@ namespace NBS.Appointments.Service.Core.Services
                 CalendarId = calendarId,
                 StartTime = startTime,
                 EndTime = endTime,
-                LockDuration = lockDuration
+                LockDuration = lockDuration,
+                UserId = _options.UserId
             };
 
             var endpointUrl = $"{_options.BaseUrl}/svcCalendar.svc/rest/LockDynamicSlots";
-            var requestContent = new StringContent(JsonConvert.SerializeObject(request));
 
-            var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, requestContent);
+            var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, request);
             var responseBody = await response.Content.ReadAsStringAsync();
+
             var slotOrdinalNumber = int.Parse(responseBody);
 
             return new ReserveSlotResponse(slotOrdinalNumber);
         }
 
-        private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl, HttpMethod method, HttpContent? content = null)
+        private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl, HttpMethod method, object? content)
         {
             using var client = _httpClientFactory.CreateClient();
             var context = new Dictionary<string, object>
@@ -108,13 +115,20 @@ namespace NBS.Appointments.Service.Core.Services
 
             var requestMessage = new HttpRequestMessage(method, endpointUrl);
 
-            if (content != null)
-                requestMessage.Content = content;
-
             var policy = GetRetryPolicy();
             return await policy.ExecuteAsync(async (context) =>
             {
-                query["apiSessionId"] = context["SessionId"].ToString();
+                if (method == HttpMethod.Post)
+                {
+                    SetApiSessionId(content, context["SessionId"].ToString());
+                    requestMessage.Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, MediaTypeNames.Application.Json);
+                }
+                else
+                {
+                    query["apiSessionId"] = context["SessionId"].ToString();
+                    requestMessage.RequestUri = new Uri(QueryHelpers.AddQueryString(endpointUrl, query));
+                }
+
                 return await client.SendAsync(requestMessage);
             }, context);
         }
@@ -128,6 +142,16 @@ namespace NBS.Appointments.Service.Core.Services
                     _sessionManager.Invalidate(context["SessionId"].ToString());
                     context["SessionId"] = _sessionManager.GetSessionId();
                 });
+        }
+
+        private static void SetApiSessionId(object obj, string apiSessionId)
+        {
+            var basePayload = obj as BasePayload;
+
+            if (basePayload != null)
+            {
+                basePayload.ApiSessionId = apiSessionId;
+            }
         }
     }
 }
