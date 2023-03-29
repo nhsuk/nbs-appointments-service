@@ -32,6 +32,18 @@ namespace NBS.Appointments.Service.Controllers
             _dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
         }
 
+        [HttpGet]
+        [Route("time")]
+        public IActionResult Time() 
+        {
+            var d = _dateTimeProvider.UtcNow;
+            return Ok(new
+            {
+                Utc = d.Hour,
+                Now = d.ToLocalTime().Hour
+            });
+        }
+
         [HttpPost]
         [Route("days")]
         public async Task<IActionResult> Days([FromBody] AvailabilityByDayRequest request)

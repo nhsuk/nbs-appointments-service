@@ -32,7 +32,7 @@ namespace NBS.Appointments.Service.Core
                     case "@utc":
                         return DateTime.UtcNow;
                     default:
-                        return DateTime.ParseExact(response, "yyyy-MM-dd HH:mm", null);
+                        return DateTime.SpecifyKind(DateTime.ParseExact(response, "yyyy-MM-dd HH:mm", null), DateTimeKind.Utc);
                 }
             }
         }        
