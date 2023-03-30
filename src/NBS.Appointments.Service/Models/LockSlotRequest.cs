@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace NBS.Appointments.Service.Models
 {
     public class ReserveSlotRequest
     {
-        [JsonProperty("slot")]
+        [JsonPropertyName("slot")]
         public string Slot { get; set; }
-        [JsonProperty("lockDuration")]
+        [JsonPropertyName("lockDuration")]
         public int LockDuration { get; set; }
     }
 }

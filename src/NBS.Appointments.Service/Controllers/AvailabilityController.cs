@@ -79,7 +79,7 @@ namespace NBS.Appointments.Service.Controllers
         public Task<IActionResult> Hours([FromBody] SiteAvailabilityRequest request)
         {
             var localDateTime = _dateTimeProvider.LocalNow;
-            return LookupAvailability(request, localDateTime.TimeOfDay, (slots) => Ok(AvailabilityHourResponse.FromQflowResponse(request.Site, request.Service, request.Date, slots)));
+            return LookupAvailability(request, localDateTime, (slots) => Ok(AvailabilityHourResponse.FromQflowResponse(request.Site, request.Service, request.Date, slots)));
         }
 
         [HttpPost]
@@ -87,10 +87,10 @@ namespace NBS.Appointments.Service.Controllers
         public Task<IActionResult> Slots([FromBody] SiteAvailabilityRequest request)
         {
             var localDateTime = _dateTimeProvider.LocalNow;
-            return LookupAvailability(request, localDateTime.TimeOfDay, (slots) => Ok(AvailabilitySlotResponse.FromQflowResponse(request.Site, request.Service, request.Date, slots)));
+            return LookupAvailability(request, localDateTime, (slots) => Ok(AvailabilitySlotResponse.FromQflowResponse(request.Site, request.Service, request.Date, slots)));
         }
 
-        private async Task<IActionResult> LookupAvailability(SiteAvailabilityRequest request, TimeSpan notBefore, Func<IEnumerable<SiteSlotAvailabilityResponse>, IActionResult> responseConversion)
+        private async Task<IActionResult> LookupAvailability(SiteAvailabilityRequest request, DateTime notBefore, Func<IEnumerable<SiteSlotAvailabilityResponse>, IActionResult> responseConversion)
         {
             var validator = _validatorFactory.GetValidator<SiteAvailabilityRequest>();
             var validationResult = validator.Validate(request);
@@ -110,8 +110,9 @@ namespace NBS.Appointments.Service.Controllers
                 serviceDescriptor.Dose,
                 serviceDescriptor.Vaccine,
                 serviceDescriptor.Reference);
-            
-            var availableSlots = qflowResponse.Availability.Where(sl => sl.Time >= notBefore);
+
+            var date = request.Date.Date;
+            var availableSlots = qflowResponse.Availability.Where(sl => date.Add(sl.Time) >= notBefore);
 
             return responseConversion(availableSlots);
         }

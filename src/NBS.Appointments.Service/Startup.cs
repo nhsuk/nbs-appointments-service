@@ -26,10 +26,11 @@ namespace NBS.Appointments.Service
             services.Configure<DateTimeProviderOptions>(Configuration.GetSection("DateTimeProvider"));
 
             services.AddHttpClient();
-            services.AddControllers().ConfigureApiBehaviorOptions(options =>
-            {
-                options.InvalidModelStateResponseFactory = context => new BadRequestObjectResult(CreateErrorInfo(context.ModelState));
-            });
+            services.AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.InvalidModelStateResponseFactory = context => new BadRequestObjectResult(CreateErrorInfo(context.ModelState));
+                });
 
             services
                 .AddQflowClient()

@@ -1,20 +1,20 @@
 ﻿using NBS.Appointments.Service.Core.Dtos.Qflow;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace NBS.Appointments.Service.Models
 {
     public class AvailabilityHourResponse
     {
-        [JsonProperty("siteId")]
+        [JsonPropertyName("siteId")]
         public string SiteId { get; set; }
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
-        [JsonProperty("date")]
+        [JsonPropertyName("date")]
         public DateTime Date { get; set; }
-        [JsonProperty("availabilityByHour")]
+        [JsonPropertyName("availabilityByHour")]
         public List<AvailabilityHour> AvailabilityByHour { get; set; }
 
         public class AvailabilityHour
@@ -25,9 +25,9 @@ namespace NBS.Appointments.Service.Models
                 Count = count;
             }
 
-            [JsonProperty("hour")]
+            [JsonPropertyName("hour")]
             public string Hour { get; set; }
-            [JsonProperty("count")]
+            [JsonPropertyName("count")]
             public int Count { get; set; }
         }
 

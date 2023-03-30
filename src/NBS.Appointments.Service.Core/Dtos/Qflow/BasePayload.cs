@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace NBS.Appointments.Service.Core.Dtos.Qflow
 {
     public class BasePayload
     {
-        [JsonProperty("apiSessionId")]
+        [JsonPropertyName("apiSessionId")]
         public string? ApiSessionId { get; set; }
     }
 }

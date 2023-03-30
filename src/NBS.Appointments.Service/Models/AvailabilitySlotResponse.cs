@@ -1,35 +1,34 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
-using NBS.Appointments.Service.Core.Dtos.Qflow;
-using Azure.Core;
 using System.Linq;
+using System.Text.Json.Serialization;
+using NBS.Appointments.Service.Core.Dtos.Qflow;
 
 namespace NBS.Appointments.Service.Models
 {
     public class AvailabilitySlotResponse
     {
-        [JsonProperty("siteId")]
+        [JsonPropertyName("siteId")]
         public string SiteId { get; set; }
 
-        [JsonProperty("service")]
+        [JsonPropertyName("service")]
         public string Service { get; set; }
 
-        [JsonProperty("date")]
+        [JsonPropertyName("date")]
         public DateTime Date { get; set; }
 
-        [JsonProperty("slots")]
+        [JsonPropertyName("slots")]
         public List<SlotInfo> Slots { get; set; }
 
         public class SlotInfo
         {
-            [JsonProperty("from")]
+            [JsonPropertyName("from")]
             public DateTime From { get; set; }
 
-            [JsonProperty("duration")]
+            [JsonPropertyName("duration")]
             public int Duration { get; set; }
 
-            [JsonProperty("ref")]
+            [JsonPropertyName("ref")]
             public string Reference { get; set; }
         }        
         
@@ -42,7 +41,7 @@ namespace NBS.Appointments.Service.Models
             {
                 From = date.Date.Add(qs.Time),
                 Duration = qs.Duration,
-                Reference = $"qflow:{qs.CalendarId}:{qs.Time.TotalMinutes}:{qs.Time.TotalMinutes + qs.Duration}"
+                Reference = $"qflow:{qs.ServiceId}:{qs.CalendarId}:{qs.AppointmentTypeId}:{qs.Time.TotalMinutes}:{qs.Time.TotalMinutes + qs.Duration}"
             }).ToList()
         };        
     }
