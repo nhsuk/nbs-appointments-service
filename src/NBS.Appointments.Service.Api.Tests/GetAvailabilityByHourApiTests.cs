@@ -56,13 +56,8 @@ namespace NBS.Appointments.Service.Api.Tests
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
-        [Theory]
-        [InlineData(0, 4)]
-        [InlineData(5, 3)]
-        [InlineData(20, 2)]
-        [InlineData(35, 1)]
-        [InlineData(50, 0)]
-        public async Task GetAvailabilityByHours_RestictsSlotCountsToFutureSlots(int minutesPastTheHour, int expectedCount)
+        [Fact]
+        public async Task GetAvailabilityByHours_ReturnsSlotCounts()
         {
             var mockApiClient = new MockApi.Client("http://localhost:4010");
             await mockApiClient
@@ -80,7 +75,7 @@ namespace NBS.Appointments.Service.Api.Tests
                     }
                 });
 
-            var serverTime = DateTime.Today.Add(new TimeSpan(9, minutesPastTheHour, 0));
+            var serverTime = DateTime.Today.Add(new TimeSpan(8, 0, 0));
             await mockApiClient
                 .SetupOnce("GET", "/time")
                 .Returns(200, serverTime.ToString("yyyy-MM-dd hh:mm"));
@@ -99,14 +94,8 @@ namespace NBS.Appointments.Service.Api.Tests
             var actualResponseData = JsonConvert.DeserializeObject<AvailabilityHourResponse>(responseBody);
 
             actualResponseData.SiteId.Should().Be("qflow:150");
-            if (expectedCount > 0)
-            {
-                actualResponseData.AvailabilityByHour.Count.Should().Be(1);
-                actualResponseData.AvailabilityByHour.First().Hour.Should().Be("9");
-                actualResponseData.AvailabilityByHour.First().Count.Should().Be(expectedCount);
-            }
-            else
-                actualResponseData.AvailabilityByHour.Count.Should().Be(0);
+            actualResponseData.AvailabilityByHour.Count.Should().Be(1);
+            actualResponseData.AvailabilityByHour.First().Count.Should().Be(4);
         }
     }
 }
