@@ -1,4 +1,5 @@
 using NBS.Appointments.Service.Core;
+using NBS.Appointments.Service.Core.Helpers;
 using NBS.Appointments.Service.Core.Interfaces.Services;
 using NBS.Appointments.Service.Core.Services;
 
@@ -11,7 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {            
             return services
                 .AddSingleton<IQflowSessionManager, QflowSessionManager>()
-                .AddTransient<IQflowService, QflowService>();            
+                .AddTransient<IQflowService, QflowService>();
         }
 
         public static IServiceCollection AddAzureBlobStoreMutex(this IServiceCollection services, string containerName)
@@ -25,6 +26,11 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddInMemoryStoreMutex(this IServiceCollection services)
         {
             return services.AddSingleton<IMutexRecordStore, InMemoryMutexRecordStore>();
+        }
+
+        public static IServiceCollection AddHelpers(this IServiceCollection services)
+        {
+            return services.AddSingleton<ICustomPropertiesHelper, CustomPropertiesHelper>();
         }
     }
 }

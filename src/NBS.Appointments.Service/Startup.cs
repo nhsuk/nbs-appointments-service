@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NBS.Appointments.Service.Core;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace NBS.Appointments.Service
 {
@@ -34,7 +33,8 @@ namespace NBS.Appointments.Service
             services.AddInMemoryStoreMutex();
             services
                .RegisterValidators()
-               .AddSwaggerGen();
+               .AddSwaggerGen()
+               .AddHelpers();
         }
 
         private IEnumerable<string> CreateErrorInfo(ModelStateDictionary modelState)

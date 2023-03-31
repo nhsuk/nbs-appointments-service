@@ -7,6 +7,7 @@ using NBS.Appointments.Service.Core.Dtos.Qflow;
 using Newtonsoft.Json;
 using System.Text;
 using System.Net.Mime;
+using NBS.Appointments.Service.Core.Dtos;
 
 namespace NBS.Appointments.Service.Core.Services
 {
@@ -101,7 +102,7 @@ namespace NBS.Appointments.Service.Core.Services
             return new ReserveSlotResponse(slotOrdinalNumber);
         }
 
-        public async Task<object> CreateBooking(int serviceId, DateTime dateAndTime, int customerId, int appointmentTypeId,
+        public async Task<ApiResult<BookAppointmentResponse>> BookAppointment(int serviceId, DateTime dateAndTime, int customerId, int appointmentTypeId,
             int slotOrdinalNumber, int calendarId, Dictionary<string, string>? customProperties)
         {
             var payload = new CreateAppointmentPayload
@@ -118,8 +119,47 @@ namespace NBS.Appointments.Service.Core.Services
             var endpointUrl = $"{_options.BaseUrl}/svcService.svc/rest/SetAppointment6";
 
             var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, payload);
+            var responseBody = await response.Content.ReadAsStringAsync();
 
-            throw new NotImplementedException();
+            var result = new ApiResult<BookAppointmentResponse>
+            {
+                StatusCode = response.StatusCode
+            };
+
+            if (response.IsSuccessStatusCode)
+            {
+                result.ResponseData = JsonConvert.DeserializeObject<BookAppointmentResponse>(responseBody);
+                return result;
+            }
+
+            return result;
+        }
+
+        public async Task<CustomerDto> CreateOrUpdateCustomer(string firstName, string surname, string nhsNumber, string dob, string? email,
+            string? phoneNumber, string? landline, string selfReferralOccupation)
+        {
+            var payload = new CreateCustomerPayload
+            {
+                Customer = new Customer
+                {
+                    DoB = $"{dob:d}",
+                    Email = email,
+                    FirstName = firstName,
+                    LastName = surname,
+                    NHSNumber = nhsNumber,
+                    SelfReferralOccupation = selfReferralOccupation,
+                    TelNumber1 = phoneNumber,
+                    TelNumber2 = landline,
+                    NotificationConsent = !string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(phoneNumber) && !string.IsNullOrEmpty(landline)
+                }
+            };
+
+            var endpointUrl = $"{_options.BaseUrl}/svcCustomCustomer.svc/rest/Create";
+
+            var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, payload);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<CustomerDto>(responseBody);
         }
 
         private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl, HttpMethod method, object? content)

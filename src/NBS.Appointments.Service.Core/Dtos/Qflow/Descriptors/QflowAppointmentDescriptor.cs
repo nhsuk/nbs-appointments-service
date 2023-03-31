@@ -1,55 +1,64 @@
 ﻿namespace NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors
 {
-    public class QflowAppointmentDescriptor
+    public class QflowBookAppointmentDescriptor
     {
-        public static QflowAppointmentDescriptor FromString(string descriptor)
+        public static QflowBookAppointmentDescriptor FromString(string descriptor)
         {
             var parts = descriptor.Split(":");
 
-            if (parts.Length != 5)
+            if (parts.Length != 7)
                 throw new FormatException("Descriptor is not formatted correctly");
 
             if (parts[0] != "qflow")
                 throw new FormatException("String was not a qflow service descriptor");
 
-            if (!int.TryParse(parts[1], out var slotOrdinalNumber))
-                throw new FormatException("Slot ordinal number must be a number.");
-
-            if (!int.TryParse(parts[2], out var serviceId))
+            if (!int.TryParse(parts[1], out var serviceId))
                 throw new FormatException("ServiceId must be a number.");
 
-            if (!DateTime.TryParse(parts[3], out var appointmentDateAndTime))
-                throw new FormatException("Appointment date and time must be a valid date and time.");
-
-            if (!int.TryParse(parts[5], out var calendarId))
+            if (!int.TryParse(parts[2], out var calendarId))
                 throw new FormatException("CalendarId must be a number.");
 
-            return new QflowAppointmentDescriptor(
-                slotOrdinalNumber,
+            if (!int.TryParse(parts[3], out var appointmentTypeId))
+                throw new FormatException("AppointmentTypeId must be a number.");
+
+            if (!DateTime.TryParse(parts[4], out var appointmentDate))
+                throw new FormatException("Appointment date must be a valid date.");
+
+            if (!int.TryParse(parts[5], out var appointmentTime))
+                throw new FormatException("Appointment time must be a number.");
+
+            if (!int.TryParse(parts[6], out var slotOrdinalNumber))
+                throw new FormatException("Slot ordinal number must be a number.");
+
+            var timespan = TimeSpan.FromMinutes(appointmentTime);
+            appointmentDate = appointmentDate.Add(timespan);
+
+            return new QflowBookAppointmentDescriptor(
                 serviceId,
-                appointmentDateAndTime,
-                parts[4],
-                calendarId);
+                calendarId,
+                appointmentTypeId,
+                appointmentDate,
+                slotOrdinalNumber);
         }
 
-        public QflowAppointmentDescriptor(
-            int slotOrdinalNumber,
+        public QflowBookAppointmentDescriptor(
             int serviceId,
-            DateTime dateAndTime,
-            string service,
-            int calendarId)
+            int calendarId,
+            int appointmentTypeId,
+            DateTime appointmentDateAndTime,
+            int slotOrdinalNumber)
         {
-            SlotOrdinalNumber = slotOrdinalNumber;
             ServiceId = serviceId;
-            DateAndTime = dateAndTime;
-            Service = service;
             CalendarId = calendarId;
+            AppointmentTypeId = appointmentTypeId;
+            AppointmentDateAndTime = appointmentDateAndTime;
+            SlotOrdinalNumber = slotOrdinalNumber;
         }
 
-        public int SlotOrdinalNumber { get; set; }
         public int ServiceId { get; set; }
-        public DateTime DateAndTime { get; set; }
-        public string Service { get; set; }
         public int CalendarId { get; set; }
+        public int AppointmentTypeId { get; set; }
+        public DateTime AppointmentDateAndTime { get; set; }
+        public int SlotOrdinalNumber { get; set; }
     }
 }

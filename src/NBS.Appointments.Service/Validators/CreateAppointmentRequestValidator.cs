@@ -5,7 +5,7 @@ using System;
 
 namespace NBS.Appointments.Service.Validators
 {
-    public class CreateAppointmentRequestValidator : AbstractValidator<CreateAppointmentRequest>
+    public class CreateAppointmentRequestValidator : AbstractValidator<BookAppointmentRequest>
     {
         public CreateAppointmentRequestValidator()
         {
@@ -15,17 +15,25 @@ namespace NBS.Appointments.Service.Validators
                 .Must(BeAValidSlotUrn)
                 .WithMessage("Slot identifier is not valid.");
 
-            RuleFor(x => x.NhsNumber)
+            RuleFor(x => x.CustomerDetails)
+                .NotEmpty()
+                .WithMessage("Customer details object must be provided.");
+
+            RuleFor(x => x.CustomerDetails.NhsNumber)
                 .NotEmpty()
                 .WithMessage("Nhs number must be provided.");
 
-            RuleFor(x => x.Name)
+            RuleFor(x => x.CustomerDetails.Name)
                 .NotEmpty()
-                .WithMessage("Participant name must be provided")
+                .WithMessage("Customer name must be provided")
                 .Must(BeAValidName)
                 .WithMessage("Name not in the correct format.");
 
-            RuleFor(x => x.ContactDetails)
+            RuleFor(x => x.CustomerDetails.Dob)
+                .NotEmpty()
+                .WithMessage("Customer date of birth must be provided.");
+
+            RuleFor(x => x.CustomerDetails.ContactDetails)
                 .NotEmpty()
                 .WithMessage("Contact details object must be provided.");
         }
@@ -34,7 +42,7 @@ namespace NBS.Appointments.Service.Validators
         {
             try
             {
-                QflowAppointmentDescriptor.FromString(slotDescriptor);
+                QflowBookAppointmentDescriptor.FromString(slotDescriptor);
                 return true;
             }
             catch (FormatException)
