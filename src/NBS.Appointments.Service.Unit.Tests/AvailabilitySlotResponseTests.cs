@@ -11,17 +11,16 @@ namespace NBS.Appointments.Service.Unit.Tests
         public void FromQflowResponse_MapsDataCorrectly()
         {
             var testDate = DateTime.Today;
-            var testSlots = new SiteSlotsResponse
+            var testSlots =  new List<SiteSlotAvailabilityResponse>
             {
-                Availability = new List<SiteSlotAvailabilityResponse>
+                new SiteSlotAvailabilityResponse
                 {
-                    new SiteSlotAvailabilityResponse
-                    {
-                        CalendarId = 99,
-                        Duration = 20,
-                        Time = new TimeSpan(9, 0, 0)
-                    }
-                }
+                    ServiceId = 33,
+                    AppointmentTypeId = 99,
+                    CalendarId = 66,
+                    Duration = 20,
+                    Time = new TimeSpan(9, 0, 0)
+                }                
             };
             var actual = AvailabilitySlotResponse.FromQflowResponse("test-site", "test-service", testDate, testSlots);
 
@@ -33,7 +32,7 @@ namespace NBS.Appointments.Service.Unit.Tests
             var actualSlot = actual.Slots.First();
             actualSlot.Duration.Should().Be(20);
             actualSlot.From.Should().Be(testDate.AddHours(9));
-            actualSlot.Reference.Should().Be("qflow:99:540:560");
+            actualSlot.Reference.Should().Be("qflow:33:66:99:540:560");
         }
     }
 }

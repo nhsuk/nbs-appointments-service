@@ -16,9 +16,9 @@ namespace NBS.Appointments.Service.Unit.Tests
                 SiteAddress = "Address",
                 SiteName = "Name",
                 VaccineType = "123156",
-                Availability = new Infrastructure.Dtos.Qflow.AvailabilityResponse[]
+                Availability = new AvailabilityResponse[]
                 {
-                    new Infrastructure.Dtos.Qflow.AvailabilityResponse
+                    new AvailabilityResponse
                     {
                         Date = new DateTime(2023, 01, 01),
                         Am = 10,

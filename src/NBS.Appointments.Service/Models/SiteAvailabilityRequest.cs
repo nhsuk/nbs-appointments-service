@@ -1,15 +1,15 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace NBS.Appointments.Service.Models
 {
     public class SiteAvailabilityRequest
     {
-        [JsonProperty("site")]
+        [JsonPropertyName("site")]
         public string Site { get; set; }
-        [JsonProperty("date")]
+        [JsonPropertyName("date")]
         public DateTime Date { get; set; }
-        [JsonProperty("service")]
+        [JsonPropertyName("service")]
         public string Service { get; set; }
     }    
 }

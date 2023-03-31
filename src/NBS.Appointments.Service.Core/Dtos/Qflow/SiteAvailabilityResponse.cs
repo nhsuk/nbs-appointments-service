@@ -1,6 +1,4 @@
-﻿using NBS.Appointments.Service.Infrastructure.Dtos.Qflow;
-
-namespace NBS.Appointments.Service.Dtos.Qflow
+﻿namespace NBS.Appointments.Service.Dtos.Qflow
 {
     public class SiteAvailabilityResponse
     {
