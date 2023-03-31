@@ -128,7 +128,7 @@ namespace NBS.Appointments.Service.Core.Services
 
             if (response.IsSuccessStatusCode)
             {
-                result.ResponseData = JsonConvert.DeserializeObject<BookAppointmentResponse>(responseBody);
+                result.ResponseData = JsonSerializer.Deserialize<BookAppointmentResponse>(responseBody);
                 return result;
             }
 
@@ -159,7 +159,7 @@ namespace NBS.Appointments.Service.Core.Services
             var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, payload);
             var responseBody = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<CustomerDto>(responseBody);
+            return JsonSerializer.Deserialize<CustomerDto>(responseBody);
         }
 
         private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl, HttpMethod method, object? content)

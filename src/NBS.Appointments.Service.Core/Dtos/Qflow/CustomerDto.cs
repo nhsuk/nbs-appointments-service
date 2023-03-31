@@ -1,82 +1,82 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace NBS.Appointments.Service.Core.Dtos.Qflow
 {
     public class CustomerDto
     {
-        [JsonProperty("PersonalId")]
+        [JsonPropertyName("PersonalId")]
         public string NHSNumber { get; set; }
 
-        [JsonProperty("FirstName")]
+        [JsonPropertyName("FirstName")]
         public string FirstName { get; set; }
 
-        [JsonProperty("LastName")]
+        [JsonPropertyName("LastName")]
         public string LastName { get; set; }
 
-        [JsonProperty("CustomerLevelId")]
+        [JsonPropertyName("CustomerLevelId")]
         public int CustomerLevelId { get; set; }
 
-        [JsonProperty("CustomerIdTypeId")]
+        [JsonPropertyName("CustomerIdTypeId")]
         public int CustomerIdTypeId { get; set; }
 
-        [JsonProperty("EMail")]
+        [JsonPropertyName("EMail")]
         public string Email { get; set; }
 
-        [JsonProperty("TelNumber1")]
+        [JsonPropertyName("TelNumber1")]
         public string TelNumber1 { get; set; }
 
-        [JsonProperty("TelNumber2")]
+        [JsonPropertyName("TelNumber2")]
         public string TelNumber2 { get; set; }
 
-        [JsonProperty("Notes")]
+        [JsonPropertyName("Notes")]
         public string Notes { get; set; }
 
-        [JsonProperty("LanguageCode")]
+        [JsonPropertyName("LanguageCode")]
         public string LanguageCode { get; set; }
 
-        [JsonProperty("DOB")]
+        [JsonPropertyName("DOB")]
         public string Dob { get; set; }
 
-        [JsonProperty("Sex")]
+        [JsonPropertyName("Sex")]
         public int Sex { get; set; }
 
-        [JsonProperty("PictureAttachmentId")]
+        [JsonPropertyName("PictureAttachmentId")]
         public int PictureAttachmentId { get; set; }
 
-        [JsonProperty("Name")]
+        [JsonPropertyName("Name")]
         public string Name { get; set; }
 
         [JsonIgnore]
         public string CustomProperties { get; set; }
 
-        [JsonProperty("CustomerLevelName")]
+        [JsonPropertyName("CustomerLevelName")]
         public string CustomerLevelName { get; set; }
 
-        [JsonProperty("CustomerIdTypeName")]
+        [JsonPropertyName("CustomerIdTypeName")]
         public string CustomerIdTypeName { get; set; }
 
-        [JsonProperty("IsCustomerGroup")]
+        [JsonPropertyName("IsCustomerGroup")]
         public bool IsCustomerGroup { get; set; }
 
-        [JsonProperty("IsMemberOfGroups")]
+        [JsonPropertyName("IsMemberOfGroups")]
         public bool IsMemberOfGroups { get; set; }
 
-        [JsonProperty("NotificationConsent")]
+        [JsonPropertyName("NotificationConsent")]
         public int NotificationConsent { get; set; }
 
-        [JsonProperty("Id")]
+        [JsonPropertyName("Id")]
         public int Id { get; set; }
 
-        [JsonProperty("Description")]
+        [JsonPropertyName("Description")]
         public string Description { get; set; }
 
-        [JsonProperty("Active")]
+        [JsonPropertyName("Active")]
         public bool Active { get; set; }
 
-        [JsonProperty("ExtRef")]
+        [JsonPropertyName("ExtRef")]
         public string ExtRef { get; set; }
 
-        [JsonProperty("PartOfQapp")]
+        [JsonPropertyName("PartOfQapp")]
         public bool PartOfQapp { get; set; }
     }
 }

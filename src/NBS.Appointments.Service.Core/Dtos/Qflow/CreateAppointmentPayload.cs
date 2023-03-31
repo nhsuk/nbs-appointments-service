@@ -1,56 +1,56 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace NBS.Appointments.Service.Core.Dtos.Qflow
 {
     public class CreateAppointmentPayload : BasePayload
     {
-        [JsonProperty("serviceId")]
+        [JsonPropertyName("serviceId")]
         public long ServiceId { get; set; }
-        [JsonProperty("dateAndTime")]
+        [JsonPropertyName("dateAndTime")]
         public string DateAndTime { get; set; }
-        [JsonProperty("customerId")]
+        [JsonPropertyName("customerId")]
         public long CustomerId { get; set; }
-        [JsonProperty("appointmentTypeId")]
+        [JsonPropertyName("appointmentTypeId")]
         public long AppointmentTypeId { get; set; }
-        [JsonProperty("calendarId")]
+        [JsonPropertyName("calendarId")]
         public int CalendarId { get; set; }
-        [JsonProperty("slotOrdinalNumber")]
+        [JsonPropertyName("slotOrdinalNumber")]
         public int SlotOrdinalNumber { get; set; }
-        [JsonProperty("customProperties")]
+        [JsonPropertyName("customProperties")]
         public Dictionary<string, string>? CustomProperties { get; set; }
 
         /* properties with default values */
-        [JsonProperty("parentCaseId")]
+        [JsonPropertyName("parentCaseId")]
         public long ParentCaseId => 0;
-        [JsonProperty("subject")]
+        [JsonPropertyName("subject")]
         public string Subject => "";
-        [JsonProperty("notes")]
+        [JsonPropertyName("notes")]
         public string Notes => "";
-        [JsonProperty("extRef")]
+        [JsonPropertyName("extRef")]
         public string ExtRef => "";
-        [JsonProperty("preventAutoQueue")]
+        [JsonPropertyName("preventAutoQueue")]
         public bool PreventAutoQueue => false;
-        [JsonProperty("languageCode")]
+        [JsonPropertyName("languageCode")]
         public string LanguageCode => "en";
-        [JsonProperty("isWalkIn")]
+        [JsonPropertyName("isWalkIn")]
         public bool IsWalkIn => false;
-        [JsonProperty("forceSimultaneousAppointment")]
+        [JsonPropertyName("forceSimultaneousAppointment")]
         public bool ForceSimultaneousAppointment => true;
-        [JsonProperty("forceWastedDuration")]
+        [JsonPropertyName("forceWastedDuration")]
         public bool ForceWastedDuration => true;
-        [JsonProperty("autoFreeUp")]
+        [JsonPropertyName("autoFreeUp")]
         public bool AutoFreeUp => true;
-        [JsonProperty("basedOnAppointmentRequestId")]
+        [JsonPropertyName("basedOnAppointmentRequestId")]
         public int BasedOnAppointmentRequestId => 0;
-        [JsonProperty("duration")]
+        [JsonPropertyName("duration")]
         public int Duration => 0;
-        [JsonProperty("simulationOnly")]
+        [JsonPropertyName("simulationOnly")]
         public bool SimulationOnly => false;
-        [JsonProperty("forceNoDynamicVacancy")]
+        [JsonPropertyName("forceNoDynamicVacancy")]
         public bool ForceNoDynamicVacancy => false;
-        [JsonProperty("ExistingProcessId")]
+        [JsonPropertyName("ExistingProcessId")]
         public int ExistingProcessId => 0;
-        [JsonProperty("ActOptionId")]
+        [JsonPropertyName("ActOptionId")]
         public int ActOptionId => 0;
     }
 }

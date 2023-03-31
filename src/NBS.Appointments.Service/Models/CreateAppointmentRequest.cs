@@ -1,41 +1,40 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System.Text.Json.Serialization;
 
 namespace NBS.Appointments.Service.Models
 {
     public class BookAppointmentRequest
     {
-        [JsonProperty("slot")]
+        [JsonPropertyName("slot")]
         public string Slot { get; set; }
-        [JsonProperty("customerDetails")]
+        [JsonPropertyName("customerDetails")]
         public CustomerDetails CustomerDetails { get; set; }
-        [JsonProperty("properties")]
+        [JsonPropertyName("properties")]
         public string Properties { get; set; }
     }
 
     public class CustomerDetails
     {
-        [JsonProperty("nhsNumber")]
+        [JsonPropertyName("nhsNumber")]
         public string NhsNumber { get; set; }
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
-        [JsonProperty("dob")]
+        [JsonPropertyName("dob")]
         public string Dob { get; set; }
-        [JsonProperty("contactDetails")]
+        [JsonPropertyName("contactDetails")]
         public ContactDetails ContactDetails { get; set; }
-        [JsonProperty("qualifiers")]
+        [JsonPropertyName("qualifiers")]
         public string Qualifiers { get; set; }
-        [JsonProperty("selfReferralOccupation")]
+        [JsonPropertyName("selfReferralOccupation")]
         public string? SelfReferralOccupation { get; set; }
     }
 
     public class ContactDetails
     {
-        [JsonProperty("phoneNumber")]
+        [JsonPropertyName("phoneNumber")]
         public string PhoneNumber { get; set; }
-        [JsonProperty("landline")]
+        [JsonPropertyName("landline")]
         public string Landline { get; set; }
-        [JsonProperty("email")]
+        [JsonPropertyName("email")]
         public string Email { get; set; }
     }
 }

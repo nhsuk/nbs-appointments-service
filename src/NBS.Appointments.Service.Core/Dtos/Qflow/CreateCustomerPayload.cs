@@ -1,43 +1,43 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace NBS.Appointments.Service.Core.Dtos.Qflow
 {
     public class CreateCustomerPayload : BasePayload
     {
-        [JsonProperty("customer")]
+        [JsonPropertyName("customer")]
         public Customer Customer { get; set; }
     }
 
     public class Customer
     {
-        [JsonProperty("active")]
+        [JsonPropertyName("active")]
         public bool Active => true;
 
-        [JsonProperty("FirstName")]
+        [JsonPropertyName("FirstName")]
         public string FirstName { get; set; }
 
-        [JsonProperty("LastName")]
+        [JsonPropertyName("LastName")]
         public string LastName { get; set; }
 
-        [JsonProperty("PersonalId")]
+        [JsonPropertyName("PersonalId")]
         public string NHSNumber { get; set; }
 
-        [JsonProperty("SelfReferalOccupation")]
+        [JsonPropertyName("SelfReferalOccupation")]
         public string SelfReferralOccupation { get; set; }
 
-        [JsonProperty("DoB")]
+        [JsonPropertyName("DoB")]
         public string DoB { get; set; }
 
-        [JsonProperty("EMail")]
+        [JsonPropertyName("EMail")]
         public string? Email { get; set; }
 
-        [JsonProperty("TelNumber1")]
+        [JsonPropertyName("TelNumber1")]
         public string? TelNumber1 { get; set; }
 
-        [JsonProperty("TelNumber2")]
+        [JsonPropertyName("TelNumber2")]
         public string? TelNumber2 { get; set; }
 
-        [JsonProperty("NotificationConsent")]
+        [JsonPropertyName("NotificationConsent")]
         public bool NotificationConsent { get; set; }
     }
 }
