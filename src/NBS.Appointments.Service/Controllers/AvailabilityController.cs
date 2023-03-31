@@ -10,6 +10,7 @@ using NBS.Appointments.Service.Validators;
 using NBS.Appointments.Service.Extensions;
 using NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors;
 using NBS.Appointments.Service.Core.Dtos.Qflow;
+using NBS.Appointments.Service.Core.Interfaces;
 
 namespace NBS.Appointments.Service.Controllers
 {
@@ -19,13 +20,27 @@ namespace NBS.Appointments.Service.Controllers
     {
         private readonly IQflowService _qflowService;
         private readonly RequestValidatorFactory _validatorFactory;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
         public AvailabilityController(
             IQflowService qflowService,
+            IDateTimeProvider dateTimeProvider,
             RequestValidatorFactory validatorFactory)
         {
             _qflowService = qflowService ?? throw new ArgumentNullException(nameof(qflowService));
             _validatorFactory = validatorFactory ?? throw new ArgumentNullException(nameof(validatorFactory));
+            _dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
+        }
+
+        [HttpGet]
+        [Route("time")]
+        public IActionResult Time() 
+        {            
+            return Ok(new
+            {
+                Utc = _dateTimeProvider.UtcNow.Hour,
+                Local = _dateTimeProvider.LocalNow.Hour
+            });
         }
 
         [HttpPost]
@@ -62,18 +77,20 @@ namespace NBS.Appointments.Service.Controllers
         [HttpPost]
         [Route("hours")]
         public Task<IActionResult> Hours([FromBody] SiteAvailabilityRequest request)
-        {            
-            return LookupAvailability(request, (qflowResponse) => Ok(AvailabilityHourResponse.FromQflowResponse(qflowResponse, request.Service, request.Date, DateTime.UtcNow)));
+        {
+            var localDateTime = _dateTimeProvider.LocalNow;
+            return LookupAvailability(request, localDateTime, (slots) => Ok(AvailabilityHourResponse.FromQflowResponse(request.Site, request.Service, request.Date, slots)));
         }
 
         [HttpPost]
         [Route("slots")]
         public Task<IActionResult> Slots([FromBody] SiteAvailabilityRequest request)
-        {            
-            return LookupAvailability(request, (qflowResponse) => Ok(AvailabilitySlotResponse.FromQflowResponse(request.Site, request.Service, request.Date, qflowResponse)));
+        {
+            var localDateTime = _dateTimeProvider.LocalNow;
+            return LookupAvailability(request, localDateTime, (slots) => Ok(AvailabilitySlotResponse.FromQflowResponse(request.Site, request.Service, request.Date, slots)));
         }
 
-        private async Task<IActionResult> LookupAvailability(SiteAvailabilityRequest request, Func<SiteSlotsResponse, IActionResult> responseConversion)
+        private async Task<IActionResult> LookupAvailability(SiteAvailabilityRequest request, DateTime notBefore, Func<IEnumerable<SiteSlotAvailabilityResponse>, IActionResult> responseConversion)
         {
             var validator = _validatorFactory.GetValidator<SiteAvailabilityRequest>();
             var validationResult = validator.Validate(request);
@@ -94,7 +111,10 @@ namespace NBS.Appointments.Service.Controllers
                 serviceDescriptor.Vaccine,
                 serviceDescriptor.Reference);
 
-            return responseConversion(qflowResponse);
+            var date = request.Date.Date;
+            var availableSlots = qflowResponse.Availability.Where(sl => date.Add(sl.Time) >= notBefore);
+
+            return responseConversion(availableSlots);
         }
     }
 }

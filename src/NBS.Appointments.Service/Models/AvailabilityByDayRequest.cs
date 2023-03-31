@@ -1,17 +1,17 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace NBS.Appointments.Service.Models
 {
     public class AvailabilityByDayRequest
     {
-        [JsonProperty("sites")]
+        [JsonPropertyName("sites")]
         public string[] Sites { get; set; }
-        [JsonProperty("from")] 
+        [JsonPropertyName("from")] 
         public DateTime From { get; set; }
-        [JsonProperty("until")] 
+        [JsonPropertyName("until")] 
         public DateTime Until { get; set; }
-        [JsonProperty("service")] 
+        [JsonPropertyName("service")] 
         public string Service { get; set; }
     }
 }

@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.WebUtilities;
 using Polly;
 using Microsoft.Extensions.Options;
 using NBS.Appointments.Service.Core.Dtos.Qflow;
-using Newtonsoft.Json;
 using System.Text;
 using System.Net.Mime;
+using System.Text.Json;
 using NBS.Appointments.Service.Core.Dtos;
 
 namespace NBS.Appointments.Service.Core.Services
@@ -57,7 +57,7 @@ namespace NBS.Appointments.Service.Core.Services
             var response = await Execute(query, endpointUrl, HttpMethod.Get, null);
             var responseBody = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<SiteAvailabilityResponse[]>(responseBody);
+            return JsonSerializer.Deserialize<SiteAvailabilityResponse[]>(responseBody);
         }
 
         public async Task<SiteSlotsResponse> GetSiteSlotAvailability(int siteId, DateTime date, string dose, string vaccineType, string externalReference)
@@ -78,7 +78,7 @@ namespace NBS.Appointments.Service.Core.Services
             var response = await Execute(query, endpointUrl, HttpMethod.Get, null);
             var responseBody = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<SiteSlotsResponse>(responseBody);
+            return JsonSerializer.Deserialize<SiteSlotsResponse>(responseBody);
         }
 
         public async Task<ReserveSlotResponse> ReserveSlot(int calendarId, int startTime, int endTime, int lockDuration)
@@ -178,7 +178,7 @@ namespace NBS.Appointments.Service.Core.Services
                 if (method == HttpMethod.Post)
                 {
                     SetApiSessionId(content, context["SessionId"].ToString());
-                    requestMessage.Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, MediaTypeNames.Application.Json);
+                    requestMessage.Content = new StringContent(JsonSerializer.Serialize(content), Encoding.UTF8, MediaTypeNames.Application.Json);
                 }
                 else
                 {

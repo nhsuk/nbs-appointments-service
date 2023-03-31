@@ -81,5 +81,11 @@
         "Method": "POST",
         "Status": 200,
         "Response": "12345"
+    },
+    {
+        "Path": "/time",
+        "Method": "GET",
+        "Status": 200,
+        "Response": "@now"
     }
 ]

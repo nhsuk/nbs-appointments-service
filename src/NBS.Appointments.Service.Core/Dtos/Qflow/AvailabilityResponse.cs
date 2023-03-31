@@ -1,15 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
-namespace NBS.Appointments.Service.Infrastructure.Dtos.Qflow
+namespace NBS.Appointments.Service.Dtos.Qflow
 {
     public class AvailabilityResponse
     {
         public DateTime Date { get; set; }
 
-        [JsonProperty("AM")]
+        [JsonPropertyName("AM")]
         public int Am { get; set; }
 
-        [JsonProperty("PM")]
+        [JsonPropertyName("PM")]
         public int Pm { get; set; }
     }
 }

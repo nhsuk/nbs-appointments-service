@@ -97,3 +97,35 @@ resource "azurerm_app_configuration_key" "config_qflow_url" {
     azurerm_role_assignment.appconf_dataowner
   ]
 }
+
+  resource "azurerm_app_configuration_key" "config_datetimeprovider_type" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
+  key                    = "DateTimeProvider:Type"
+  value                  = "system"
+
+  lifecycle {
+    ignore_changes = [
+      value      
+    ]
+  }
+
+  depends_on = [
+    azurerm_role_assignment.appconf_dataowner
+  ]
+}
+
+  resource "azurerm_app_configuration_key" "config_datetimeprovider_timezone" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
+  key                    = "DateTimeProvider:TimeZone"
+  value                  = "Europe/London"
+
+  lifecycle {
+    ignore_changes = [
+      value      
+    ]
+  }
+
+  depends_on = [
+    azurerm_role_assignment.appconf_dataowner
+  ]
+}

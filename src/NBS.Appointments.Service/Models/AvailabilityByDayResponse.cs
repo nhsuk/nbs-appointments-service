@@ -1,24 +1,24 @@
 ﻿using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace NBS.Appointments.Service.Models
 {
     public class AvailabilityByDayResponse
     {
-        [JsonProperty("site")]
+        [JsonPropertyName("site")]
         public string Site { get; set; }
-        [JsonProperty("service")]
+        [JsonPropertyName("service")]
         public string Service { get; set; }
-        [JsonProperty("availability")] 
+        [JsonPropertyName("availability")] 
         public AvailabilityEntry[] Availability { get; set; }
 
         public class AvailabilityEntry
         {
-            [JsonProperty("date")]
+            [JsonPropertyName("date")]
             public string Date { get; set; }
-            [JsonProperty("AM")]
+            [JsonPropertyName("am")]
             public int Am { get; set; }
-            [JsonProperty("PM")]
+            [JsonPropertyName("pm")]
             public int Pm { get; set; }
         }
 

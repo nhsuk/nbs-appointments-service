@@ -1,21 +1,21 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace NBS.Appointments.Service.Core.Dtos.Qflow
 {
     public class ReserveSlotRequestContent : BasePayload
     {
-        [JsonProperty("calendarId")]
+        [JsonPropertyName("calendarId")]
         public int CalendarId { get; set; }
 
-        [JsonProperty("startTime")]
+        [JsonPropertyName("startTime")]
         public int StartTime { get; set; }
 
-        [JsonProperty("endTime")]
+        [JsonPropertyName("endTime")]
         public int EndTime { get; set; }
 
-        [JsonProperty("lockDuration")]
+        [JsonPropertyName("lockDuration")]
         public int LockDuration { get; set; }
-        [JsonProperty("userId")]
+        [JsonPropertyName("userId")]
         public int UserId { get; set; }
     }
 }
