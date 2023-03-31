@@ -93,6 +93,11 @@ resource "azurerm_app_configuration_key" "config_qflow_url" {
     ]
   }
 
+  depends_on = [
+    azurerm_role_assignment.appconf_dataowner
+  ]
+}
+
   resource "azurerm_app_configuration_key" "config_datetimeprovider_type" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
   key                    = "DateTimeProvider:Type"
@@ -103,6 +108,11 @@ resource "azurerm_app_configuration_key" "config_qflow_url" {
       value      
     ]
   }
+
+  depends_on = [
+    azurerm_role_assignment.appconf_dataowner
+  ]
+}
 
   resource "azurerm_app_configuration_key" "config_datetimeprovider_timezone" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
