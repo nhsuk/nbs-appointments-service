@@ -16,9 +16,9 @@ namespace NBS.Appointments.Service.Models
         {
             [JsonPropertyName("date")]
             public string Date { get; set; }
-            [JsonPropertyName("AM")]
+            [JsonPropertyName("am")]
             public int Am { get; set; }
-            [JsonPropertyName("PM")]
+            [JsonPropertyName("pm")]
             public int Pm { get; set; }
         }
 

@@ -20,7 +20,6 @@ namespace NBS.Appointments.Service.Api.Tests
         {
             var payload = new StringContent("");
             var response = await _httpClient.PostAsync(Endpoint, payload);
-
             response.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         }
 
