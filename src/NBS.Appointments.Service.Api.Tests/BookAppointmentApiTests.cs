@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using NBS.Appointments.Service.Models;
-using Newtonsoft.Json;
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using Xunit;
 
 namespace NBS.Appointments.Service.Api.Tests
@@ -26,12 +26,15 @@ namespace NBS.Appointments.Service.Api.Tests
         {
             var request = new BookAppointmentRequest
             {
-                Slot = string.Empty,
-                CustomerDetails = new CustomerDetails(),
+                Slot = "invalid:slot:descriptor",
+                CustomerDetails = new CustomerDetails
+                {
+                    Name = "Test"
+                },
                 Properties = string.Empty
             };
 
-            var payload = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var payload = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -40,7 +43,30 @@ namespace NBS.Appointments.Service.Api.Tests
         [Fact]
         public async Task BookAppointment_ShouldReturnOkResponse_WhenRequestModelIsValid()
         {
+            var request = new BookAppointmentRequest
+            {
+                Slot = "qflow:1080:109429:1:2023-03-31:605:49",
+                CustomerDetails = new CustomerDetails
+                {
+                    NhsNumber = "987654321",
+                    Dob = DateTime.Today.AddYears(-35).ToShortDateString(),
+                    Name = "Bruce:Wayne",
+                    Qualifiers = string.Empty,
+                    SelfReferralOccupation = string.Empty,
+                    ContactDetails = new ContactDetails
+                    {
+                        Email = string.Empty,
+                        Landline = string.Empty,
+                        PhoneNumber = string.Empty
+                    }
+                },
+                Properties = "qflow:1:0"
+            };
 
+            var payload = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(Endpoint, payload);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
     }
 }

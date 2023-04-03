@@ -5,9 +5,9 @@ using System;
 
 namespace NBS.Appointments.Service.Validators
 {
-    public class CreateAppointmentRequestValidator : AbstractValidator<BookAppointmentRequest>
+    public class BookAppointmentRequestValidator : AbstractValidator<BookAppointmentRequest>
     {
-        public CreateAppointmentRequestValidator()
+        public BookAppointmentRequestValidator()
         {
             RuleFor(x => x.Slot)
                 .NotEmpty()
