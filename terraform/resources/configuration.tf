@@ -161,3 +161,19 @@ resource "azurerm_app_configuration_key" "config_qflow_callcentrebookingflagid" 
     azurerm_role_assignment.appconf_dataowner
   ]
 }
+
+resource "azurerm_app_configuration_key" "config_qflow_callcentreemailflagid" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
+  key                    = "Qflow:CallCentreEmailFlagId"
+  value                  = "3"
+
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
+
+  depends_on = [
+    azurerm_role_assignment.appconf_dataowner
+  ]
+}
