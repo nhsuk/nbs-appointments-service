@@ -10,6 +10,8 @@ services:
       - "DateTimeProvider:Type=remote"
       - "DateTimeProvider:Endpoint=http://mock-api/time"
       - "DateTimeProvider:TimeZone=Europe/London"
+      - "Qflow:AppBookingFlagId=5"
+      - "Qflow:CallCentreBookingFlagId=1"
     ports:
       - "4000:80"
 

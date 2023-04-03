@@ -7,6 +7,7 @@ using NBS.Appointments.Service.Core.Dtos.Qflow;
 using System.Text;
 using System.Net.Mime;
 using System.Text.Json;
+using NBS.Appointments.Service.Core.Dtos;
 
 namespace NBS.Appointments.Service.Core.Services
 {
@@ -15,8 +16,6 @@ namespace NBS.Appointments.Service.Core.Services
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IQflowSessionManager _sessionManager;
         private readonly QflowOptions _options;
-
-        private const string ApiSessionId = "ApiSessionId";
 
         public QflowService(
             IOptions<QflowOptions> options,
@@ -101,6 +100,77 @@ namespace NBS.Appointments.Service.Core.Services
             var slotOrdinalNumber = int.Parse(responseBody);
 
             return new ReserveSlotResponse(slotOrdinalNumber);
+        }
+
+        public async Task<ApiResult<BookAppointmentResponse>> BookAppointment(int serviceId, DateTime dateAndTime, int customerId, int appointmentTypeId,
+            int slotOrdinalNumber, int calendarId, Dictionary<string, string>? customProperties)
+        {
+            var payload = new BookAppointmentPayload
+            {
+                AppointmentTypeId = appointmentTypeId,
+                CalendarId = calendarId,
+                CustomerId = customerId,
+                CustomProperties = customProperties,
+                DateAndTime = $"{dateAndTime:yyyy-MM-dd HH:mm:ss}",
+                ServiceId = serviceId,
+                SlotOrdinalNumber = slotOrdinalNumber,
+            };
+
+            var endpointUrl = $"{_options.BaseUrl}/svcService.svc/rest/SetAppointment6";
+
+            var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, payload);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            var result = new ApiResult<BookAppointmentResponse>
+            {
+                StatusCode = response.StatusCode
+            };
+
+            if (response.IsSuccessStatusCode)
+            {
+                result.ResponseData = JsonSerializer.Deserialize<BookAppointmentResponse>(responseBody);
+                return result;
+            }
+
+            return result;
+        }
+
+        public async Task<ApiResult<CustomerDto>> CreateOrUpdateCustomer(string firstName, string surname, string nhsNumber, string dob, string? email,
+            string? phoneNumber, string? landline, string selfReferralOccupation)
+        {
+            var payload = new CreateCustomerPayload
+            {
+                Customer = new Customer
+                {
+                    DoB = $"{dob:d}",
+                    Email = email,
+                    FirstName = firstName,
+                    LastName = surname,
+                    NHSNumber = nhsNumber,
+                    SelfReferralOccupation = selfReferralOccupation,
+                    TelNumber1 = phoneNumber,
+                    TelNumber2 = landline,
+                    NotificationConsent = !string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(phoneNumber) && !string.IsNullOrEmpty(landline)
+                }
+            };
+
+            var endpointUrl = $"{_options.BaseUrl}/svcCustomCustomer.svc/rest/Create";
+
+            var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, payload);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            var result = new ApiResult<CustomerDto>
+            {
+                StatusCode = response.StatusCode
+            };
+
+            if (response.IsSuccessStatusCode)
+            {
+                result.ResponseData = JsonSerializer.Deserialize<CustomerDto>(responseBody);
+                return result;
+            }
+
+            return result;
         }
 
         private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl, HttpMethod method, object? content)
