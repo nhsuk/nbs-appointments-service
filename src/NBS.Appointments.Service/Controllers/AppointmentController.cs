@@ -48,7 +48,7 @@ namespace NBS.Appointments.Service.Controllers
 
             var customerDetails = request.CustomerDetails;
 
-            var qflowCustomer = await _qflowService.CreateOrUpdateCustomer(
+            var createUpdateCustomerResult = await _qflowService.CreateOrUpdateCustomer(
                 nameDescriptor.FirstName,
                 nameDescriptor.Surname,
                 customerDetails.NhsNumber,
@@ -58,17 +58,22 @@ namespace NBS.Appointments.Service.Controllers
                 customerDetails.ContactDetails.Landline,
                 customerDetails.SelfReferralOccupation);
 
-            var result = await _qflowService.BookAppointment(
+            if (!createUpdateCustomerResult.IsSuccessful)
+            {
+                return BadRequest("Failed to create or update customer record.");
+            }
+
+            var bookAppointmentResult = await _qflowService.BookAppointment(
                 appointmentDescriptor.ServiceId,
                 appointmentDescriptor.AppointmentDateAndTime,
-                qflowCustomer.Id,
+                createUpdateCustomerResult.ResponseData.Id,
                 appointmentDescriptor.AppointmentTypeId,
                 appointmentDescriptor.SlotOrdinalNumber,
                 appointmentDescriptor.CalendarId,
                 _customPropertiesHelper.BuildCustomProperties(request.Properties));
 
-            return result.StatusCode == HttpStatusCode.OK
-                ? Ok(result.ResponseData)
+            return bookAppointmentResult.IsSuccessful
+                ? Ok(BookedAppointmentResponse.FromQflowResponse(bookAppointmentResult.ResponseData))
                 : StatusCode(410, "Slot no longer exists or reservation has expired.");
         }
     }

@@ -12,7 +12,7 @@ namespace NBS.Appointments.Service.Core.Interfaces.Services
         public Task<ReserveSlotResponse> ReserveSlot(int calendarId, int startTime, int endTime, int lockDuration);
         public Task<ApiResult<BookAppointmentResponse>> BookAppointment(int serviceId, DateTime dateAndTime, int customerId, int appointmentTypeId,
             int slotOrdinalNumber, int calendarId, Dictionary<string, string>? customProperties);
-        public Task<CustomerDto> CreateOrUpdateCustomer(string firstName, string surname, string nhsNumber, string dob, string? email,
+        public Task<ApiResult<CustomerDto>> CreateOrUpdateCustomer(string firstName, string surname, string nhsNumber, string dob, string? email,
             string? phoneNumber, string? landline, string selfReferralOccupation);
     }
 }

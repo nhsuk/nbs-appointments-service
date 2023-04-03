@@ -6,5 +6,6 @@ namespace NBS.Appointments.Service.Core.Dtos
     {
         public TResponse ResponseData { get; set; }
         public HttpStatusCode StatusCode { get; set; }
+        public bool IsSuccessful => StatusCode == HttpStatusCode.OK;
     }
 }

@@ -7,10 +7,10 @@
             var parts = descriptor.Split(":");
 
             if (parts.Length != 7)
-                throw new FormatException("Descriptor is not formatted correctly");
+                throw new FormatException("Descriptor is not formatted correctly.");
 
             if (parts[0] != "qflow")
-                throw new FormatException("String was not a qflow service descriptor");
+                throw new FormatException("String was not a qflow service descriptor.");
 
             if (!int.TryParse(parts[1], out var serviceId))
                 throw new FormatException("ServiceId must be a number.");

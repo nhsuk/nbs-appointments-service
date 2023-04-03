@@ -2,7 +2,7 @@
 
 namespace NBS.Appointments.Service.Core.Dtos.Qflow
 {
-    public class CreateAppointmentPayload : BasePayload
+    public class BookAppointmentPayload : BasePayload
     {
         [JsonPropertyName("serviceId")]
         public long ServiceId { get; set; }

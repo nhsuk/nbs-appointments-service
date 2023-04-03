@@ -105,7 +105,7 @@ namespace NBS.Appointments.Service.Core.Services
         public async Task<ApiResult<BookAppointmentResponse>> BookAppointment(int serviceId, DateTime dateAndTime, int customerId, int appointmentTypeId,
             int slotOrdinalNumber, int calendarId, Dictionary<string, string>? customProperties)
         {
-            var payload = new CreateAppointmentPayload
+            var payload = new BookAppointmentPayload
             {
                 AppointmentTypeId = appointmentTypeId,
                 CalendarId = calendarId,
@@ -135,7 +135,7 @@ namespace NBS.Appointments.Service.Core.Services
             return result;
         }
 
-        public async Task<CustomerDto> CreateOrUpdateCustomer(string firstName, string surname, string nhsNumber, string dob, string? email,
+        public async Task<ApiResult<CustomerDto>> CreateOrUpdateCustomer(string firstName, string surname, string nhsNumber, string dob, string? email,
             string? phoneNumber, string? landline, string selfReferralOccupation)
         {
             var payload = new CreateCustomerPayload
@@ -159,7 +159,18 @@ namespace NBS.Appointments.Service.Core.Services
             var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, payload);
             var responseBody = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<CustomerDto>(responseBody);
+            var result = new ApiResult<CustomerDto>
+            {
+                StatusCode = response.StatusCode
+            };
+
+            if (response.IsSuccessStatusCode)
+            {
+                result.ResponseData = JsonSerializer.Deserialize<CustomerDto>(responseBody);
+                return result;
+            }
+
+            return result;
         }
 
         private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl, HttpMethod method, object? content)

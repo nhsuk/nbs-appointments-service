@@ -7,18 +7,19 @@ namespace NBS.Appointments.Service.Core.Unit.Tests.Dtos.Qflow.Descriptors
     public class QflowBookAppointmentDescriptorTests
     {
         [Theory]
-        [InlineData("not:enough:segments")]
-        [InlineData("enough:segments:does:not:start:with:qflow")]
-        [InlineData("too:many:segments:for:the:book:appointment:urn")]
-        [InlineData("qflow:invalid:123:321:2023-03-31:456:654")]
-        [InlineData("qflow:123:invalid:321:2023-03-31:456:654")]
-        [InlineData("qflow:123:321:invalid:2023-03-31:456:654")]
-        [InlineData("qflow:123:321:456:invalid:456:654")]
-        [InlineData("qflow:123:321:456:2023-03-31:invalid:654")]
-        [InlineData("qflow:123:321:456:2023-03-31:456:invalid")]
-        public void FromString_ThrowsFormatException_WhenUrnIsFormattedIncorrectly(string descriptor)
+        [InlineData("not:enough:segments", "Descriptor is not formatted correctly.")]
+        [InlineData("enough:segments:does:not:start:with:qflow", "String was not a qflow service descriptor.")]
+        [InlineData("too:many:segments:for:the:book:appointment:urn", "Descriptor is not formatted correctly.")]
+        [InlineData("qflow:invalid:123:321:2023-03-31:456:654", "ServiceId must be a number.")]
+        [InlineData("qflow:123:invalid:321:2023-03-31:456:654", "CalendarId must be a number.")]
+        [InlineData("qflow:123:321:invalid:2023-03-31:456:654", "AppointmentTypeId must be a number.")]
+        [InlineData("qflow:123:321:456:invalid:456:654", "Appointment date must be a valid date.")]
+        [InlineData("qflow:123:321:456:2023-03-31:invalid:654", "Appointment time must be a number.")]
+        [InlineData("qflow:123:321:456:2023-03-31:456:invalid", "Slot ordinal number must be a number.")]
+        public void FromString_ThrowsFormatException_WhenUrnIsFormattedIncorrectly(string descriptor, string expectedErrorMsg)
         {
-            Assert.Throws<FormatException>(() => QflowBookAppointmentDescriptor.FromString(descriptor));
+            var exception = Assert.Throws<FormatException>(() => QflowBookAppointmentDescriptor.FromString(descriptor));
+            exception.Message.Should().Be(expectedErrorMsg);
         }
 
         [Fact]
