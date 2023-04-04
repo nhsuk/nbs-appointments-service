@@ -40,20 +40,15 @@ namespace NBS.Appointments.Service.Controllers
 
             var slotDescriptor = QFlowSlotDescriptor.FromString(request.Slot);
 
-            try
-            {
-                var response = await _qflowService.ReserveSlot(
-                    slotDescriptor.CalendarId,
-                    slotDescriptor.StartTime,
-                    slotDescriptor.EndTime,
-                    request.LockDuration);
+            var response = await _qflowService.ReserveSlot(
+                slotDescriptor.CalendarId,
+                slotDescriptor.StartTime,
+                slotDescriptor.EndTime,
+                request.LockDuration);
 
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return response.IsSuccessful
+                ? Ok(LockSlotResponse.FromQflowResponse(slotDescriptor.ServiceId, slotDescriptor.CalendarId, slotDescriptor.AppointmentTypeId, slotDescriptor.StartTime, response.ResponseData))
+                : StatusCode(410, "Slot no longer exists or reservation has expired.");
         }
     }
 }

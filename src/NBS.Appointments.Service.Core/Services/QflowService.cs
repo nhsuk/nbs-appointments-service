@@ -81,7 +81,7 @@ namespace NBS.Appointments.Service.Core.Services
             return JsonSerializer.Deserialize<SiteSlotsResponse>(responseBody);
         }
 
-        public async Task<ReserveSlotResponse> ReserveSlot(int calendarId, int startTime, int endTime, int lockDuration)
+        public async Task<ApiResult<ReserveSlotResponse>> ReserveSlot(int calendarId, int startTime, int endTime, int lockDuration)
         {
             var request = new ReserveSlotRequestContent
             {
@@ -97,9 +97,20 @@ namespace NBS.Appointments.Service.Core.Services
             var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, request);
             var responseBody = await response.Content.ReadAsStringAsync();
 
-            var slotOrdinalNumber = int.Parse(responseBody);
+            var result = new ApiResult<ReserveSlotResponse>
+            {
+                StatusCode = response.StatusCode
+            };
 
-            return new ReserveSlotResponse(slotOrdinalNumber);
+            if (response.IsSuccessStatusCode)
+            {
+                var slotOrdinalNumber = int.Parse(responseBody);
+
+                result.ResponseData = new ReserveSlotResponse(slotOrdinalNumber);
+                return result;
+            }
+
+            return result;
         }
 
         public async Task<ApiResult<BookAppointmentResponse>> BookAppointment(int serviceId, DateTime dateAndTime, int customerId, int appointmentTypeId,
