@@ -41,7 +41,7 @@ namespace NBS.Appointments.Service.Models
             {
                 From = date.Date.Add(qs.Time),
                 Duration = qs.Duration,
-                Reference = $"qflow:{qs.ServiceId}:{qs.CalendarId}:{qs.AppointmentTypeId}:{qs.Time.TotalMinutes}:{qs.Time.TotalMinutes + qs.Duration}"
+                Reference = $"qflow:{qs.ServiceId}:{qs.CalendarId}:{qs.AppointmentTypeId}:{date:yyyy-MM-dd}:{qs.Time.TotalMinutes}:{qs.Time.TotalMinutes + qs.Duration}"
             }).ToList()
         };        
     }

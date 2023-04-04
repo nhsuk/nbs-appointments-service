@@ -47,7 +47,7 @@ namespace NBS.Appointments.Service.Controllers
                 request.LockDuration);
 
             return response.IsSuccessful
-                ? Ok(LockSlotResponse.FromQflowResponse(slotDescriptor.ServiceId, slotDescriptor.CalendarId, slotDescriptor.AppointmentTypeId, slotDescriptor.StartTime, response.ResponseData))
+                ? Ok(LockSlotResponse.FromQflowResponse(slotDescriptor, response.ResponseData))
                 : StatusCode(410, "Slot no longer exists or reservation has expired.");
         }
     }

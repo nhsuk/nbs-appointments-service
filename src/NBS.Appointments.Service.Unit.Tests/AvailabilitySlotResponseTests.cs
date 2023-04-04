@@ -32,7 +32,7 @@ namespace NBS.Appointments.Service.Unit.Tests
             var actualSlot = actual.Slots.First();
             actualSlot.Duration.Should().Be(20);
             actualSlot.From.Should().Be(testDate.AddHours(9));
-            actualSlot.Reference.Should().Be("qflow:33:66:99:540:560");
+            actualSlot.Reference.Should().Be($"qflow:33:66:99:{testDate:yyyy-MM-dd}:540:560");
         }
     }
 }

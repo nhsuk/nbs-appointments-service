@@ -1,4 +1,5 @@
 ﻿using NBS.Appointments.Service.Core.Dtos.Qflow;
+using NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors;
 using System.Text.Json.Serialization;
 
 namespace NBS.Appointments.Service.Models
@@ -8,9 +9,9 @@ namespace NBS.Appointments.Service.Models
         [JsonPropertyName("ref")]
         public string Ref { get; set; }
 
-        public static LockSlotResponse FromQflowResponse(int serviceId, int calendarId, int appointmentTypeId, int startTime, ReserveSlotResponse responseData) => new LockSlotResponse
+        public static LockSlotResponse FromQflowResponse(QFlowSlotDescriptor descriptor, ReserveSlotResponse responseData) => new LockSlotResponse
         {
-            Ref = $"qflow:{serviceId}:{calendarId}:{appointmentTypeId}:{startTime}:{responseData.SlotOrdinalNumber}"
+            Ref = $"qflow:{descriptor.ServiceId}:{descriptor.CalendarId}:{descriptor.AppointmentTypeId}:{descriptor.Date:yyyy-MM-dd}:{descriptor.StartTime}:{responseData.SlotOrdinalNumber}"
         };
 
     }

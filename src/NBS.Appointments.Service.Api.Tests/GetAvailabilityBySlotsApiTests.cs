@@ -80,7 +80,7 @@ namespace NBS.Appointments.Service.Api.Tests
             actualResponseData.SiteId.Should().Be("qflow:1234");
             actualResponseData.Service.Should().Be("qflow:0:12345:NotSet");
             actualResponseData.Slots.Should().HaveCount(1);
-            actualResponseData.Slots.First().Reference.Should().Be("qflow:3:2:1:390:395");
+            actualResponseData.Slots.First().Reference.Should().Be($"qflow:3:2:1:{from:yyyy-MM-dd}:390:395");
         }
 
         [Theory]
