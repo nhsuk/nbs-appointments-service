@@ -42,7 +42,7 @@ namespace NBS.Appointments.Service.Api.Tests
         [Fact]
         public async Task ReserveSlot_RespondsOk_WhenPayloadIsValid()
         {
-            var payload = new ReserveSlotApiRequest("qflow:1:2:3", 5);
+            var payload = new ReserveSlotApiRequest("qflow:1:2:3:2023-04-05:4:5", 5);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync(Endpoint, jsonContent);
