@@ -1,13 +1,16 @@
 ﻿namespace NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors
 {
-    public class QflowCancelationrReasonDescriptor
+    public class QflowCancelationReasonDescriptor
     {
-        public static QflowCancelationrReasonDescriptor FromString(string descriptor)
+        public static QflowCancelationReasonDescriptor FromString(string descriptor)
         {
             var parts = descriptor.Split(':');
 
             if (parts.Length != 3)
                 throw new FormatException("Descriptor is formatted incorrectly.");
+
+            if (parts[0] != "qflow")
+                throw new FormatException("String was not a qflow cancelation reason descriptor.");
 
             if (!int.TryParse(parts[1], out var cancelationReasonId))
                 throw new FormatException("CancelationReasonId must be a number.");
@@ -15,10 +18,10 @@
             if (!int.TryParse(parts[2], out var treatmentPlanCancelationMethod))
                 throw new FormatException("TreatmentPlanCancelationMethod must be a number.");
 
-            return new QflowCancelationrReasonDescriptor(cancelationReasonId, treatmentPlanCancelationMethod);
+            return new QflowCancelationReasonDescriptor(cancelationReasonId, treatmentPlanCancelationMethod);
         }
 
-        public QflowCancelationrReasonDescriptor(int cancelationReasonId, int treatmentPlanCancelationMethod) 
+        public QflowCancelationReasonDescriptor(int cancelationReasonId, int treatmentPlanCancelationMethod) 
         {
             CancelationReasonId = cancelationReasonId;
             TreatmentPlanCancelationMethod = treatmentPlanCancelationMethod;

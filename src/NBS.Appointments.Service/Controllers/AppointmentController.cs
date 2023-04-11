@@ -98,7 +98,7 @@ namespace NBS.Appointments.Service.Controllers
             if (appointmentToCancel is null)
                 return NotFound($"Cannot find appointment with processId: {cancelAppointmentDescriptor.ProcessId} for customer: {cancelAppointmentDescriptor.QflowCustomerId}.");
 
-            var cancelationReasonDescriptor = QflowCancelationrReasonDescriptor.FromString(request.Cancellation);
+            var cancelationReasonDescriptor = QflowCancelationReasonDescriptor.FromString(request.Cancelation);
 
             var cancelationResult = await _qflowService.CancelAppointment(
                 appointmentToCancel.ProcessId,

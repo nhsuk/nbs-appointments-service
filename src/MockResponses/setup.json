@@ -133,5 +133,37 @@
             "QCode": "qcode",
             "CustomerTreatmentPlanId": 456
         }
+    },
+    {
+        "Path": "/svcCustomAppointment.svc/rest/GetAllCustomerAppointments",
+        "Method": "GET",
+        "Status": 200,
+        "Response": [
+            {
+                "UnitId": 4,
+                "CaseId": 456,
+                "CustomerId": 6543210,
+                "ProcessId": 123456,
+                "AppointmentId": 123457,
+                "ServiceId": 1080,
+                "AppointmentDate": "2023-04-06",
+                "AppointmentDuration": 5,
+                "PreventAutoQueue": false,
+                "Dose": 1,
+                "CancelationReasonId": 1,
+                "SelfReferalOccupation": ""
+            }
+        ]
+    },
+    {
+        "Path": "/svcProcess.svc/rest/CancelAppointment1",
+        "Method": "POST",
+        "Status": 200,
+        "Response": {
+            "CanceledByScript": false,
+            "ProcessId": 123456,
+            "UserId": 3516,
+            "DelegateId": 1
+        }
     }
 ]

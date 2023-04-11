@@ -7,6 +7,6 @@ namespace NBS.Appointments.Service.Models
         [JsonPropertyName("appointment")]
         public string Appointment { get; set; }
         [JsonPropertyName("cancellation")]
-        public string Cancellation { get; set; }
+        public string Cancelation { get; set; }
     }
 }

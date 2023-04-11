@@ -9,6 +9,9 @@
             if (parts.Length != 3)
                 throw new FormatException("Decscriptor is formatted incorrectly.");
 
+            if (parts[0] != "qflow")
+                throw new FormatException("String was not a qflow cancel appointment descriptor.");
+
             if (!int.TryParse(parts[1], out var qflowCustomerId))
                 throw new FormatException("QflowCustomerId is in invalid format.");
 
