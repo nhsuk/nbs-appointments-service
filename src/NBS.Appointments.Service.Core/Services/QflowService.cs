@@ -106,10 +106,12 @@ namespace NBS.Appointments.Service.Core.Services
             {
                 var slotOrdinalNumber = int.Parse(responseBody);
 
-                result.ResponseData = new ReserveSlotResponse(slotOrdinalNumber);
+                result.ResponseData = new ReserveSlotResponse(slotOrdinalNumber, null);
                 return result;
             }
 
+            var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(responseBody);
+            result.ResponseData = new ReserveSlotResponse(0, errorResponse?.Message);
             return result;
         }
 
