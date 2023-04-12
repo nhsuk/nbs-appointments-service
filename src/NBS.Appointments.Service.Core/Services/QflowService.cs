@@ -230,6 +230,20 @@ namespace NBS.Appointments.Service.Core.Services
             return result;
         }
 
+        public async Task<CustomerDto> GetCustomerByNhsNumber(string nhsNumber)
+        {
+            var query = new Dictionary<string, string>
+            {
+                { "nhsNumber", nhsNumber.ToString() }
+            };
+
+            var endpointUrl = $"{_options.BaseUrl}/svcCustomNHSNumber.svc/rest/GetByNHSNumber";
+            var response = await Execute(query, endpointUrl, HttpMethod.Get, null);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonSerializer.Deserialize<CustomerDto>(responseBody);
+        }
+
         private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl, HttpMethod method, object? content)
         {
             using var client = _httpClientFactory.CreateClient();

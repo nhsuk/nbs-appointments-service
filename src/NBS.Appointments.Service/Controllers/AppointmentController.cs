@@ -109,5 +109,21 @@ namespace NBS.Appointments.Service.Controllers
                 ? Ok()
                 : BadRequest("Failed to cancel appointment");
         }
+
+        [HttpGet]
+        [Route("get-all")]
+        public async Task<IActionResult> GetAllCustomerAppointments(string nhsNumber, bool includePastAppointments)
+        {
+            if (string.IsNullOrEmpty(nhsNumber))
+                return BadRequest("Customer NHS Number must be provided.");
+
+            var qflowCustomer = await _qflowService.GetCustomerByNhsNumber(nhsNumber);
+
+            var appointments = await _qflowService.GetAllCustomerAppointments(qflowCustomer.Id);
+
+            return includePastAppointments
+                ? Ok(appointments)
+                : Ok(appointments.Where(x => DateTime.Compare(x.AppointmentDate, DateTime.Today) >= 0));
+        }
     }
 }
