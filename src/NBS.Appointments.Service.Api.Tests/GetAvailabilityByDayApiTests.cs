@@ -8,14 +8,15 @@ namespace NBS.Appointments.Service.Api.Tests
 {
     public class GetAvailabilityByDayApiTests
     {
-        private readonly HttpClient _httpClient = new();
+        private readonly IHttpClientFactory _httpClientFactory = new ApiHttpClientFactory();
         private const string Endpoint = "http://localhost:4000/availability/days";
 
         [Fact]
         public async Task GetAvailability_RespondsWithUnsupportedMediaType_WhenJsonNotSpecified()
         {
+            var httpClient = _httpClientFactory.CreateClient();
             var payload = new StringContent("");
-            var response = await _httpClient.PostAsync(Endpoint, payload);
+            var response = await httpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         }
@@ -23,8 +24,9 @@ namespace NBS.Appointments.Service.Api.Tests
         [Fact]
         public async Task GetAvailability_RespondsWithBadRequest_WhenMalformedPayloadIsSent()
         {
+            var httpClient = _httpClientFactory.CreateClient();
             var payload = new StringContent("", Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(Endpoint, payload);
+            var response = await httpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
@@ -34,9 +36,10 @@ namespace NBS.Appointments.Service.Api.Tests
         {
             var from = DateTime.Today;
             var until = from.AddDays(10);
+            var httpClient = _httpClientFactory.CreateClient();
             var payload = new ApiRequest(new[] { "qflow:1234" }, from.ToString("yyyy-MM-dd"), until.ToString("yyyy-MM-dd"), "qflow:0:12345:NotSet");
             var jsonContent = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(Endpoint, jsonContent);
+            var response = await httpClient.PostAsync(Endpoint, jsonContent);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
@@ -47,9 +50,10 @@ namespace NBS.Appointments.Service.Api.Tests
         {
             var from = DateTime.Today.AddDays(fromDays);
             var until = from.AddDays(untilDays);
+            var httpClient = _httpClientFactory.CreateClient();
             var payload = new ApiRequest(new[] { "qflow:1234" }, from.ToString("yyyy-MM-dd"), until.ToString("yyyy-MM-dd"), "qflow:0:12345:NotSet");
             var jsonContent = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(Endpoint, jsonContent);
+            var response = await httpClient.PostAsync(Endpoint, jsonContent);
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
@@ -57,8 +61,9 @@ namespace NBS.Appointments.Service.Api.Tests
         [MemberData(nameof(BadRequests))]
         public async Task GetAvailability_RespondsWithBadRequest_WithInvalidRequestData(object payload)
         {
+            var httpClient = _httpClientFactory.CreateClient();
             var jsonContent= new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(Endpoint, jsonContent);
+            var response = await httpClient.PostAsync(Endpoint, jsonContent);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
