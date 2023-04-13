@@ -60,6 +60,22 @@ resource "azurerm_key_vault_secret" "kv_qflow_password" {
   }
 }
 
+resource "azurerm_key_vault_secret" "kv_nbs_api_key" {
+  name         = "nbsapikey"
+  value        = "default"
+  key_vault_id = azurerm_key_vault.nbs_appts_key_vault.id
+
+  depends_on = [
+    azurerm_role_assignment.keyvault_dataowner
+  ]
+
+  lifecycle {
+    ignore_changes = [
+      value      
+    ]
+  }
+}
+
 resource "azurerm_app_configuration_key" "config_qflow_username" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
   key                    = "Qflow:UserName"
@@ -76,6 +92,17 @@ resource "azurerm_app_configuration_key" "config_qflow_password" {
   key                    = "Qflow:Password"
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.kv_qflow_password.versionless_id
+
+  depends_on = [
+    azurerm_role_assignment.appconf_dataowner
+  ]
+}
+
+resource "azurerm_app_configuration_key" "config_nbs_api_key" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
+  key                    = "ApiKey"
+  type                   = "vault"
+  vault_key_reference    = azurerm_key_vault_secret.kv_nbs_api_key.versionless_id
 
   depends_on = [
     azurerm_role_assignment.appconf_dataowner
