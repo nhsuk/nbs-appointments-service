@@ -8,9 +8,9 @@ namespace NBS.Appointments.Service.Models
         [JsonPropertyName("ref")]
         public string Ref { get; set; }
 
-        public static BookedAppointmentResponse FromQflowResponse(BookAppointmentResponse qflowResponse) => new BookedAppointmentResponse
+        public static BookedAppointmentResponse FromQflowResponse(int qflowCustomerId, BookAppointmentResponse qflowResponse) => new BookedAppointmentResponse
         {
-            Ref = $"qflow:{qflowResponse.AppointmentId}"
+            Ref = $"qflow:{qflowCustomerId}:{qflowResponse.ProcessId}"
         };
     }
 }

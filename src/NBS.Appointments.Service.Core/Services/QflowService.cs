@@ -186,6 +186,52 @@ namespace NBS.Appointments.Service.Core.Services
             return result;
         }
 
+        public async Task<IList<AppointmentResponse>> GetAllCustomerAppointments(long qflowCustomerId)
+        {
+            var query = new Dictionary<string, string>
+            {
+                { "QflowCustomerId", qflowCustomerId.ToString() }
+            };
+            var endpointUrl = $"{_options.BaseUrl}/svcCustomAppointment.svc/rest/GetAllCustomerAppointments";
+
+            var response = await Execute(query, endpointUrl, HttpMethod.Get, null);
+            var responeBody = await response.Content.ReadAsStringAsync();
+
+            return JsonSerializer.Deserialize<List<AppointmentResponse>>(responeBody);
+        }
+
+        public async Task<ApiResult<CancelBookingResponse>> CancelAppointment(int processId, int cancelationReasonId, int treatmentPlanCancelationMethod)
+        {
+            var payload = new CancelBookingPayload
+            {
+                ProcessId = processId,
+                CancellationReasonId = cancelationReasonId,
+                TreatmentPlanCancellationMethod = treatmentPlanCancelationMethod,
+                // TODO: These are the same throughout existing NBS, should we add them to the cancelation descriptor?
+                CancellationType = 0,
+                CustomerTreatmentPlanId = 0,
+                ParentCaseId = 0,
+                RemoveWaitingListRequest = false
+            };
+
+            var endpointUrl = $"{_options.BaseUrl}/svcProcess.svc/rest/CancelAppointment1";
+            var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, payload);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            var result = new ApiResult<CancelBookingResponse>
+            {
+                StatusCode = response.StatusCode
+            };
+
+            if (response.IsSuccessStatusCode)
+            {
+                result.ResponseData = JsonSerializer.Deserialize<CancelBookingResponse>(responseBody);
+                return result;
+            }
+
+            return result;
+        }
+
         private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl, HttpMethod method, object? content)
         {
             using var client = _httpClientFactory.CreateClient();
