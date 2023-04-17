@@ -15,5 +15,7 @@
         public string QCode { get; set; }
 
         public long CustomerTreatmentPlanId { get; set; }
+
+        public string? ErrorMsg { get; set; }
     }
 }

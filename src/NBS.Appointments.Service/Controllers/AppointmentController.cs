@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure;
+using Microsoft.AspNetCore.Mvc;
 using NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors;
 using NBS.Appointments.Service.Core.Helpers;
 using NBS.Appointments.Service.Core.Interfaces.Services;
@@ -75,7 +76,7 @@ namespace NBS.Appointments.Service.Controllers
 
             return bookAppointmentResult.IsSuccessful
                 ? Ok(BookedAppointmentResponse.FromQflowResponse(createUpdateCustomerResult.ResponseData.Id, bookAppointmentResult.ResponseData))
-                : StatusCode(410, "Slot no longer exists or reservation has expired.");
+                : StatusCode(410, $"A problem occurred. Error message: {bookAppointmentResult.ResponseData.ErrorMsg}");
         }
 
         [HttpPost]

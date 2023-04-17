@@ -145,6 +145,8 @@ namespace NBS.Appointments.Service.Core.Services
                 return result;
             }
 
+            var erroResponse = JsonSerializer.Deserialize<ErrorResponse>(responseBody);
+            result.ResponseData = new BookAppointmentResponse { ErrorMsg = erroResponse?.Message };
             return result;
         }
 
