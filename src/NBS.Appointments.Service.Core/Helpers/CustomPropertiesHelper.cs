@@ -28,7 +28,7 @@ namespace NBS.Appointments.Service.Core.Helpers
             };
 
             if (customPropertiesDescriptor.CallCentreEmailAddress != null)
-                customProperties.Add("CallCentreEmailFlagId", customPropertiesDescriptor.CallCentreEmailAddress);
+                customProperties.Add(_options.CallCentreEmailFlagId, customPropertiesDescriptor.CallCentreEmailAddress);
 
             return customProperties;
         }
