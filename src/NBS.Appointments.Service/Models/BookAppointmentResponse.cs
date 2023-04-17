@@ -10,7 +10,7 @@ namespace NBS.Appointments.Service.Models
 
         public static BookedAppointmentResponse FromQflowResponse(int qflowCustomerId, BookAppointmentResponse qflowResponse) => new BookedAppointmentResponse
         {
-            Ref = $"qflow:{qflowCustomerId}:{qflowResponse.ProcessId}"
+            Ref = $"qflow:{qflowCustomerId}:{qflowResponse.ProcessId}:{qflowResponse.CaseId}"
         };
     }
 }
