@@ -7,7 +7,6 @@ using NBS.Appointments.Service.Models;
 using NBS.Appointments.Service.Validators;
 using System;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace NBS.Appointments.Service.Controllers
@@ -108,6 +107,32 @@ namespace NBS.Appointments.Service.Controllers
             return cancelationResult.IsSuccessful
                 ? Ok()
                 : BadRequest("Failed to cancel appointment");
+        }
+
+        [HttpPost]
+        [Route("reschedule")]
+        public async Task<IActionResult> Reschedule([FromBody] RescheduleAppointmentRequest request)
+        {
+            var validator = _requestValidatorFactory.GetValidator<RescheduleAppointmentRequest>();
+            var validationResult = validator.Validate(request);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors.ToErrorMessages());
+            }
+
+            var descriptor = QflowRescheduleAppointmentDescriptor.FromString(request.Appointment);
+            // TODO: Do we need the qflowCustomerId to return it for canceling?
+            var rescheduleResult = await _qflowService.RescheduleAppointment(
+                descriptor.ServiceId,
+                descriptor.DateAndTime,
+                descriptor.AppointmentTypeId,
+                descriptor.CancelationReasonId,
+                descriptor.OriginalProcessId);
+
+            return rescheduleResult.IsSuccessful
+                ? Ok()
+                : BadRequest("Failed to reschedule apointment.");
         }
     }
 }
