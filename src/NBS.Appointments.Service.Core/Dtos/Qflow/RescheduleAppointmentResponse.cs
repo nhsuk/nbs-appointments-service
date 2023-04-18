@@ -5,19 +5,12 @@
         public SetAppointmentData SetAppointmentData { get; set; }
         public RescheduleAppointmentData RescheduleAppointmentData { get; set; }
         public object ScriptResults { get; set; }
-
         public long CaseId { get; set; }
-
         public long ProcessId { get; set; }
-
         public long AppointmentId { get; set; }
-
         public long CalendarId { get; set; }
-
         public long QNumber { get; set; }
-
         public string QCode { get; set; }
-
         public long CustomerId { get; set; }
     }
 

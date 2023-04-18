@@ -35,19 +35,19 @@
 
             return new QflowRescheduleAppointmentDescriptor(
                 serviceId,
-                appointmentDate,
+                originalProcessId,
                 appointmentTypeId,
-                cancelationReasonId,
-                originalProcessId);
+                appointmentDate,
+                cancelationReasonId);
         }
 
-        public QflowRescheduleAppointmentDescriptor(int serviceId, DateTime dateAndTime, int appointmentTypeId, int cancelationReasonId, long originalProcessId)
+        public QflowRescheduleAppointmentDescriptor(int serviceId, long originalProcessId, int appointmentTypeId, DateTime dateAndTime, int cancelationReasonId)
         {
             ServiceId = serviceId;
+            OriginalProcessId = originalProcessId;
             DateAndTime = dateAndTime;
             AppointmentTypeId = appointmentTypeId;
             CancelationReasonId = cancelationReasonId;
-            OriginalProcessId = originalProcessId;
         }
 
         public int ServiceId { get; set; }

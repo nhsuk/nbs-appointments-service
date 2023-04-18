@@ -165,5 +165,19 @@
             "UserId": 3516,
             "DelegateId": 1
         }
+    },
+    {
+        "Path": "/svcProcess.svc/rest/RescheduleAppointment",
+        "Method": "POST",
+        "Status": 200,
+        "Response": {
+            "CaseId": 100123,
+            "ProcessId": 100124,
+            "AppointmentId": 100125,
+            "CalendarId": 12345,
+            "QNumber": 123,
+            "QCode": "",
+            "CustomerId": 6543210
+        }
     }
 ]

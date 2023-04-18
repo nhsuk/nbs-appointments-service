@@ -122,7 +122,7 @@ namespace NBS.Appointments.Service.Controllers
             }
 
             var descriptor = QflowRescheduleAppointmentDescriptor.FromString(request.Appointment);
-            // TODO: Do we need the qflowCustomerId to return it for canceling?
+            // TODO: CustomerId should come back in response
             var rescheduleResult = await _qflowService.RescheduleAppointment(
                 descriptor.ServiceId,
                 descriptor.DateAndTime,
