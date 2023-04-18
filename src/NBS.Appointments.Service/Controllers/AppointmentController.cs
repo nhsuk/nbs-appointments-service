@@ -119,11 +119,14 @@ namespace NBS.Appointments.Service.Controllers
 
             var qflowCustomer = await _qflowService.GetCustomerByNhsNumber(nhsNumber);
 
-            var appointments = await _qflowService.GetAllCustomerAppointments(qflowCustomer.Id);
+            if (!qflowCustomer.IsSuccessful)
+                return NotFound($"Could not find qflow customer with NhsNumber: {nhsNumber}.");
+
+            var appointments = await _qflowService.GetAllCustomerAppointments(qflowCustomer.ResponseData.Id);
 
             return includePastAppointments
                 ? Ok(appointments)
-                : Ok(appointments.Where(x => DateTime.Compare(x.AppointmentDate, DateTime.Today) >= 0));
+                : Ok(appointments.Where(x => DateTime.Compare(x.AppointmentDate.ToUniversalTime(), DateTime.Today.ToUniversalTime()) >= 0));
         }
     }
 }
