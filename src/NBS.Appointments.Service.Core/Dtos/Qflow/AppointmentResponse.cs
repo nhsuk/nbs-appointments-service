@@ -27,5 +27,6 @@
         public int Dose { get; set; }
         public int CancelationReasonId { get; set; }
         public string SelfReferalOccupation { get; set; }
+        public string TimeZoneOffset { get; set; }
     }
 }

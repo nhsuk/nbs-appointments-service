@@ -16,6 +16,6 @@ namespace NBS.Appointments.Service.Core.Interfaces.Services
             string? phoneNumber, string? landline, string selfReferralOccupation);
         public Task<IList<AppointmentResponse>> GetAllCustomerAppointments(long qflowCustomerId);
         public Task<ApiResult<CancelBookingResponse>> CancelAppointment(int processId, int cancelationReasonId, int treatmentPlanCancelationMethod);
-        public Task<CustomerDto> GetCustomerByNhsNumber(string nhsNumber);
+        public Task<ApiResult<CustomerDto>> GetCustomerByNhsNumber(string nhsNumber);
     }
 }
