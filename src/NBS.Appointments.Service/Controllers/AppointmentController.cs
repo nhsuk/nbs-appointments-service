@@ -6,6 +6,7 @@ using NBS.Appointments.Service.Extensions;
 using NBS.Appointments.Service.Models;
 using NBS.Appointments.Service.Validators;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -73,8 +74,59 @@ namespace NBS.Appointments.Service.Controllers
                 _customPropertiesHelper.BuildCustomProperties(request.Properties));
 
             return bookAppointmentResult.IsSuccessful
-                ? Ok(BookedAppointmentResponse.FromQflowResponse(bookAppointmentResult.ResponseData))
+                ? Ok(BookedAppointmentResponse.FromQflowResponse(createUpdateCustomerResult.ResponseData.Id, bookAppointmentResult.ResponseData))
                 : StatusCode(410, "Slot no longer exists or reservation has expired.");
+        }
+
+        [HttpPost]
+        [Route("cancel")]
+        public async Task<IActionResult> Cancel([FromBody] CancelAppointmentRequest request)
+        {
+            var validator = _requestValidatorFactory.GetValidator<CancelAppointmentRequest>();
+            var validationResult = validator.Validate(request);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors.ToErrorMessages());
+            }
+
+            var cancelAppointmentDescriptor = QflowCancelAppointmentDescriptor.FromString(request.Appointment);
+
+            var appointments = await _qflowService.GetAllCustomerAppointments(cancelAppointmentDescriptor.QflowCustomerId);
+            var appointmentToCancel = appointments.FirstOrDefault(x => x.ProcessId == cancelAppointmentDescriptor.ProcessId);
+
+            if (appointmentToCancel is null)
+                return NotFound($"Cannot find appointment with processId: {cancelAppointmentDescriptor.ProcessId} for customer: {cancelAppointmentDescriptor.QflowCustomerId}.");
+
+            var cancelationReasonDescriptor = QflowCancelationReasonDescriptor.FromString(request.Cancelation);
+
+            var cancelationResult = await _qflowService.CancelAppointment(
+                appointmentToCancel.ProcessId,
+                cancelationReasonDescriptor.CancelationReasonId,
+                cancelationReasonDescriptor.TreatmentPlanCancelationMethod);
+
+            return cancelationResult.IsSuccessful
+                ? Ok()
+                : BadRequest("Failed to cancel appointment");
+        }
+
+        [HttpGet]
+        [Route("get-all")]
+        public async Task<IActionResult> GetAllCustomerAppointments(string nhsNumber, bool includePastAppointments)
+        {
+            if (string.IsNullOrEmpty(nhsNumber))
+                return BadRequest("Customer NHS Number must be provided.");
+
+            var qflowCustomer = await _qflowService.GetCustomerByNhsNumber(nhsNumber);
+
+            if (!qflowCustomer.IsSuccessful)
+                return NotFound($"Could not find qflow customer with NhsNumber: {nhsNumber}.");
+
+            var appointments = await _qflowService.GetAllCustomerAppointments(qflowCustomer.ResponseData.Id);
+
+            return includePastAppointments
+                ? Ok(appointments)
+                : Ok(appointments.Where(x => DateTime.Compare(x.AppointmentDate.ToUniversalTime(), DateTime.Today.ToUniversalTime()) >= 0));
         }
     }
 }

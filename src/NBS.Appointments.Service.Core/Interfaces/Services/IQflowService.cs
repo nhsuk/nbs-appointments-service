@@ -14,5 +14,8 @@ namespace NBS.Appointments.Service.Core.Interfaces.Services
             int slotOrdinalNumber, int calendarId, Dictionary<string, string>? customProperties);
         public Task<ApiResult<CustomerDto>> CreateOrUpdateCustomer(string firstName, string surname, string nhsNumber, string dob, string? email,
             string? phoneNumber, string? landline, string selfReferralOccupation);
+        public Task<IList<AppointmentResponse>> GetAllCustomerAppointments(long qflowCustomerId);
+        public Task<ApiResult<CancelBookingResponse>> CancelAppointment(int processId, int cancelationReasonId, int treatmentPlanCancelationMethod);
+        public Task<ApiResult<CustomerDto>> GetCustomerByNhsNumber(string nhsNumber);
     }
 }

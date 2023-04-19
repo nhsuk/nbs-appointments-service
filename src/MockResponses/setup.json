@@ -133,5 +133,68 @@
             "QCode": "qcode",
             "CustomerTreatmentPlanId": 456
         }
+    },
+    {
+        "Path": "/svcCustomAppointment.svc/rest/GetAllCustomerAppointments",
+        "Method": "GET",
+        "Status": 200,
+        "Response": [
+            {
+                "UnitId": 4,
+                "CaseId": 456,
+                "CustomerId": 6543210,
+                "ProcessId": 123456,
+                "AppointmentId": 123457,
+                "ServiceId": 1080,
+                "AppointmentDate": "2023-04-06",
+                "AppointmentDuration": 5,
+                "PreventAutoQueue": false,
+                "Dose": 1,
+                "CancelationReasonId": 1,
+                "SelfReferalOccupation": ""
+            }
+        ]
+    },
+    {
+        "Path": "/svcProcess.svc/rest/CancelAppointment1",
+        "Method": "POST",
+        "Status": 200,
+        "Response": {
+            "CanceledByScript": false,
+            "ProcessId": 123456,
+            "UserId": 3516,
+            "DelegateId": 1
+        }
+    },{
+        "Path": "/svcCustomNHSNumber.svc/rest/GetByNHSNumber",
+        "Method": "GET",
+        "Status": 200,
+        "Response": {
+            "NHSNumber": "1234567890",
+            "FirstName": "Bruce",
+            "LastName": "Wayne",
+            "CustomerLevelId": 0,
+            "CustomerIdTypeId": 1,
+            "Email": "buce.wayne@wayne-enterprises.com",
+            "TelNumber1": "012345678901",
+            "TelNumber2": "",
+            "Notes": "",
+            "LanguageCode": "",
+            "Dob": "1973-05-05",
+            "Sex": 1,
+            "PictureAttachmentId": 0,
+            "Name": "Bruce Wayne",
+            "CustomProperties": "",
+            "CustomerLevelName": "",
+            "CustomerIdTypeName": "",
+            "IsCustomerGroup": false,
+            "IsMemberOfGroups": false,
+            "NotificationConsent": 0,
+            "Id": 6543210,
+            "Description": "",
+            "Active": true,
+            "ExtRef": "",
+            "PartOfQapp": true
+        }
     }
 ]
