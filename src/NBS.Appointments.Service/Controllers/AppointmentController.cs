@@ -122,7 +122,7 @@ namespace NBS.Appointments.Service.Controllers
             }
 
             var descriptor = QflowRescheduleAppointmentDescriptor.FromString(request.Appointment);
-            // TODO: CustomerId should come back in response
+
             var rescheduleResult = await _qflowService.RescheduleAppointment(
                 descriptor.ServiceId,
                 descriptor.DateAndTime,
@@ -131,7 +131,7 @@ namespace NBS.Appointments.Service.Controllers
                 descriptor.OriginalProcessId);
 
             return rescheduleResult.IsSuccessful
-                ? Ok()
+                ? Ok(RescheduledAppointmentResponse.FromQflowResponse(rescheduleResult.ResponseData))
                 : BadRequest("Failed to reschedule apointment.");
         }
     }

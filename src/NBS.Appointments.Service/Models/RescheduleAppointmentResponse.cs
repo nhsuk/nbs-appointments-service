@@ -6,11 +6,11 @@ namespace NBS.Appointments.Service.Models
     {
         public string Ref { get; set; }
 
-        public static RescheduledAppointmentResponse FromQflowResponse(long qflowCustomerId, RescheduleAppointmentResponse response)
+        public static RescheduledAppointmentResponse FromQflowResponse(RescheduleAppointmentResponse response)
         {
             return new RescheduledAppointmentResponse
             {
-                Ref = $"qflow:{qflowCustomerId}:{response.ProcessId}:{response.CaseId}"
+                Ref = $"qflow:{response.CustomerId}:{response.ProcessId}:{response.CaseId}"
             };
         }
     }
