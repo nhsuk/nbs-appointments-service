@@ -165,6 +165,37 @@
             "UserId": 3516,
             "DelegateId": 1
         }
+    },{
+        "Path": "/svcCustomNHSNumber.svc/rest/GetByNHSNumber",
+        "Method": "GET",
+        "Status": 200,
+        "Response": {
+            "NHSNumber": "1234567890",
+            "FirstName": "Bruce",
+            "LastName": "Wayne",
+            "CustomerLevelId": 0,
+            "CustomerIdTypeId": 1,
+            "Email": "buce.wayne@wayne-enterprises.com",
+            "TelNumber1": "012345678901",
+            "TelNumber2": "",
+            "Notes": "",
+            "LanguageCode": "",
+            "Dob": "1973-05-05",
+            "Sex": 1,
+            "PictureAttachmentId": 0,
+            "Name": "Bruce Wayne",
+            "CustomProperties": "",
+            "CustomerLevelName": "",
+            "CustomerIdTypeName": "",
+            "IsCustomerGroup": false,
+            "IsMemberOfGroups": false,
+            "NotificationConsent": 0,
+            "Id": 6543210,
+            "Description": "",
+            "Active": true,
+            "ExtRef": "",
+            "PartOfQapp": true
+        }
     },
     {
         "Path": "/svcProcess.svc/rest/RescheduleAppointment",
