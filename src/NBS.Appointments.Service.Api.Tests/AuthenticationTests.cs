@@ -33,6 +33,8 @@ namespace NBS.Appointments.Service.Api.Tests
             yield return new object[] { HttpMethod.Post, "availability/slots" };
             yield return new object[] { HttpMethod.Post, "slot/reserve" };
             yield return new object[] { HttpMethod.Post, "appointment/book" };
+            yield return new object[] { HttpMethod.Post, "appointment/cancel" };
+            yield return new object[] { HttpMethod.Get, "appointment/get-all" };
         }
     }
 }

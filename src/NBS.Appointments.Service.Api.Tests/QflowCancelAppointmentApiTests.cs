@@ -9,14 +9,15 @@ namespace NBS.Appointments.Service.Api.Tests
 {
     public class QflowCancelAppointmentApiTests
     {
-        private readonly HttpClient _httpClient = new();
+        private readonly IHttpClientFactory _httpClientFactory = new ApiHttpClientFactory();
         private const string Endpoint = "http://localhost:4000/appointment/cancel";
 
         [Fact]
         public async Task CancelAppointment_ShouldReturnUnsupportedMediaType_WhenNoJsonSpecified()
         {
+            var httpClient = _httpClientFactory.CreateClient();
             var payload = new StringContent("");
-            var response = await _httpClient.PostAsync(Endpoint, payload);
+            var response = await httpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         }
@@ -30,8 +31,9 @@ namespace NBS.Appointments.Service.Api.Tests
                 Cancelation = "invalid:cancelation:reason:descriptor"
             };
 
+            var httpClient = _httpClientFactory.CreateClient();
             var payload = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(Endpoint, payload);
+            var response = await httpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
@@ -45,8 +47,9 @@ namespace NBS.Appointments.Service.Api.Tests
                 Cancelation = "qflow:654:321"
             };
 
+            var httpClient = _httpClientFactory.CreateClient();
             var payload = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(Endpoint, payload);
+            var response = await httpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
@@ -60,8 +63,9 @@ namespace NBS.Appointments.Service.Api.Tests
                 Cancelation = "qflow:654:321"
             };
 
+            var httpClient = _httpClientFactory.CreateClient();
             var payload = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(Endpoint, payload);
+            var response = await httpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
