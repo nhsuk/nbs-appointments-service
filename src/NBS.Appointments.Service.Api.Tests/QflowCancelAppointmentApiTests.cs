@@ -7,16 +7,15 @@ using Xunit;
 
 namespace NBS.Appointments.Service.Api.Tests
 {
-    public class QflowCancelAppointmentApiTests
-    {
-        private readonly HttpClient _httpClient = new();
-        private const string Endpoint = "http://localhost:4000/appointment/cancel";
+    public class QflowCancelAppointmentApiTests : ApiTestBase
+    {        
+        public override string PathToTest => "appointment/cancel";
 
         [Fact]
         public async Task CancelAppointment_ShouldReturnUnsupportedMediaType_WhenNoJsonSpecified()
         {
             var payload = new StringContent("");
-            var response = await _httpClient.PostAsync(Endpoint, payload);
+            var response = await HttpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         }
@@ -29,9 +28,9 @@ namespace NBS.Appointments.Service.Api.Tests
                 Appointment = "invalid:appointment:descriptor",
                 Cancelation = "invalid:cancelation:reason:descriptor"
             };
-
+            
             var payload = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(Endpoint, payload);
+            var response = await HttpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
@@ -46,7 +45,7 @@ namespace NBS.Appointments.Service.Api.Tests
             };
 
             var payload = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(Endpoint, payload);
+            var response = await HttpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
@@ -61,7 +60,7 @@ namespace NBS.Appointments.Service.Api.Tests
             };
 
             var payload = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(Endpoint, payload);
+            var response = await HttpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }

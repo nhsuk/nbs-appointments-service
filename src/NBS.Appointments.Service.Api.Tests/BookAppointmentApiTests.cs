@@ -7,16 +7,15 @@ using Xunit;
 
 namespace NBS.Appointments.Service.Api.Tests
 {
-    public class BookAppointmentApiTests
+    public class BookAppointmentApiTests : ApiTestBase
     {
-        private readonly HttpClient _httpClient = new();
-        private const string Endpoint = "http://localhost:4000/appointment/book";
+        public override string PathToTest => "appointment/book";
 
         [Fact]
         public async Task BookAppointment_ShouldReturnUnsupportedMediaType_WhenNoJsonSpecified()
         {
-            var payload = new StringContent("");
-            var response = await _httpClient.PostAsync(Endpoint, payload);
+            var payload = new StringContent("");     
+            var response = await HttpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         }
@@ -33,9 +32,9 @@ namespace NBS.Appointments.Service.Api.Tests
                 },
                 Properties = string.Empty
             };
-
+            
             var payload = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(Endpoint, payload);
+            var response = await HttpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
@@ -64,9 +63,9 @@ namespace NBS.Appointments.Service.Api.Tests
             };
 
             var payload = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(Endpoint, payload);
+            var response = await HttpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
-    }
+    }    
 }
