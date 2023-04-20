@@ -165,7 +165,8 @@
             "UserId": 3516,
             "DelegateId": 1
         }
-    },{
+    },
+    {
         "Path": "/svcCustomNHSNumber.svc/rest/GetByNHSNumber",
         "Method": "GET",
         "Status": 200,
