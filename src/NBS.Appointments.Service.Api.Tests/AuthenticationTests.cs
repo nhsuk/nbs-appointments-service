@@ -3,13 +3,15 @@ using Xunit;
 
 namespace NBS.Appointments.Service.Api.Tests
 {
-    public class AuthenticationTests
+    public class AuthenticationTests : ApiTestBase
     {
+        public override string PathToTest => throw new NotImplementedException();
+
         [Theory]
         [MemberData(nameof(EndPoints))]
         public async Task Endpoints_Return401UnAuthorized_WhenNoApiKeyIsSupplied(HttpMethod method, string endpoint)
         {
-            var request = new HttpRequestMessage(method, $"http://localhost:4000/{endpoint}");
+            var request = new HttpRequestMessage(method, $"{BaseUrl}/{endpoint}");
             var httpClient = new HttpClient();
             var response = await httpClient.SendAsync(request);
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
@@ -19,7 +21,7 @@ namespace NBS.Appointments.Service.Api.Tests
         [MemberData(nameof(EndPoints))]
         public async Task Endpoints_Return401UnAuthorized_WhenIncorrectApiKeyIsSupplied(HttpMethod method, string endpoint)
         {
-            var request = new HttpRequestMessage(method, $"http://localhost:4000/{endpoint}");
+            var request = new HttpRequestMessage(method, $"{BaseUrl}/{endpoint}");
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("nbs-api-key", "incorrect");
             var response = await httpClient.SendAsync(request);

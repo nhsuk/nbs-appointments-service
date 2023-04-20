@@ -10,17 +10,16 @@ using Xunit;
 
 namespace NBS.Appointments.Service.Api.Tests
 {
-    public class GetAvailabilityByHourApiTests
+    public class GetAvailabilityByHourApiTests : ApiTestBase
     {
-        private readonly IHttpClientFactory _httpClientFactory = new ApiHttpClientFactory();
-        private const string Endpoint = "http://localhost:4000/availability/hours";
+        
+        public override string PathToTest => "availability/hours";
 
         [Fact]
         public async Task AvailabilityByHours_ShouldReturnUnsupportedMediaType_WhenNoJsonSpecified()
         {
-            var httpClient = _httpClientFactory.CreateClient();
             var payload = new StringContent("");
-            var response = await httpClient.PostAsync(Endpoint, payload);
+            var response = await HttpClient.PostAsync(Endpoint, payload);
             response.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         }
 
@@ -33,10 +32,9 @@ namespace NBS.Appointments.Service.Api.Tests
                 Date = DateTime.Today,
                 Site = "siteId:150"
             };
-
-            var httpClient = _httpClientFactory.CreateClient();
+            
             var payload = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync(Endpoint, payload);
+            var response = await HttpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
@@ -51,9 +49,8 @@ namespace NBS.Appointments.Service.Api.Tests
                 Site = "qflow:150"
             };
 
-            var httpClient = _httpClientFactory.CreateClient();
             var payload = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync(Endpoint, payload);
+            var response = await HttpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
@@ -88,9 +85,9 @@ namespace NBS.Appointments.Service.Api.Tests
                 Date = DateTime.Today.AddDays(1),
                 Site = "qflow:150"
             };
-            var httpClient = _httpClientFactory.CreateClient();
+            
             var jsonContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync(Endpoint, jsonContent);
+            var response = await HttpClient.PostAsync(Endpoint, jsonContent);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var responseBody = await response.Content.ReadAsStringAsync();

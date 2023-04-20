@@ -44,9 +44,11 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
 
         var claimsIdentity = new ClaimsIdentity("Service");
         var principal = new ClaimsPrincipal(claimsIdentity);
-        var ticket = new AuthenticationTicket(principal, Scheme.Name);
+        var ticket = new AuthenticationTicket(principal, SchemeName);
         return Task.FromResult(AuthenticateResult.Success(ticket));
     }
+
+    protected virtual string SchemeName => Scheme.Name;
 
     private static string GetSubmittedApiKey(HttpContext context)
     {

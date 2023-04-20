@@ -7,17 +7,15 @@ using Xunit;
 
 namespace NBS.Appointments.Service.Api.Tests
 {
-    public class BookAppointmentApiTests
+    public class BookAppointmentApiTests : ApiTestBase
     {
-        private readonly IHttpClientFactory _httpClientFactory = new ApiHttpClientFactory();
-        private const string Endpoint = "http://localhost:4000/appointment/book";        
+        public override string PathToTest => "appointment/book";
 
         [Fact]
         public async Task BookAppointment_ShouldReturnUnsupportedMediaType_WhenNoJsonSpecified()
         {
-            var payload = new StringContent("");
-            var httpClient = _httpClientFactory.CreateClient();
-            var response = await httpClient.PostAsync(Endpoint, payload);
+            var payload = new StringContent("");     
+            var response = await HttpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         }
@@ -34,10 +32,9 @@ namespace NBS.Appointments.Service.Api.Tests
                 },
                 Properties = string.Empty
             };
-
-            var httpClient = _httpClientFactory.CreateClient();
+            
             var payload = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync(Endpoint, payload);
+            var response = await HttpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
@@ -65,21 +62,10 @@ namespace NBS.Appointments.Service.Api.Tests
                 Properties = "qflow:1:0"
             };
 
-            var httpClient = _httpClientFactory.CreateClient();
             var payload = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync(Endpoint, payload);
+            var response = await HttpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
-    }
-
-    public class ApiHttpClientFactory : IHttpClientFactory
-    {
-        public HttpClient CreateClient(string name)
-        {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("nbs-api-key", "supersecret");
-            return client;
-        }
-    }
+    }    
 }
