@@ -253,6 +253,36 @@ namespace NBS.Appointments.Service.Core.Services
             return result;
         }
 
+        public async Task<ApiResult<RescheduleAppointmentResponse>> RescheduleAppointment(int serviceId, DateTime startDateTime, int appointmentTypeId,
+            int cancelationReasonId, long processId)
+        {
+            var payload = new RescheduleAppointmentPayload
+            {
+                AppointmentTypeId = appointmentTypeId,
+                CancelationReasonId = cancelationReasonId,
+                OriginalProcessId = processId,
+                ServiceId = serviceId,
+                DateAndTime = startDateTime
+            };
+
+            var endpointUrl = $"{_options.BaseUrl}/svcProcess.svc/rest/RescheduleAppointment";
+            var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, payload);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            var result = new ApiResult<RescheduleAppointmentResponse>
+            {
+                StatusCode = response.StatusCode
+            };
+
+            if (response.IsSuccessStatusCode)
+            {
+                result.ResponseData = JsonSerializer.Deserialize<RescheduleAppointmentResponse>(responseBody);
+                return result;
+            }
+
+            return result;
+        }
+
         private async Task<HttpResponseMessage> Execute(Dictionary<string, string> query, string endpointUrl, HttpMethod method, object? content)
         {
             using var client = _httpClientFactory.CreateClient();
