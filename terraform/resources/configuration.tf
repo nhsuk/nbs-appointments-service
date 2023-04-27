@@ -2,6 +2,7 @@ resource "azurerm_app_configuration" "nbs_appts_app_config" {
   name                = "${var.application}-app-config-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
   location            = azurerm_resource_group.nbs_appts_rg.location
+  sku = "standard"
 }
 
 data "azurerm_client_config" "current" {}
