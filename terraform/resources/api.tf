@@ -11,14 +11,6 @@ resource "azurerm_resource_group" "nbs_appts_rg" {
   tags     = local.allTags
 }
 
-resource "azurerm_application_insights" "nbs_appts_app_insights" {
-  name                = "${var.application}-ai-${var.environment}-${var.loc}"
-  location            = azurerm_resource_group.nbs_appts_rg.location
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  application_type    = "web"
-  retention_in_days   = 30
-}
-
 resource "azurerm_service_plan" "nbs_appts_sp" {
   name                = "${var.application}-sp-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
@@ -46,9 +38,6 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
 
   app_settings = {
     AppConfig = azurerm_app_configuration.nbs_appts_app_config.primary_read_key[0].connection_string
-    "XDT_MicrosoftApplicationInsights_Mode"      = "default"
-    "ApplicationInsightsAgent_EXTENSION_VERSION" = "~3"
-    "APPLICATIONINSIGHTS_CONNECTION_STRING" = azurerm_application_insights.nbs_appts_app_insights.connection_string
   }
 
   identity {

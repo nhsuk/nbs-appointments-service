@@ -29,7 +29,6 @@ namespace NBS.Appointments.Service
                 .Configure<ApiKeyAuthenticationOptions>(options => options.ApiKey = Configuration.GetValue<string>("ApiKey"));
 
             services
-                .AddApplicationInsightsTelemetry()
                 .AddHttpClient()
                 .AddHttpContextAccessor()
                 .AddControllers()
