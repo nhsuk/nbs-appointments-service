@@ -75,5 +75,7 @@ resource "azurerm_portal_dashboard" "nbs_appts_dashboard" {
   dashboard_properties = templatefile("../../resources/dash.tpl",
     {
       sub_id     = data.azurerm_subscription.current.subscription_id
+      application = var.application
+      environment = var.environment
   })
 }

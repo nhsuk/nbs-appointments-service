@@ -87,7 +87,7 @@
                       "metrics": [
                         {
                           "resourceMetadata": {
-                            "id": "/subscriptions/${data.azurerm_subscription.current.subscription_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
+                            "id": "/subscriptions/${sub_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
                           },
                           "name": "Requests",
                           "aggregationType": 1,
@@ -137,7 +137,7 @@
                       "metrics": [
                         {
                           "resourceMetadata": {
-                            "id": "/subscriptions/${data.azurerm_subscription.current.subscription_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
+                            "id": "/subscriptions/${sub_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
                           },
                           "name": "Requests",
                           "aggregationType": 1,
@@ -194,7 +194,7 @@
                       "metrics": [
                         {
                           "resourceMetadata": {
-                            "id": "/subscriptions/${data.azurerm_subscription.current.subscription_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
+                            "id": "/subscriptions/${sub_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
                           },
                           "name": "Http4xx",
                           "aggregationType": 1,
@@ -205,7 +205,7 @@
                         },
                         {
                           "resourceMetadata": {
-                            "id": "/subscriptions/${data.azurerm_subscription.current.subscription_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
+                            "id": "/subscriptions/${sub_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
                           },
                           "name": "Http5xx",
                           "aggregationType": 1,
@@ -255,7 +255,7 @@
                       "metrics": [
                         {
                           "resourceMetadata": {
-                            "id": "/subscriptions/${data.azurerm_subscription.current.subscription_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
+                            "id": "/subscriptions/${sub_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
                           },
                           "name": "Http4xx",
                           "aggregationType": 1,
@@ -266,7 +266,7 @@
                         },
                         {
                           "resourceMetadata": {
-                            "id": "/subscriptions/${data.azurerm_subscription.current.subscription_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
+                            "id": "/subscriptions/${sub_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
                           },
                           "name": "Http5xx",
                           "aggregationType": 1,
@@ -323,7 +323,7 @@
                       "metrics": [
                         {
                           "resourceMetadata": {
-                            "id": "/subscriptions/${data.azurerm_subscription.current.subscription_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
+                            "id": "/subscriptions/${sub_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
                           },
                           "name": "HttpResponseTime",
                           "aggregationType": 4,
@@ -373,7 +373,7 @@
                       "metrics": [
                         {
                           "resourceMetadata": {
-                            "id": "/subscriptions/${data.azurerm_subscription.current.subscription_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
+                            "id": "/subscriptions/${sub_id}/resourceGroups/${application}-rg-${environment}-uks/providers/Microsoft.Web/sites/${application}-app-${environment}-uks"
                           },
                           "name": "HttpResponseTime",
                           "aggregationType": 4,
