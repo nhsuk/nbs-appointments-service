@@ -69,7 +69,7 @@ resource "azurerm_role_assignment" "keyvault_secrets_user" {
 }
 
 resource "azurerm_portal_dashboard" "nbs_appts_dashboard" {
-  name                = "${var.application}-dashboard-${var.environment}-${var.loc}"
+  name                = "${var.application}-dashboard-${var.environment}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
   location            = azurerm_resource_group.nbs_appts_rg.location
   dashboard_properties = templatefile("../../resources/dash.tpl",
