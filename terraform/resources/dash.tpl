@@ -7,7 +7,7 @@
                     "position": {
                         "x": 0,
                         "y": 0,
-                        "colSpan": 5,
+                        "colSpan": 3,
                         "rowSpan": 1
                     },
                     "metadata": {
@@ -26,9 +26,9 @@
                 },
                 "1": {
                     "position": {
-                        "x": 5,
+                        "x": 4,
                         "y": 0,
-                        "colSpan": 5,
+                        "colSpan": 3,
                         "rowSpan": 1
                     },
                     "metadata": {
@@ -47,9 +47,9 @@
                 },
                 "2": {
                     "position": {
-                        "x": 10,
+                        "x": 8,
                         "y": 0,
-                        "colSpan": 5,
+                        "colSpan": 3,
                         "rowSpan": 1
                     },
                     "metadata": {
@@ -70,8 +70,8 @@
                     "position": {
                         "x": 0,
                         "y": 1,
-                        "colSpan": 5,
-                        "rowSpan": 4
+                        "colSpan": 4,
+                        "rowSpan": 3
                     },
                     "metadata": {
                         "inputs": [
@@ -175,10 +175,10 @@
                 },
                 "4": {
                     "position": {
-                        "x": 5,
+                        "x": 4,
                         "y": 1,
-                        "colSpan": 5,
-                        "rowSpan": 4
+                        "colSpan": 4,
+                        "rowSpan": 3
                     },
                     "metadata": {
                         "inputs": [
@@ -304,10 +304,10 @@
                 },
                 "5": {
                     "position": {
-                        "x": 10,
+                        "x": 8,
                         "y": 1,
-                        "colSpan": 5,
-                        "rowSpan": 4
+                        "colSpan": 4,
+                        "rowSpan": 3
                     },
                     "metadata": {
                         "inputs": [
