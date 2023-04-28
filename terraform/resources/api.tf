@@ -3,6 +3,8 @@ data "azurerm_container_registry" "container_registry" {
   name                = var.registry_name
 }
 
+data "azurerm_subscription" "current" {}
+
 resource "azurerm_resource_group" "nbs_appts_rg" {
   name     = "${var.application}-rg-${var.environment}-${var.loc}"
   location = var.location
@@ -64,4 +66,14 @@ resource "azurerm_role_assignment" "keyvault_secrets_user" {
   scope = azurerm_key_vault.nbs_appts_key_vault.id
   role_definition_name = "Key Vault Secrets User"
   principal_id = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
+}
+
+resource "azurerm_portal_dashboard" "nbs_appts_dashboard" {
+  name                = "${var.application}-dashboard-${var.environment}-${var.loc}"
+  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
+  location            = azurerm_resource_group.nbs_appts_rg.location
+  dashboard_properties = templatefile("dash.tpl",
+    {
+      sub_id     = data.azurerm_subscription.current.subscription_id
+  })
 }
