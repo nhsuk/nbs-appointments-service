@@ -73,7 +73,7 @@ resource "azurerm_portal_dashboard" "nbs_appts_dashboard" {
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
   location            = azurerm_resource_group.nbs_appts_rg.location
   tags = {
-    hidden-title = "${var.application}-dashboard-${var.environment}"
+    hidden-title = "Appointment Service Metrics for ${var.environment}"
   }
   dashboard_properties = templatefile("../../resources/dash.tpl",
     {

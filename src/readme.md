@@ -44,5 +44,5 @@ To view the dashboard in Azure portal once deployed, follow these steps:
 2. Select Dashboard from the menu. Your default Azure dashboard will appear.
 3. Select the arrow next to the dashboard name.
 4. Select Browse all dashboards.
-5. Search for `nbs-appts-dashboard`.
-6. Select the dashboard corresponding to the environment of interest (the environment name is suffixed at the end of the dashboard name).
+5. Search for `Appointment Service Metrics`.
+6. Select the dashboard corresponding to the environment of interest.
