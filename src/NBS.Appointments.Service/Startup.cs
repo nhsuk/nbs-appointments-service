@@ -28,7 +28,8 @@ namespace NBS.Appointments.Service
                 .Configure<DateTimeProviderOptions>(Configuration.GetSection("DateTimeProvider"))
                 .Configure<ApiKeyAuthenticationOptions>(options => options.ApiKey = Configuration.GetValue<string>("ApiKey"));
 
-            services.AddHttpClient()
+            services
+                .AddHttpClient()
                 .AddHttpContextAccessor()
                 .AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
