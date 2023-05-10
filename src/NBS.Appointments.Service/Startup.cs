@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NBS.Appointments.Service.Core;
 using System.Collections.Generic;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace NBS.Appointments.Service
 {
@@ -68,7 +71,7 @@ namespace NBS.Appointments.Service
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                // app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
@@ -76,6 +79,21 @@ namespace NBS.Appointments.Service
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseExceptionHandler(handler => {
+                handler.Run(async context => {
+                    var showExceptions = Configuration.GetValue<bool>("ShowException");
+                    if (showExceptions)
+                    {
+                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                        context.Response.ContentType = Text.Plain;
+
+                        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+
+                        await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.Message);
+                    }
+                });
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();
