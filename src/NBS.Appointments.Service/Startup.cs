@@ -71,7 +71,6 @@ namespace NBS.Appointments.Service
         {
             if (env.IsDevelopment())
             {
-                // app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
@@ -91,6 +90,7 @@ namespace NBS.Appointments.Service
                         var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
 
                         await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.Message);
+                        await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.StackTrace);
                     }
                 });
             });
