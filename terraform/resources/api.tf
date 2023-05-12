@@ -82,3 +82,33 @@ resource "azurerm_portal_dashboard" "nbs_appts_dashboard" {
       environment = var.environment
   })
 }
+
+resource "azurerm_monitor_action_group" "nbs_appts_app_alert_action_group" {
+  name                = "nbs-appts-app-alert-action-group"
+  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
+  short_name          = "NBS appointments service alert action group"
+
+   email_receiver {
+    name          = "Jabby team"
+    email_address = "kim.crowe4@nhs.net"
+  }
+}
+
+resource "azurerm_monitor_metric_alert" "nbs_appts_app_http_401_alert" {
+  name = "Http 401 alert"
+  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
+  scopes = [azurerm_linux_web_app.nbs_appts_app.id]
+  description = "Alert will be triggered when http 401 error count is greater than 0"
+
+  criteria {
+    metric_namespace = "Microsoft.Web/sites"
+    metric_name      = "Http401"
+    aggregation      = "Total"
+    operator         = "GreaterThan"
+    threshold        = 0
+  }
+
+  action {
+    action_group_id = azurerm_monitor_action_group.nbs_appts_app_alert_action_group.id
+  }
+}
