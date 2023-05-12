@@ -258,7 +258,7 @@ namespace NBS.Appointments.Service.Core.Services
             var payload = new RescheduleAppointmentPayload
             {
                 AppointmentTypeId = appointmentTypeId,
-                CancelationReasonId = _options.RescheduleCancellationReasonId,
+                CancelationReasonId = _options.DefaultRescheduleReasonId,
                 OriginalProcessId = processId,
                 ServiceId = serviceId,
                 DateAndTime = startDateTime
