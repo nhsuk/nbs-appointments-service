@@ -86,7 +86,7 @@ resource "azurerm_portal_dashboard" "nbs_appts_dashboard" {
 resource "azurerm_monitor_action_group" "nbs_appts_app_alert_action_group" {
   name                = "nbs-appts-app-alert-action-group"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  short_name          = "NBS appointments service alert action group"
+  short_name          = "appts_alert"
 
    email_receiver {
     name          = "Jabby team"
