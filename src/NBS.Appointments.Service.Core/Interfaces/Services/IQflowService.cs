@@ -17,6 +17,6 @@ namespace NBS.Appointments.Service.Core.Interfaces.Services
         public Task<IList<AppointmentResponse>> GetAllCustomerAppointments(long qflowCustomerId);
         public Task<ApiResult<CancelBookingResponse>> CancelAppointment(int processId, int cancelationReasonId, int treatmentPlanCancelationMethod);
         public Task<ApiResult<CustomerDto>> GetCustomerByNhsNumber(string nhsNumber);
-        public Task<ApiResult<RescheduleAppointmentResponse>> RescheduleAppointment(int serviceId, DateTime startDateTime, int appointmentTypeId, int cancellationReasonId, long processId);
+        public Task<ApiResult<RescheduleAppointmentResponse>> RescheduleAppointment(int serviceId, DateTime startDateTime, int appointmentTypeId, long processId);
     }
 }

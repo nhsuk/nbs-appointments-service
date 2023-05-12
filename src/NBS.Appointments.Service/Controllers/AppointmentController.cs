@@ -17,7 +17,7 @@ namespace NBS.Appointments.Service.Controllers
     {
         private readonly IQflowService _qflowService;
         private readonly RequestValidatorFactory _requestValidatorFactory;
-        private readonly ICustomPropertiesHelper _customPropertiesHelper;
+        private readonly ICustomPropertiesHelper _customPropertiesHelper;        
 
         public AppointmentController(IQflowService qflowService, RequestValidatorFactory requestValidatorFactory, ICustomPropertiesHelper customPropertiesHelper)
         {
@@ -43,8 +43,8 @@ namespace NBS.Appointments.Service.Controllers
                 return BadRequest(validationResult.Errors.ToErrorMessages());
             }
 
-            var appointmentDescriptor = QflowBookAppointmentDescriptor.FromString(request.Slot);
-            var nameDescriptor = QflowNameDescriptor.FromString(request.CustomerDetails.Name);
+            var appointmentDescriptor = DescriptorConverter.Parse<QflowBookAppointmentDescriptor>(request.Slot);
+            var nameDescriptor = DescriptorConverter.Parse<QflowNameDescriptor>(request.CustomerDetails.Name);
 
             var customerDetails = request.CustomerDetails;
 
@@ -89,15 +89,15 @@ namespace NBS.Appointments.Service.Controllers
                 return BadRequest(validationResult.Errors.ToErrorMessages());
             }
 
-            var cancelAppointmentDescriptor = QflowCancelAppointmentDescriptor.FromString(request.Appointment);
+            var cancelAppointmentDescriptor = DescriptorConverter.Parse<QFlowAppointmentReferenceDescriptor>(request.Appointment);
 
-            var appointments = await _qflowService.GetAllCustomerAppointments(cancelAppointmentDescriptor.QflowCustomerId);
-            var appointmentToCancel = appointments.FirstOrDefault(x => x.ProcessId == cancelAppointmentDescriptor.ProcessId);
+            var appointments = await _qflowService.GetAllCustomerAppointments(cancelAppointmentDescriptor.CustomerId);
+            var appointmentToCancel = appointments.SingleOrDefault(x => x.ProcessId == cancelAppointmentDescriptor.ProcessId);
 
             if (appointmentToCancel is null)
-                return NotFound($"Cannot find appointment with processId: {cancelAppointmentDescriptor.ProcessId} for customer: {cancelAppointmentDescriptor.QflowCustomerId}.");
+                return NotFound($"Cannot find appointment with processId: {cancelAppointmentDescriptor.ProcessId} for customer: {cancelAppointmentDescriptor.CustomerId}.");
 
-            var cancelationReasonDescriptor = QflowCancelationReasonDescriptor.FromString(request.Cancelation);
+            var cancelationReasonDescriptor = DescriptorConverter.Parse<QflowCancelationReasonDescriptor>(request.Cancelation);
 
             var cancelationResult = await _qflowService.CancelAppointment(
                 appointmentToCancel.ProcessId,
@@ -140,14 +140,14 @@ namespace NBS.Appointments.Service.Controllers
                 return BadRequest(validationResult.Errors.ToErrorMessages());
             }
 
-            var descriptor = QflowRescheduleAppointmentDescriptor.FromString(request.Appointment);
-
+            var originalAppointmentDescriptor = DescriptorConverter.Parse<QFlowAppointmentReferenceDescriptor>(request.OriginalAppointment);
+            var targetAppointment = DescriptorConverter.Parse<QFlowSlotDescriptor>(request.RescheduledSlot);
+            
             var rescheduleResult = await _qflowService.RescheduleAppointment(
-                descriptor.ServiceId,
-                descriptor.DateAndTime,
-                descriptor.AppointmentTypeId,
-                descriptor.CancelationReasonId,
-                descriptor.OriginalProcessId);
+                targetAppointment.ServiceId,
+                targetAppointment.Date.Date.Add(TimeSpan.FromMinutes(targetAppointment.StartTime)),
+                targetAppointment.AppointmentTypeId,
+                originalAppointmentDescriptor.ProcessId);
 
             return rescheduleResult.IsSuccessful
                 ? Ok(RescheduledAppointmentResponse.FromQflowResponse(rescheduleResult.ResponseData))

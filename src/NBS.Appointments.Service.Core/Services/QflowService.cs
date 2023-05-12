@@ -253,13 +253,12 @@ namespace NBS.Appointments.Service.Core.Services
             return result;
         }
 
-        public async Task<ApiResult<RescheduleAppointmentResponse>> RescheduleAppointment(int serviceId, DateTime startDateTime, int appointmentTypeId,
-            int cancelationReasonId, long processId)
+        public async Task<ApiResult<RescheduleAppointmentResponse>> RescheduleAppointment(int serviceId, DateTime startDateTime, int appointmentTypeId, long processId)
         {
             var payload = new RescheduleAppointmentPayload
             {
                 AppointmentTypeId = appointmentTypeId,
-                CancelationReasonId = cancelationReasonId,
+                CancelationReasonId = _options.RescheduleCancellationReasonId,
                 OriginalProcessId = processId,
                 ServiceId = serviceId,
                 DateAndTime = startDateTime

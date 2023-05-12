@@ -11,6 +11,7 @@ using NBS.Appointments.Service.Extensions;
 using NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors;
 using NBS.Appointments.Service.Core.Dtos.Qflow;
 using NBS.Appointments.Service.Core.Interfaces;
+using NBS.Appointments.Service.Core.Helpers;
 
 namespace NBS.Appointments.Service.Controllers
 {
@@ -57,7 +58,7 @@ namespace NBS.Appointments.Service.Controllers
                 return BadRequest(errorMessages);
             }
 
-            QflowServiceDescriptor serviceDescriptor = QflowServiceDescriptor.FromString(request.Service);
+            var serviceDescriptor = DescriptorConverter.Parse<QflowServiceDescriptor>(request.Service);
             IEnumerable<SiteUrn> siteUrns = request.Sites.Select(s => SiteUrnParser.Parse(s)).ToList();
 
             if(siteUrns.Any(urn => urn.Scheme != "qflow"))
@@ -101,8 +102,8 @@ namespace NBS.Appointments.Service.Controllers
                 return BadRequest(errorMessages);
             }
 
-            var siteDescriptor = QFlowSiteDescriptor.FromString(request.Site);
-            var serviceDescriptor = QflowServiceDescriptor.FromString(request.Service);
+            var siteDescriptor = DescriptorConverter.Parse<QFlowSiteDescriptor>(request.Site);
+            var serviceDescriptor = DescriptorConverter.Parse<QflowServiceDescriptor>(request.Service);
 
             var qflowResponse = await _qflowService.GetSiteSlotAvailability(
                 siteDescriptor.SiteId,

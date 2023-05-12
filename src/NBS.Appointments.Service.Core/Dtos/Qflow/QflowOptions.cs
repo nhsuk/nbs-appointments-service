@@ -9,5 +9,6 @@ namespace NBS.Appointments.Service.Core
         public string CallCentreBookingFlagId { get; set; }
         public string AppBookingFlagId { get; set; }
         public string CallCentreEmailFlagId { get; set; }
+        public int DefaultRescheduleReasonId { get; set; }
     }
 }
