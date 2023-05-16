@@ -20,7 +20,7 @@ resource "azurerm_monitor_action_group" "nbs_appts_app_alert_action_group" {
 
    email_receiver {
     name          = "Team Jabby Member"
-    email_address = "kim.crowe4@nhs.net, vincent.crowe1@nhs.net, paul.lewis43@nhs.net"
+    email_address = "kim.crowe4@nhs.net; vincent.crowe1@nhs.net; paul.lewis43@nhs.net"
   }
 }
 
