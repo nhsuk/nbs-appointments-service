@@ -61,7 +61,7 @@ resource "azurerm_monitor_metric_alert" "nbs_appts_app_http_401_alert" {
   description = "Alert will be triggered when http 401 error count is greater than 0"
 	
 	severity = 2
-	frequency = "PT15M"
+	frequency = "PT5M"
 	window_size = "PT15M"
 
   criteria {
