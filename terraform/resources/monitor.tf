@@ -59,6 +59,10 @@ resource "azurerm_monitor_metric_alert" "nbs_appts_app_http_401_alert" {
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
   scopes = [azurerm_linux_web_app.nbs_appts_app.id]
   description = "Alert will be triggered when http 401 error count is greater than 0"
+	
+	severity = 2
+	frequency = "PT15M"
+	window_size = "PT15M"
 
   criteria {
     metric_namespace = "Microsoft.Web/sites"
