@@ -42,6 +42,9 @@ namespace NBS.Appointments.Service
                             logging.ClearProviders();
                             logging.AddConsole();
                             logging.AddAzureWebAppDiagnostics();
+#if DEBUG
+                            logging.AddDebug();
+#endif
                         });
                 });
     }
