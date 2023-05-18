@@ -68,17 +68,3 @@ resource "azurerm_role_assignment" "keyvault_secrets_user" {
   principal_id = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
 }
 
-resource "azurerm_portal_dashboard" "nbs_appts_dashboard" {
-  name                = "${var.application}-dashboard-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  location            = azurerm_resource_group.nbs_appts_rg.location
-  tags = {
-    hidden-title = "Appointment Service Metrics for ${var.environment}"
-  }
-  dashboard_properties = templatefile("../../resources/dash.tpl",
-    {
-      sub_id     = data.azurerm_subscription.current.subscription_id
-      application = var.application
-      environment = var.environment
-  })
-}
