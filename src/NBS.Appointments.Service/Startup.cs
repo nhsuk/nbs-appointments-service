@@ -1,3 +1,4 @@
+using Microsoft.ApplicationInsights.Extensibility.EventCounterCollector;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -32,6 +33,11 @@ namespace NBS.Appointments.Service
                 .Configure<ApiKeyAuthenticationOptions>(options => options.ApiKey = Configuration.GetValue<string>("ApiKey"));
 
             services
+                .AddApplicationInsightsTelemetry()
+                .ConfigureTelemetryModule<EventCounterCollectionModule>((module, o) =>
+                {
+                    module.Counters.Add(new EventCounterCollectionRequest("System.Runtime", "cpu-usage"));
+                })
                 .AddHttpClient()
                 .AddHttpContextAccessor()
                 .AddControllers()
