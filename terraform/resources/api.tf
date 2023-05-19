@@ -46,8 +46,7 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
 
   app_settings = {
     AppConfig = azurerm_app_configuration.nbs_appts_app_config.primary_read_key[0].connection_string
-    "APPLICATIONINSIGHTS_CONNECTION_STRING" = azurerm_application_insights.nbs_appts_app_insights.connection_string
-    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.nbs_appts_app_insights.instrumentation_key
+    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.nbs_appts_app_insights.connection_string
   }
 
   identity {
