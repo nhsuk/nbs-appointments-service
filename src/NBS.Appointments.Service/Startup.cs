@@ -8,7 +8,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using NBS.Appointments.Service.Core;
+using NBS.Appointments.Service.Filters;
+using Serilog;
 using System.Collections.Generic;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -45,9 +48,12 @@ namespace NBS.Appointments.Service
                 .AddInMemoryStoreMutex()
                 .AddDateTimeProvider()
                 .RegisterValidators()
-                .AddSwaggerGen()
-                .AddHelpers();
-                        
+                .AddHelpers()
+                .AddSwaggerGen(config =>
+                {
+                    config.OperationFilter<SwaggerHeaderFilter>();
+                });
+
             services
                 .AddAuthentication("ApiKey") 
                 .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>("ApiKey",opts => { });
@@ -97,6 +103,8 @@ namespace NBS.Appointments.Service
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSerilogRequestLogging();
 
             app.UseEndpoints(endpoints =>
             {
