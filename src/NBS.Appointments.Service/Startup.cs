@@ -27,6 +27,7 @@ namespace NBS.Appointments.Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var sessionManagerConfig = Configuration.GetSection("SessionManager").Get<SessionManagerOptions>();
             services
                 .Configure<QflowOptions>(Configuration.GetSection("Qflow"))
                 .Configure<DateTimeProviderOptions>(Configuration.GetSection("DateTimeProvider"))
@@ -48,7 +49,7 @@ namespace NBS.Appointments.Service
 
             services
                 .AddQflowClient()
-                .AddInMemoryStoreMutex()
+                .AddSessionManager(sessionManagerConfig)
                 .AddDateTimeProvider()
                 .RegisterValidators()
                 .AddSwaggerGen()

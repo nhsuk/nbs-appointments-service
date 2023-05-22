@@ -8,9 +8,9 @@ namespace NBS.Appointments.Service.Core
     public class AzureBlobMutexRecordStore : IMutexRecordStore
     {
         private readonly BlobServiceClient _blobServiceClient;
-        private readonly Options _options;
+        private readonly SessionManagerOptions _options;
 
-        public AzureBlobMutexRecordStore(IOptions<Options> options, BlobServiceClient blobServiceClient)
+        public AzureBlobMutexRecordStore(IOptions<SessionManagerOptions> options, BlobServiceClient blobServiceClient)
         {
             _blobServiceClient = blobServiceClient ?? throw new ArgumentNullException(nameof(blobServiceClient));
             _options = options.Value;
@@ -60,12 +60,7 @@ namespace NBS.Appointments.Service.Core
                 };
                 _blobClient.Upload(BinaryData.FromString(content), options);
             }
-        }
-
-        public class Options
-        {
-            public string ContainerName { get; set; }
-        }
+        }        
     }
 
     public class InMemoryMutexRecordStore : IMutexRecordStore
@@ -119,5 +114,15 @@ namespace NBS.Appointments.Service.Core
             
             public void Write(string content) => _write(content);
         }
+    }
+
+    public class SessionManagerOptions
+    {
+        public static string AzureStorage => nameof(AzureStorage);
+        public static string InMemory => nameof(InMemory);
+
+        public string Type { get; set; }
+        public string BlobEndpoint { get; set; }
+        public string ContainerName { get; set; }
     }
 }
