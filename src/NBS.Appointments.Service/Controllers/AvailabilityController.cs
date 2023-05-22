@@ -11,6 +11,7 @@ using NBS.Appointments.Service.Extensions;
 using NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors;
 using NBS.Appointments.Service.Core.Dtos.Qflow;
 using NBS.Appointments.Service.Core.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace NBS.Appointments.Service.Controllers
 {
@@ -21,15 +22,18 @@ namespace NBS.Appointments.Service.Controllers
         private readonly IQflowService _qflowService;
         private readonly RequestValidatorFactory _validatorFactory;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ILogger<AvailabilityController> _logger;
 
         public AvailabilityController(
             IQflowService qflowService,
             IDateTimeProvider dateTimeProvider,
-            RequestValidatorFactory validatorFactory)
+            RequestValidatorFactory validatorFactory,
+            ILogger<AvailabilityController> logger)
         {
             _qflowService = qflowService ?? throw new ArgumentNullException(nameof(qflowService));
             _validatorFactory = validatorFactory ?? throw new ArgumentNullException(nameof(validatorFactory));
             _dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [HttpGet]

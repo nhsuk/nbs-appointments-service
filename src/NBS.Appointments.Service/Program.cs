@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Azure.Identity;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Exceptions;
 
 namespace NBS.Appointments.Service
 {
@@ -36,6 +35,12 @@ namespace NBS.Appointments.Service
                         });
                     }
                 })
+                .UseSerilog((hostingContext, loggerConfiguration) =>
+                    loggerConfiguration
+                        .ReadFrom.Configuration(hostingContext.Configuration)
+                        .Enrich.FromLogContext()
+                        .Enrich.WithExceptionDetails()
+                )
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
