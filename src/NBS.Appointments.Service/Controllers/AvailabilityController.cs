@@ -58,6 +58,8 @@ namespace NBS.Appointments.Service.Controllers
             if (!validationResult.IsValid)
             {
                 var errorMessages = validationResult.Errors.ToErrorMessages();
+                _logger.LogWarning("Request for availability by days failed validation. Validation errors: {@Errors}. Request model: {@Request}",
+                    errorMessages, request);
                 return BadRequest(errorMessages);
             }
 
@@ -68,9 +70,9 @@ namespace NBS.Appointments.Service.Controllers
                 return BadRequest(new {Message = "Only qflow sites are currently supported"});
 
             var qflowResponse = await _qflowService.GetSiteAvailability(
-                siteUrns.Select(urn => urn.Identifier), 
-                request.From, 
-                request.Until, 
+                siteUrns.Select(urn => urn.Identifier),
+                request.From,
+                request.Until,
                 serviceDescriptor.Dose,
                 serviceDescriptor.Vaccine,
                 serviceDescriptor.Reference);
@@ -102,6 +104,8 @@ namespace NBS.Appointments.Service.Controllers
             if (!validationResult.IsValid)
             {
                 var errorMessages = validationResult.Errors.ToErrorMessages();
+                _logger.LogWarning("Site availability request failed validation. Validation errors: {@Errors}. Request model: {@Request}",
+                    errorMessages, request);
                 return BadRequest(errorMessages);
             }
 
