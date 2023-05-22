@@ -45,8 +45,8 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
   }
 
   app_settings = {
-    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.nbs_appts_app_insights.connection_string
     AppConfig = azurerm_app_configuration.nbs_appts_app_config.primary_read_key[0].connection_string
+    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.nbs_appts_app_insights.connection_string
   }
 
   identity {
@@ -59,7 +59,6 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
 
   lifecycle {
     ignore_changes = [
-      app_settings,
       tags # Ignore changes to tags, avoiding loss of Azure link to App Insights 
     ]
   }
