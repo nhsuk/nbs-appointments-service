@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors;
 using NBS.Appointments.Service.Core.Helpers;
 using NBS.Appointments.Service.Core.Interfaces.Services;
@@ -18,8 +19,13 @@ namespace NBS.Appointments.Service.Controllers
         private readonly IQflowService _qflowService;
         private readonly RequestValidatorFactory _requestValidatorFactory;
         private readonly ICustomPropertiesHelper _customPropertiesHelper;
+        private readonly ILogger<AppointmentController> _logger;
 
-        public AppointmentController(IQflowService qflowService, RequestValidatorFactory requestValidatorFactory, ICustomPropertiesHelper customPropertiesHelper)
+        public AppointmentController(
+            IQflowService qflowService,
+            RequestValidatorFactory requestValidatorFactory,
+            ICustomPropertiesHelper customPropertiesHelper,
+            ILogger<AppointmentController> logger)
         {
             _qflowService = qflowService
                 ?? throw new ArgumentNullException(nameof(qflowService));
@@ -29,6 +35,9 @@ namespace NBS.Appointments.Service.Controllers
 
             _customPropertiesHelper = customPropertiesHelper
                 ?? throw new ArgumentNullException(nameof(customPropertiesHelper));
+
+            _logger = logger
+                ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [HttpPost]
@@ -40,7 +49,10 @@ namespace NBS.Appointments.Service.Controllers
 
             if (!validationResult.IsValid)
             {
-                return BadRequest(validationResult.Errors.ToErrorMessages());
+                var errorMessages = validationResult.Errors.ToErrorMessages();
+                _logger.LogWarning("Book appointment request failed validation. Errors: {@Errors}. Request model: {@Request}",
+                    errorMessages, request);
+                return BadRequest(errorMessages);
             }
 
             var appointmentDescriptor = QflowBookAppointmentDescriptor.FromString(request.Slot);
@@ -60,6 +72,7 @@ namespace NBS.Appointments.Service.Controllers
 
             if (!createUpdateCustomerResult.IsSuccessful)
             {
+                _logger.LogWarning("Failed to create or update customer record. Customer details: {@Customer}", customerDetails);
                 return BadRequest("Failed to create or update customer record.");
             }
 
@@ -86,7 +99,10 @@ namespace NBS.Appointments.Service.Controllers
 
             if (!validationResult.IsValid)
             {
-                return BadRequest(validationResult.Errors.ToErrorMessages());
+                var errorMessages = validationResult.Errors.ToErrorMessages();
+                _logger.LogWarning("Cancel appointment request failed validation. Errors: {@Errors}. Request object: {@Request}",
+                    errorMessages, request);
+                return BadRequest(errorMessages);
             }
 
             var cancelAppointmentDescriptor = QflowCancelAppointmentDescriptor.FromString(request.Appointment);
@@ -114,12 +130,18 @@ namespace NBS.Appointments.Service.Controllers
         public async Task<IActionResult> GetAllCustomerAppointments(string nhsNumber, bool includePastAppointments)
         {
             if (string.IsNullOrEmpty(nhsNumber))
+            {
+                _logger.LogWarning("NHS Number not provided when trying to get all customer appointments.");
                 return BadRequest("Customer NHS Number must be provided.");
+            }
 
             var qflowCustomer = await _qflowService.GetCustomerByNhsNumber(nhsNumber);
 
             if (!qflowCustomer.IsSuccessful)
+            {
+                _logger.LogWarning("Could not find qflow customer with NHS Number: {@NhsNumber}", nhsNumber);
                 return NotFound($"Could not find qflow customer with NhsNumber: {nhsNumber}.");
+            }
 
             var appointments = await _qflowService.GetAllCustomerAppointments(qflowCustomer.ResponseData.Id);
 
@@ -137,7 +159,10 @@ namespace NBS.Appointments.Service.Controllers
 
             if (!validationResult.IsValid)
             {
-                return BadRequest(validationResult.Errors.ToErrorMessages());
+                var errorMessages = validationResult.Errors.ToErrorMessages();
+                _logger.LogWarning("Reschedule appointment request failed validation. Errors: {@Errors}. Request object: {@Request}",
+                    errorMessages, request);
+                return BadRequest(errorMessages);
             }
 
             var descriptor = QflowRescheduleAppointmentDescriptor.FromString(request.Appointment);
