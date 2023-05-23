@@ -13,10 +13,19 @@ resource "azurerm_resource_group" "nbs_appts_rg" {
 
 resource "azurerm_application_insights" "nbs_appts_app_insights" {
   name                = "${var.application}-ai-${var.environment}-${var.loc}"
-  location            = azurerm_resource_group.nbs_appts_rg.location
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
+  location            = azurerm_resource_group.nbs_appts_rg.location
   application_type    = "web"
   retention_in_days   = 30
+}
+
+resource "azurerm_storage_account" "nbs_appts_stacc" {
+  name                     = "${var.application}${var.environment}${var.loc}"
+  resource_group_name      = azurerm_resource_group.nbs_appts_rg.name
+  location                 = azurerm_resource_group.nbs_appts_rg.location
+  account_tier             = "Standard"
+  account_kind             = "BlobStorage"
+  account_replication_type = "LRS"
 }
 
 resource "azurerm_service_plan" "nbs_appts_sp" {
@@ -75,4 +84,11 @@ resource "azurerm_role_assignment" "keyvault_secrets_user" {
   role_definition_name = "Key Vault Secrets User"
   principal_id = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
 }
+
+resource "azurerm_role_assignment" "storage_blob_data_owner" {
+  scope                = azurerm_storage_account.nbs_appts_stacc.id
+  role_definition_name = "Storage Blob Data Owner"
+  principal_id         = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
+}
+
 
