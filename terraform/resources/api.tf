@@ -28,6 +28,12 @@ resource "azurerm_storage_account" "nbs_appts_stacc" {
   account_replication_type = "LRS"
 }
 
+resource "azurerm_storage_container" "nbs_appts_container" {
+  name                  = "${var.application_short}${var.environment}${var.loc}"
+  storage_account_name  = azurerm_storage_account.nbs_appts_stacc.name
+  container_access_type = "blob"
+}
+
 resource "azurerm_service_plan" "nbs_appts_sp" {
   name                = "${var.application}-sp-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name

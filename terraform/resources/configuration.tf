@@ -241,7 +241,7 @@ resource "azurerm_app_configuration_key" "config_sessionmanager_type" {
 resource "azurerm_app_configuration_key" "config_sessionmanager_blobendpoint" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
   key                    = "SessionManager:BlobEndpoint"
-  value                  = "<replace with terraform ref to storage account blob endpoint property>"
+  value                  = azurerm_storage_account.nbs_appts_stacc.primary_blob_endpoint
 
   lifecycle {
     ignore_changes = [
@@ -257,7 +257,7 @@ resource "azurerm_app_configuration_key" "config_sessionmanager_blobendpoint" {
 resource "azurerm_app_configuration_key" "config_sessionmanager_containername" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
   key                    = "SessionManager:ContainerName"
-  value                  = "<replace with terraform ref to container name property>"
+  value                  = azurerm_storage_container.nbs_appts_container.name
 
   lifecycle {
     ignore_changes = [
