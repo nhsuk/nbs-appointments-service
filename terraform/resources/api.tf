@@ -20,7 +20,7 @@ resource "azurerm_application_insights" "nbs_appts_app_insights" {
 }
 
 resource "azurerm_storage_account" "nbs_appts_stacc" {
-  name                     = "${var.application}${var.environment}${var.loc}"
+  name                     = "${var.application_short}${var.environment}${var.loc}"
   resource_group_name      = azurerm_resource_group.nbs_appts_rg.name
   location                 = azurerm_resource_group.nbs_appts_rg.location
   account_tier             = "Standard"
