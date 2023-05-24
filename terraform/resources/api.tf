@@ -11,6 +11,14 @@ resource "azurerm_resource_group" "nbs_appts_rg" {
   tags     = local.allTags
 }
 
+resource "azurerm_log_analytics_workspace" "nbs_appts_analytics_workspace" {
+  name                = "${var.application}-la-${var.environment}-${var.loc}"
+  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
+  location            = azurerm_resource_group.nbs_appts_rg.location
+  sku                 = "Free"
+  retention_in_days   = 7
+}
+
 resource "azurerm_application_insights" "nbs_appts_app_insights" {
   name                = "${var.application}-ai-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
