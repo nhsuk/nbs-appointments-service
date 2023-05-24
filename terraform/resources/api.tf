@@ -3,6 +3,8 @@ data "azurerm_container_registry" "container_registry" {
   name                = var.registry_name
 }
 
+data "azurerm_subscription" "current" {}
+
 resource "azurerm_resource_group" "nbs_appts_rg" {
   name     = "${var.application}-rg-${var.environment}-${var.loc}"
   location = var.location
@@ -65,3 +67,4 @@ resource "azurerm_role_assignment" "keyvault_secrets_user" {
   role_definition_name = "Key Vault Secrets User"
   principal_id = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
 }
+

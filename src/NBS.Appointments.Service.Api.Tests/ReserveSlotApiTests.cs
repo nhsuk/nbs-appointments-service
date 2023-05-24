@@ -6,16 +6,15 @@ using Xunit;
 
 namespace NBS.Appointments.Service.Api.Tests
 {
-    public class ReserveSlotApiTests
-    {
-        private readonly HttpClient _httpClient = new();
-        private const string Endpoint = "http://localhost:4000/slot/reserve";
+    public class ReserveSlotApiTests : ApiTestBase
+    {        
+        public override string PathToTest => "slot/reserve";
 
         [Fact]
         public async Task ReserveSlot_RespondsWithUnsupportedMediaType_WhenJsonNotSpecified()
         {
             var payload = new StringContent("");
-            var response = await _httpClient.PostAsync(Endpoint, payload);
+            var response = await HttpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         }
@@ -24,7 +23,7 @@ namespace NBS.Appointments.Service.Api.Tests
         public async Task ReserveSlot_RespondsWithBadRequest_WhenMalformedPayloadIsSent()
         {
             var payload = new StringContent("", Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(Endpoint, payload);
+            var response = await HttpClient.PostAsync(Endpoint, payload);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
@@ -34,7 +33,7 @@ namespace NBS.Appointments.Service.Api.Tests
         public async Task ReserveSlot_ReturnsBadRequest_WhenInvalidPayloadSent(object payload)
         {
             var jsonContent = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(Endpoint, jsonContent);
+            var response = await HttpClient.PostAsync(Endpoint, jsonContent);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
@@ -45,7 +44,7 @@ namespace NBS.Appointments.Service.Api.Tests
             var payload = new ReserveSlotApiRequest("qflow:1:2:3:2023-04-05:4:5", 5);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync(Endpoint, jsonContent);
+            var response = await HttpClient.PostAsync(Endpoint, jsonContent);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 

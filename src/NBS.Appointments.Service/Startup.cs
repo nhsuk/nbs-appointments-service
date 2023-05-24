@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
@@ -7,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NBS.Appointments.Service.Core;
 using System.Collections.Generic;
-using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace NBS.Appointments.Service
 {
@@ -23,11 +26,15 @@ namespace NBS.Appointments.Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<QflowOptions>(Configuration.GetSection("Qflow"));
-            services.Configure<DateTimeProviderOptions>(Configuration.GetSection("DateTimeProvider"));
+            services
+                .Configure<QflowOptions>(Configuration.GetSection("Qflow"))
+                .Configure<DateTimeProviderOptions>(Configuration.GetSection("DateTimeProvider"))
+                .Configure<ApiKeyAuthenticationOptions>(options => options.ApiKey = Configuration.GetValue<string>("ApiKey"));
 
-            services.AddHttpClient();
-            services.AddControllers()
+            services
+                .AddHttpClient()
+                .AddHttpContextAccessor()
+                .AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
                 {
                     options.InvalidModelStateResponseFactory = context => new BadRequestObjectResult(CreateErrorInfo(context.ModelState));
@@ -40,6 +47,10 @@ namespace NBS.Appointments.Service
                 .RegisterValidators()
                 .AddSwaggerGen()
                 .AddHelpers();
+                        
+            services
+                .AddAuthentication("ApiKey") 
+                .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>("ApiKey",opts => { });
         }
 
         private IEnumerable<string> CreateErrorInfo(ModelStateDictionary modelState)
@@ -60,7 +71,6 @@ namespace NBS.Appointments.Service
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
@@ -69,11 +79,30 @@ namespace NBS.Appointments.Service
 
             app.UseRouting();
 
+            app.UseExceptionHandler(handler => {
+                handler.Run(async context => {
+                    var showExceptions = Configuration.GetValue<bool>("ShowException");
+                    if (showExceptions)
+                    {
+                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                        context.Response.ContentType = Text.Plain;
+
+                        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+
+                        await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.Message);
+                        await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.StackTrace);
+                    }
+                });
+            });
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints
+                    .MapControllers()
+                    .RequireAuthorization();
             });
         }
     }

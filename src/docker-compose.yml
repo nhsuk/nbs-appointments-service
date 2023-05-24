@@ -12,6 +12,8 @@ services:
       - "DateTimeProvider:TimeZone=Europe/London"
       - "Qflow:AppBookingFlagId=5"
       - "Qflow:CallCentreBookingFlagId=1"
+      - "ApiKey=supersecret"
+      - "ShowException=false"
     ports:
       - "4000:80"
 
