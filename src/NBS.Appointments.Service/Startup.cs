@@ -35,10 +35,6 @@ namespace NBS.Appointments.Service
 
             services
                 .AddApplicationInsightsTelemetry()
-                .ConfigureTelemetryModule<EventCounterCollectionModule>((module, o) =>
-                {
-                    module.Counters.Add(new EventCounterCollectionRequest("System.Runtime", "cpu-usage"));
-                })
                 .AddHttpClient()
                 .AddHttpContextAccessor()
                 .AddControllers()
