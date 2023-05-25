@@ -11,6 +11,21 @@ resource "azurerm_resource_group" "nbs_appts_rg" {
   tags     = local.allTags
 }
 
+resource "azurerm_storage_account" "nbs_appts_stacc" {
+  name                     = "${var.application_short}${var.environment}${var.loc}"
+  resource_group_name      = azurerm_resource_group.nbs_appts_rg.name
+  location                 = azurerm_resource_group.nbs_appts_rg.location
+  account_tier             = "Standard"
+  account_kind             = "BlobStorage"
+  account_replication_type = "LRS"
+}
+
+resource "azurerm_storage_container" "nbs_appts_container" {
+  name                  = "${var.application_short}${var.environment}${var.loc}"
+  storage_account_name  = azurerm_storage_account.nbs_appts_stacc.name
+  container_access_type = "blob"
+}
+
 resource "azurerm_service_plan" "nbs_appts_sp" {
   name                = "${var.application}-sp-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
@@ -38,6 +53,7 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
 
   app_settings = {
     AppConfig = azurerm_app_configuration.nbs_appts_app_config.primary_read_key[0].connection_string
+    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.nbs_appts_app_insights.connection_string
   }
 
   identity {
@@ -50,7 +66,6 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
 
   lifecycle {
     ignore_changes = [
-      app_settings,
       tags # Ignore changes to tags, avoiding loss of Azure link to App Insights 
     ]
   }
@@ -67,4 +82,11 @@ resource "azurerm_role_assignment" "keyvault_secrets_user" {
   role_definition_name = "Key Vault Secrets User"
   principal_id = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
 }
+
+resource "azurerm_role_assignment" "storage_blob_data_owner" {
+  scope                = azurerm_storage_account.nbs_appts_stacc.id
+  role_definition_name = "Storage Blob Data Owner"
+  principal_id         = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
+}
+
 
