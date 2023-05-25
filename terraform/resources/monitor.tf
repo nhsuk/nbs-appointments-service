@@ -1,3 +1,20 @@
+resource "azurerm_log_analytics_workspace" "nbs_appts_analytics_workspace" {
+  name                = "${var.application}-log-analytics-${var.environment}-${var.loc}"
+  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
+  location            = azurerm_resource_group.nbs_appts_rg.location
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+}
+
+resource "azurerm_application_insights" "nbs_appts_app_insights" {
+  name                = "${var.application}-ai-${var.environment}-${var.loc}"
+  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
+  location            = azurerm_resource_group.nbs_appts_rg.location
+  workspace_id        = azurerm_log_analytics_workspace.nbs_appts_analytics_workspace.id
+  application_type    = "web"
+  retention_in_days   = 30
+}
+
 resource "azurerm_portal_dashboard" "nbs_appts_dashboard" {
   name                = "${var.application}-dashboard-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
