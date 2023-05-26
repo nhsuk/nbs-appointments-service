@@ -29,6 +29,6 @@ module "api" {
   location = "uksouth"
   environment = "perf"
   loc = "uks"
-  sku_name = "B1"  
+  sku_name = "S1"  
   docker_image_tag = var.docker_image_tag
 }
