@@ -123,9 +123,12 @@ namespace NBS.Appointments.Service.Controllers
 
             var appointments = await _qflowService.GetAllCustomerAppointments(qflowCustomer.ResponseData.Id);
 
-            return includePastAppointments
-                ? Ok(appointments)
-                : Ok(appointments.Where(x => DateTime.Compare(x.AppointmentDate.ToUniversalTime(), DateTime.Today.ToUniversalTime()) >= 0));
+            if (includePastAppointments)
+                appointments = appointments.Where(x => DateTime.Compare(x.AppointmentDate.ToUniversalTime(), DateTime.Today.ToUniversalTime()) >= 0).ToList();
+
+            var customerName = $"{qflowCustomer.ResponseData.FirstName} {qflowCustomer.ResponseData.LastName}";
+
+            return Ok(GetAppointmentsResponse.FromQflowResponse(appointments, nhsNumber, customerName));
         }
 
         [HttpPost]
