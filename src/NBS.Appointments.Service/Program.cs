@@ -3,9 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System;
 using Azure.Identity;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Exceptions;
+using NBS.Appointments.Service.Configuration;
 
 namespace NBS.Appointments.Service
 {
@@ -36,10 +36,14 @@ namespace NBS.Appointments.Service
                     }
                 })
                 .UseSerilog((hostingContext, loggerConfiguration) =>
+                {
+                    var settings = hostingContext.Configuration;
+                    var splunkConfig = settings.GetSection("Splunk").Get<SplunkSettings>();
                     loggerConfiguration
-                        .ReadFrom.Configuration(hostingContext.Configuration)
+                        .WriteTo.EventCollector(splunkConfig.SplunkHost, splunkConfig.EventCollectorToken)
                         .Enrich.FromLogContext()
-                        .Enrich.WithExceptionDetails()
+                        .Enrich.WithExceptionDetails();
+                }
                 )
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
