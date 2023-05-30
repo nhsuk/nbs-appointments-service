@@ -1,3 +1,5 @@
+using Azure.Identity;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Options;
 using NBS.Appointments.Service.Core;
 using NBS.Appointments.Service.Core.Helpers;
@@ -17,10 +19,26 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddTransient<IQflowService, QflowService>();
         }
 
-        public static IServiceCollection AddAzureBlobStoreMutex(this IServiceCollection services, string containerName)
+        public static IServiceCollection AddSessionManager(this IServiceCollection services, SessionManagerOptions options)
         {
-            services.Configure<AzureBlobMutexRecordStore.Options>(opts => {
+            if (options.Type == SessionManagerOptions.AzureStorage)
+                return services.AddAzureBlobStoreMutex(options.BlobEndpoint, options.ContainerName);
+            else if (options.Type == SessionManagerOptions.InMemory)
+                return services.AddInMemoryStoreMutex();
+
+            throw new ArgumentOutOfRangeException($"No session manage of type {options.Type} is available");
+        }
+
+        public static IServiceCollection AddAzureBlobStoreMutex(this IServiceCollection services, string blobEndpoint, string containerName)
+        {
+            services.Configure<SessionManagerOptions>(opts => {
+                opts.Type = SessionManagerOptions.AzureStorage;
                 opts.ContainerName = containerName;
+            });
+            services.AddAzureClients(x =>
+            {
+                x.AddBlobServiceClient(new Uri(blobEndpoint));
+                x.UseCredential(new DefaultAzureCredential());
             });
             return services.AddSingleton<IMutexRecordStore, AzureBlobMutexRecordStore>();
         }
