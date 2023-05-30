@@ -9,8 +9,8 @@ namespace NBS.Appointments.Service.Models
     public class GetAppointmentsResponse
     {
         public string Ref { get; set; }
-        public string Site { get; set; }
-        public string Service { get; set; }
+        public int Site { get; set; }
+        public int Service { get; set; }
         public DateTime From { get; set; }
         public int Duration { get; set; }
         public Status Status { get; set; }
@@ -21,15 +21,14 @@ namespace NBS.Appointments.Service.Models
             return appointments.Select(x => new GetAppointmentsResponse()
             {
                 Ref = $"qflow:{x.CustomerId}:{x.ProcessId}",
-                Site = $"qflow:{x.UnitId}",
-                // TODO: The service urn for the availability endpoint contains the vaccine code but we don't have access to that here
-                Service = $"qflow:{x.Dose}:{x.ServiceId}:{x.AppointmentTypeExtRef}",
+                Site = x.UnitId,
+                Service = x.ServiceId,
                 From = x.AppointmentDate,
                 Duration = x.AppointmentDuration,
                 Status = new Status
                 {
                     Code = ((QflowAppointmentStatus)x.CurrentEntityStatus).ToString(),
-                    Reason = ((AppointmentCancellationReason)x.CancelationReasonId).ToString()
+                    Reason = GetCancellationReason(x.CancelationReasonId)
                 },
                 Attendee = new Attendee
                 {
@@ -38,6 +37,13 @@ namespace NBS.Appointments.Service.Models
                 }
             })
             .ToList();
+        }
+
+        private static string GetCancellationReason(int cancellationReasonId)
+        {
+            return Enum.IsDefined(typeof(AppointmentCancellationReason), cancellationReasonId)
+                ? ((AppointmentCancellationReason)cancellationReasonId).ToString()
+                : "none";
         }
     }
 
