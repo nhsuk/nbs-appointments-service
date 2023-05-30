@@ -15,6 +15,24 @@ resource "azurerm_application_insights" "nbs_appts_app_insights" {
   retention_in_days   = 30
 }
 
+resource "azurerm_service_plan" "nbs_appts_alert_func_sp" {
+  name                = "${var.application}-func-sp-${var.environment}-${var.loc}"
+  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
+  location            = azurerm_resource_group.nbs_appts_rg.location
+  os_type             = "Linux"
+  sku_name            = "Y1"
+}
+
+resource "azurerm_linux_function_app" "nbs_appts_alert_app_func" {
+  name                = "${var.application}-func-${var.environment}-${var.loc}"
+  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
+  location            = azurerm_resource_group.nbs_appts_rg.location
+
+  storage_account_name       = azurerm_storage_account.nbs_appts_stacc.name
+  storage_account_access_key = azurerm_storage_account.nbs_appts_stacc.primary_access_key
+  service_plan_id            = azurerm_service_plan.nbs_appts_func_sp.id
+}
+
 resource "azurerm_portal_dashboard" "nbs_appts_dashboard" {
   name                = "${var.application}-dashboard-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
@@ -38,37 +56,15 @@ resource "azurerm_monitor_action_group" "nbs_appts_app_alert_action_group" {
   email_receiver {
     name          = "Kim Crowe"
     email_address = "kim.crowe4@nhs.net"
-  }
-
-  email_receiver {
-    name          = "Vincent Crowe"
-    email_address = "vincent.crowe1@nhs.net"
-  }
-
-  email_receiver {
-    name          = "Paul Lewis"
-    email_address = "paul.lewis43@nhs.net"
-  }
-
-  email_receiver {
-    name          = "Usman Iqbal"
-    email_address = "usman.iqbal6@nhs.net"
-  }
-
-  email_receiver {
-    name          = "Anton Forbes"
-    email_address = "anton.forbes1@nhs.net"
-  }
-
-	email_receiver {
-    name          = "Darren Lightfoot"
-    email_address = "darren.lightfoot1@nhs.net"
-  }
-
-	email_receiver {
-    name          = "Leon Bamforth"
-    email_address = "leon.bamforth2@nhs.net"
   }  
+
+  azure_function_receiver {
+    name                     = "${var.application}-slack-webhook"
+    function_app_resource_id = azurerm_linux_function_app.nbs_appts_app_func.id
+    function_name            = azurerm_linux_function_app.nbs_appts_app_func.name
+    http_trigger_url         = azurerm_linux_function_app.nbs_appts_app_func.http_trigger_url
+    use_common_alert_schema  = true
+  }
 }
 
 resource "azurerm_monitor_metric_alert" "nbs_appts_app_http_401_alert" {
