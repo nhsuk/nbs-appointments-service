@@ -43,6 +43,11 @@ variable "docker_image_tag" {
   type = string
 }
 
+variable "enable_autoscaling" {
+  type    = bool
+  default = false
+}
+
 variable "tags" {
   description = "A map of the tags to use for the resources that are deployed"
   type        = map(string)

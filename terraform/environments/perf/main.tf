@@ -24,6 +24,8 @@ variable "docker_image_tag" {
   type = string
 }
 
+enable_autoscaling = true
+
 module "api" {
   source           = "../../resources"
   location         = "uksouth"
