@@ -16,7 +16,7 @@ resource "azurerm_monitor_autoscale_setting" "nbs_appts_sp_autoscale" {
 
     rule {
       metric_trigger {
-        metric_name        = "Percentage CPU"
+        metric_name        = "CpuPercentage"
         metric_resource_id = azurerm_service_plan.nbs_appts_sp.id
         time_grain         = "PT1M"
         statistic          = "Average"
