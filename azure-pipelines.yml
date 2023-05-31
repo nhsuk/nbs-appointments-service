@@ -25,7 +25,7 @@ jobs:
         rootFolderOrFile: 'func_app_output/'
         includeRootFolder: false
         archiveType: 'zip'
-        archiveFile: '/func_app_package/alerts_function_app.zip'
+        archiveFile: 'func_app_package/alerts_function_app.zip'
         replaceExistingArchive: true
     - task: PublishBuildArtifacts@1
       displayName: "Publish Alerts Function App"
