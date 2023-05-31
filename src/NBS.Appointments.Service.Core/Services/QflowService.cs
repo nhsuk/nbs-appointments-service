@@ -8,6 +8,7 @@ using System.Text;
 using System.Net.Mime;
 using System.Text.Json;
 using NBS.Appointments.Service.Core.Dtos;
+using Microsoft.Extensions.Logging;
 
 namespace NBS.Appointments.Service.Core.Services
 {
@@ -16,15 +17,24 @@ namespace NBS.Appointments.Service.Core.Services
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IQflowSessionManager _sessionManager;
         private readonly QflowOptions _options;
+        private readonly ILogger<QflowService> _logger;
 
         public QflowService(
             IOptions<QflowOptions> options,
             IHttpClientFactory httpClientFactory, 
-            IQflowSessionManager sessionManager)
+            IQflowSessionManager sessionManager,
+            ILogger<QflowService> logger)
         {
             _options = options.Value;
-            _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
-            _sessionManager = sessionManager ?? throw new ArgumentNullException(nameof(sessionManager));
+
+            _httpClientFactory = httpClientFactory
+                ?? throw new ArgumentNullException(nameof(httpClientFactory));
+
+            _sessionManager = sessionManager
+                ?? throw new ArgumentNullException(nameof(sessionManager));
+
+            _logger = logger
+                ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<SiteAvailabilityResponse[]> GetSiteAvailability(IEnumerable<string> siteIds, DateTime startDate, DateTime endDate,
@@ -33,10 +43,10 @@ namespace NBS.Appointments.Service.Core.Services
             if(siteIds.Any() == false)
                 throw new ArgumentException("At least one site must be provided", nameof(siteIds));
 
-            if (String.IsNullOrEmpty(dose))
+            if (string.IsNullOrEmpty(dose))
                 throw new ArgumentException("A value must be provided", nameof(dose));
 
-            if (String.IsNullOrEmpty(vaccine))
+            if (string.IsNullOrEmpty(vaccine))
                 throw new ArgumentException("A value must be provided", nameof(vaccine));
 
             int days = startDate.DaysBetween(endDate);
@@ -57,7 +67,16 @@ namespace NBS.Appointments.Service.Core.Services
             var response = await Execute(query, endpointUrl, HttpMethod.Get, null);
             var responseBody = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<SiteAvailabilityResponse[]>(responseBody);
+            try
+            {
+                return JsonSerializer.Deserialize<SiteAvailabilityResponse[]>(responseBody);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception thrown when attempting to deserialize qflow site availability response. Message: {@Message}, Response body: {@ResponseBody}, StatusCode: {@StatusCode}",
+                    ex.Message, responseBody, response.StatusCode);
+                throw;
+            }
         }
 
         public async Task<SiteSlotsResponse> GetSiteSlotAvailability(int siteId, DateTime date, string dose, string vaccineType, string externalReference)
@@ -78,7 +97,16 @@ namespace NBS.Appointments.Service.Core.Services
             var response = await Execute(query, endpointUrl, HttpMethod.Get, null);
             var responseBody = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<SiteSlotsResponse>(responseBody);
+            try
+            {
+                return JsonSerializer.Deserialize<SiteSlotsResponse>(responseBody);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception thrown when attempting to deserialize qflow site slot availability response. Message: {@Message}, Response body: {@ResponseBody}, StatusCode: {@StatusCode}",
+                    ex.Message, responseBody, response.StatusCode);
+                throw;
+            }
         }
 
         public async Task<ApiResult<ReserveSlotResponse>> ReserveSlot(int calendarId, int startTime, int endTime, int lockDuration)
@@ -109,6 +137,9 @@ namespace NBS.Appointments.Service.Core.Services
                 result.ResponseData = new ReserveSlotResponse(slotOrdinalNumber);
                 return result;
             }
+
+            _logger.LogWarning("Reserve slot returned non-successful status code. Status code: {@StatusCode}. Response body: {@ResponseBody}. Payload: {@Payload}",
+                response.StatusCode, responseBody, request);
 
             return result;
         }
@@ -142,6 +173,9 @@ namespace NBS.Appointments.Service.Core.Services
                 result.ResponseData = JsonSerializer.Deserialize<BookAppointmentResponse>(responseBody);
                 return result;
             }
+
+            _logger.LogWarning("Book appointment returned non-successful status code. Status code: {@StatusCode}. Response body: {@ResponseBody}. Payload: {@Payload}",
+                response.StatusCode, responseBody, payload);
 
             return result;
         }
@@ -181,6 +215,9 @@ namespace NBS.Appointments.Service.Core.Services
                 return result;
             }
 
+            _logger.LogWarning("Create or update customer returned non-successful status code. Status code: {@StatusCode}. Response body: {@ResponseBody}. Payload: {@Payload}",
+                response.StatusCode, responseBody, payload);
+
             return result;
         }
 
@@ -193,9 +230,18 @@ namespace NBS.Appointments.Service.Core.Services
             var endpointUrl = $"{_options.BaseUrl}/svcCustomAppointment.svc/rest/GetAllCustomerAppointments";
 
             var response = await Execute(query, endpointUrl, HttpMethod.Get, null);
-            var responeBody = await response.Content.ReadAsStringAsync();
+            var responseBody = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<List<AppointmentResponse>>(responeBody);
+            try
+            {
+                return JsonSerializer.Deserialize<List<AppointmentResponse>>(responseBody);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception thrown when attempting to deserialize customer appointments response. Message: {@Message}, Response body: {@ResponseBody}, StatusCode: {@StatusCode}",
+                    ex.Message, responseBody, response.StatusCode);
+                throw;
+            }
         }
 
         public async Task<ApiResult<CancelBookingResponse>> CancelAppointment(int processId, int cancelationReasonId, int treatmentPlanCancelationMethod)
@@ -213,19 +259,22 @@ namespace NBS.Appointments.Service.Core.Services
             };
 
             var endpointUrl = $"{_options.BaseUrl}/svcProcess.svc/rest/CancelAppointment1";
-            var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, payload);
-            var responseBody = await response.Content.ReadAsStringAsync();
+             var response = await Execute(new Dictionary<string, string>(), endpointUrl, HttpMethod.Post, payload);
+             var responseBody = await response.Content.ReadAsStringAsync();
 
-            var result = new ApiResult<CancelBookingResponse>
-            {
-                StatusCode = response.StatusCode
-            };
+             var result = new ApiResult<CancelBookingResponse>
+             {
+                 StatusCode = response.StatusCode
+             };
 
-            if (response.IsSuccessStatusCode)
-            {
-                result.ResponseData = JsonSerializer.Deserialize<CancelBookingResponse>(responseBody);
-                return result;
-            }
+             if (response.IsSuccessStatusCode)
+             {
+                 result.ResponseData = JsonSerializer.Deserialize<CancelBookingResponse>(responseBody);
+                 return result;
+             }
+
+            _logger.LogWarning("Cancel appointment returned non-successful status code. Status code: {@StatusCode}. Response body: {@ResponseBody}. Payload: {@Payload}",
+               response.StatusCode, responseBody, payload);
 
             return result;
         }
@@ -249,7 +298,15 @@ namespace NBS.Appointments.Service.Core.Services
             if (string.IsNullOrEmpty(responseBody))
                 return result;
 
-            result.ResponseData = JsonSerializer.Deserialize<CustomerDto>(responseBody);
+            if (response.IsSuccessStatusCode)
+            {
+                result.ResponseData = JsonSerializer.Deserialize<CustomerDto>(responseBody);
+                return result;
+            }
+
+            _logger.LogWarning("Get customer by NHS number returned non-successful status code. Status code: {@StatusCode}. Response body: {@ResponseBody}. NHS Number: {@NhsNumber}",
+               response.StatusCode, responseBody, nhsNumber);
+
             return result;
         }
 
@@ -278,6 +335,9 @@ namespace NBS.Appointments.Service.Core.Services
                 result.ResponseData = JsonSerializer.Deserialize<RescheduleAppointmentResponse>(responseBody);
                 return result;
             }
+
+            _logger.LogWarning("Get customer by NHS number returned non-successful status code. Status code: {@StatusCode}. Response body: {@ResponseBody}. Payload: {@Payload}",
+               response.StatusCode, responseBody, payload);
 
             return result;
         }

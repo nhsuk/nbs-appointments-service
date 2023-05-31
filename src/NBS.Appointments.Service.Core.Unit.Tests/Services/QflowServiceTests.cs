@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using NBS.Appointments.Service.Core.Interfaces.Services;
 using NBS.Appointments.Service.Core.Services;
@@ -11,6 +12,7 @@ namespace NBS.Appointments.Service.Core.Unit.Tests.Services
         private readonly Mock<IHttpClientFactory> _httpClientFactoryMock = new();
         private readonly Mock<IQflowSessionManager> _sessionManagerMock = new();
         private readonly Mock<IOptions<QflowOptions>> _optionsMock = new();
+        private readonly Mock<ILogger<QflowService>> _loggerMock = new();
 
         private readonly IQflowService _sut;
 
@@ -27,7 +29,8 @@ namespace NBS.Appointments.Service.Core.Unit.Tests.Services
             _sut = new QflowService(
                 _optionsMock.Object,
                 _httpClientFactoryMock.Object,
-                _sessionManagerMock.Object);
+                _sessionManagerMock.Object,
+                _loggerMock.Object);
         }
 
         [Fact]
