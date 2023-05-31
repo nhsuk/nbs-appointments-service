@@ -40,7 +40,7 @@ resource "azurerm_key_vault_secret" "kv_qflow_username" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 }
@@ -56,7 +56,7 @@ resource "azurerm_key_vault_secret" "kv_qflow_password" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 }
@@ -72,7 +72,7 @@ resource "azurerm_key_vault_secret" "kv_nbs_api_key" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 }
@@ -117,7 +117,7 @@ resource "azurerm_app_configuration_key" "config_qflow_url" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 
@@ -133,7 +133,7 @@ resource "azurerm_app_configuration_key" "config_qflow_url" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 
@@ -149,7 +149,7 @@ resource "azurerm_app_configuration_key" "config_qflow_url" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 
@@ -206,6 +206,22 @@ resource "azurerm_app_configuration_key" "config_qflow_callcentreemailflagid" {
   ]
 }
 
+resource "azurerm_app_configuration_key" "config_qflow_defaultreschedulereasonid" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
+  key                    = "Qflow:DefaultRescheduleReasonId"
+  value                  = "2"
+
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
+
+  depends_on = [
+    azurerm_role_assignment.appconf_dataowner
+  ]
+}
+
 resource "azurerm_app_configuration_key" "config_qflow_userid" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
   key                    = "Qflow:UserId"
@@ -213,7 +229,39 @@ resource "azurerm_app_configuration_key" "config_qflow_userid" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
+    ]
+  }
+
+  depends_on = [
+    azurerm_role_assignment.appconf_dataowner
+  ]
+}
+
+resource "azurerm_app_configuration_key" "config_splunk_host" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
+  key                    = "Splunk:Host"
+  value                  = "default"
+
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
+
+  depends_on = [
+    azurerm_role_assignment.appconf_dataowner
+  ]
+}
+
+resource "azurerm_app_configuration_key" "config_splunk_eventcollectortoken" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
+  key                    = "Splunk:EventCollectorToken"
+  value                  = "00000000-0000-0000-0000-000000000000"
+
+  lifecycle {
+    ignore_changes = [
+      value
     ]
   }
 
