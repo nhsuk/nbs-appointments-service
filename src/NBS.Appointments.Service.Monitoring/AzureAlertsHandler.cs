@@ -83,7 +83,7 @@ namespace NBS.Appointments.Service.Monitoring
         private static Task SendSlackNotification(object notification)
         {
             var client = new HttpClient();
-            var uri = "https://requestinspector.com/inspect/01h1p7ztdc9we8vdw50h9gsz6e";
+            var uri = "https://hooks.slack.com/services/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";
             return client.PostAsJsonAsync(uri, notification);
         }
     }
