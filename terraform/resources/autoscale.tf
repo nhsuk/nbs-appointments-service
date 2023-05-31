@@ -1,14 +1,12 @@
-resource "azurerm_monitor_autoscale_setting" "nbs_appts_sp_autoscale2" {
+resource "azurerm_monitor_autoscale_setting" "nbs_appts_sp_autoscale3" {
   #count               = var.enable_autoscaling ? 1 : 0   
   #name                = "${var.application_short}${var.environment}${var.loc}"
-  name                = "myAutoscaleSetting"
+  name                = "myAutoscaleSetting2"
   enabled             = true
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
   location            = azurerm_resource_group.nbs_appts_rg.location
   target_resource_id  = azurerm_service_plan.nbs_appts_sp.id
-  lifecycle {
-    ignore_changes = [force_delete]
-  }
+
   profile {
     name = "default"
 
@@ -58,5 +56,6 @@ resource "azurerm_monitor_autoscale_setting" "nbs_appts_sp_autoscale2" {
       }
     }
   }
+
 }
 
