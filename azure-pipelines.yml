@@ -5,7 +5,35 @@ trigger:
       - releases/*
 
 jobs:
-  - job: "Build"
+  - job: "Build Alerts Func App"
+    pool:
+      vmImage: "ubuntu-latest"
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet restore'
+      inputs:
+        command: restore
+        projects: src/NBS.Appointments.Service.Monitoring/NBS.Appointments.Service.Monitoring.csproj
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build'
+      inputs:
+        projects: src/NBS.Appointments.Service.Monitoring/NBS.Appointments.Service.Monitoring.csproj
+        arguments: '--output func_app_output --configuration Release'
+    - task: ArchiveFiles@2
+      displayName: 'Create zip'
+      inputs:
+        rootFolderOrFile: 'func_app_output'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: 'alerts_function_app.zip'
+        replaceExistingArchive: true
+    - task: PublishBuildArtifacts@1
+      displayName: "Publish Terraform"
+      inputs:
+          PathtoPublish: "func_app_output"
+          ArtifactName: "drop_funcapp"
+          publishLocation: "Container"
+  - job: "Build Appointment Service"
     pool:
       vmImage: "ubuntu-latest"
     steps:
@@ -41,10 +69,4 @@ jobs:
       inputs:
           PathtoPublish: "terraform"
           ArtifactName: "drop_terraform"
-          publishLocation: "Container"
-    - task: PublishBuildArtifacts@1
-      displayName: "Publish Monitoring Function App"
-      inputs:
-          PathtoPublish: "src/NBS.Appointments.Service.Monitoring/bin/output"
-          ArtifactName: "drop_alertshandler"
           publishLocation: "Container"
