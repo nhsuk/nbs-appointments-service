@@ -42,3 +42,9 @@ jobs:
           PathtoPublish: "terraform"
           ArtifactName: "drop_terraform"
           publishLocation: "Container"
+    - task: PublishBuildArtifacts@1
+      displayName: "Publish Monitoring Function App"
+      inputs:
+          PathtoPublish: "src/NBS.Appointments.Service.Monitoring/bin/output"
+          ArtifactName: "drop_alertshandler"
+          publishLocation: "Container"
