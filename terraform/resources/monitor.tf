@@ -32,6 +32,8 @@ resource "azurerm_linux_function_app" "nbs_appts_alert_handler_func_app" {
   storage_account_access_key = azurerm_storage_account.nbs_appts_stacc.primary_access_key
   service_plan_id            = azurerm_service_plan.nbs_appts_alert_handler_sp.id
 
+  site_config {}
+
   app_settings = {
     AppConfig = azurerm_app_configuration.nbs_appts_app_config.primary_read_key[0].connection_string
   }
