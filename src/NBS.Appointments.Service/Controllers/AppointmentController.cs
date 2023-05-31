@@ -3,6 +3,7 @@ using NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors;
 using NBS.Appointments.Service.Core.Helpers;
 using NBS.Appointments.Service.Core.Interfaces.Services;
 using NBS.Appointments.Service.Extensions;
+using NBS.Appointments.Service.Helpers;
 using NBS.Appointments.Service.Models;
 using NBS.Appointments.Service.Validators;
 using System;
@@ -123,9 +124,7 @@ namespace NBS.Appointments.Service.Controllers
 
             var appointments = await _qflowService.GetAllCustomerAppointments(qflowCustomer.ResponseData.Id);
 
-            if (!includePastAppointments)
-                appointments = appointments.Where(x => DateTime.Compare(x.AppointmentDate.ToUniversalTime(), DateTime.Today.ToUniversalTime()) >= 0).ToList();
-
+            appointments = AppointmentsHelper.FilterPastCustomerAppointments(appointments, includePastAppointments);
             var customerName = $"{qflowCustomer.ResponseData.FirstName} {qflowCustomer.ResponseData.LastName}";
 
             return Ok(GetAppointmentsResponse.FromQflowResponse(appointments, nhsNumber, customerName));
