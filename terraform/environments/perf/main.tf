@@ -30,6 +30,7 @@ module "api" {
   environment        = "perf"
   loc                = "uks"
   sku_name           = "S1"
+  enable_autoscaling = true
   docker_image_tag   = var.docker_image_tag
 }
 

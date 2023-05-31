@@ -17,7 +17,7 @@ resource "azurerm_monitor_autoscale_setting" "nbs_appts_sp_autoscale" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = azurerm_app_service_plan.nbs_appts_sp.id
+        metric_resource_id = azurerm_service_plan.nbs_appts_sp.id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
@@ -55,3 +55,52 @@ resource "azurerm_monitor_autoscale_setting" "nbs_appts_sp_autoscale" {
     }
   }
 }
+
+/*
+{
+    "location": "UK South",
+    "tags": {},
+    "properties": {
+        "name": "nbs-appts-sp-perf-uks-Autoscale-152",
+        "enabled": false,
+        "targetResourceUri": "/subscriptions/07748954-52d6-46ce-95e6-2701bfc715b4/resourceGroups/nbs-appts-rg-perf-uks/providers/Microsoft.Web/serverfarms/nbs-appts-sp-perf-uks",
+        "profiles": [
+            {
+                "name": "Auto created default scale condition",
+                "capacity": {
+                    "minimum": "1",
+                    "maximum": "10",
+                    "default": "1"
+                },
+                "rules": [
+                    {
+                        "scaleAction": {
+                            "direction": "Increase",
+                            "type": "ChangeCount",
+                            "value": "1",
+                            "cooldown": "PT5M"
+                        },
+                        "metricTrigger": {
+                            "metricName": "CpuPercentage",
+                            "metricNamespace": "microsoft.web/serverfarms",
+                            "metricResourceUri": "/subscriptions/07748954-52d6-46ce-95e6-2701bfc715b4/resourceGroups/nbs-appts-rg-perf-uks/providers/Microsoft.Web/serverFarms/nbs-appts-sp-perf-uks",
+                            "operator": "GreaterThan",
+                            "statistic": "Average",
+                            "threshold": 70,
+                            "timeAggregation": "Average",
+                            "timeGrain": "PT1M",
+                            "timeWindow": "PT10M",
+                            "Dimensions": [],
+                            "dividePerInstance": false
+                        }
+                    }
+                ]
+            }
+        ],
+        "notifications": [],
+        "targetResourceLocation": "UK South"
+    },
+    "id": "/subscriptions/07748954-52d6-46ce-95e6-2701bfc715b4/resourceGroups/nbs-appts-rg-perf-uks/providers/microsoft.insights/autoscalesettings/nbs-appts-sp-perf-uks-Autoscale-152",
+    "name": "nbs-appts-sp-perf-uks-Autoscale-152",
+    "type": "Microsoft.Insights/autoscaleSettings"
+}*/
