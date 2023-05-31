@@ -40,7 +40,7 @@ namespace NBS.Appointments.Service
                     var settings = hostingContext.Configuration;
                     var splunkConfig = settings.GetSection("Splunk").Get<SplunkSettings>();
                     loggerConfiguration
-                        .WriteTo.EventCollector(splunkConfig.SplunkHost, splunkConfig.EventCollectorToken)
+                        .WriteTo.EventCollector(splunkConfig.Host, splunkConfig.EventCollectorToken)
                         .Enrich.FromLogContext()
                         .Enrich.WithExceptionDetails();
                 }

@@ -2,7 +2,7 @@
 {
     public class SplunkSettings
     {
-        public string SplunkHost { get; set; }
+        public string Host { get; set; }
         public string EventCollectorToken { get; set; }
     }
 }
