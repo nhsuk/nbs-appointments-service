@@ -6,6 +6,8 @@ resource "azurerm_monitor_autoscale_setting" "nbs_appts_sp_autoscale" {
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
   location            = azurerm_resource_group.nbs_appts_rg.location
   target_resource_id  = azurerm_service_plan.nbs_appts_sp.id
+  lifecycle {
+    ignore_changes = [force_delete]
 
   profile {
     name = "default"
