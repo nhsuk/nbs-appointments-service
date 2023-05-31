@@ -1,4 +1,4 @@
-resource "azurerm_monitor_autoscale_setting" "nbs_appts_sp_autoscale" {
+resource "azurerm_monitor_autoscale_setting"  {
   #count               = var.enable_autoscaling ? 1 : 0   
   #name                = "${var.application_short}${var.environment}${var.loc}"
   name                = "myAutoscaleSetting"
@@ -8,7 +8,7 @@ resource "azurerm_monitor_autoscale_setting" "nbs_appts_sp_autoscale" {
   target_resource_id  = azurerm_service_plan.nbs_appts_sp.id
 
   profile {
-    name = "CPUProfile"
+    name = "MyCPUProfile"
 
     capacity {
       default = 1
