@@ -22,15 +22,15 @@ jobs:
     - task: ArchiveFiles@2
       displayName: 'Create zip'
       inputs:
-        rootFolderOrFile: 'func_app_output'
+        rootFolderOrFile: 'func_app_output/'
         includeRootFolder: false
         archiveType: 'zip'
-        archiveFile: 'alerts_function_app.zip'
+        archiveFile: '/func_app_package/alerts_function_app.zip'
         replaceExistingArchive: true
     - task: PublishBuildArtifacts@1
-      displayName: "Publish Terraform"
+      displayName: "Publish Alerts Function App"
       inputs:
-          PathtoPublish: "func_app_output"
+          PathtoPublish: "func_app_package"
           ArtifactName: "drop_funcapp"
           publishLocation: "Container"
   - job: "BuildAppointmentService"
