@@ -30,7 +30,7 @@ resource "azurerm_linux_function_app" "nbs_appts_alert_handler_func_app" {
 
   storage_account_name       = azurerm_storage_account.nbs_appts_stacc.name
   storage_account_access_key = azurerm_storage_account.nbs_appts_stacc.primary_access_key
-  service_plan_id            = azurerm_service_plan.nbs_appts_func_sp.id
+  service_plan_id            = azurerm_service_plan.nbs_appts_alert_handler_sp.id
 
   app_settings = {
     AppConfig = azurerm_app_configuration.nbs_appts_app_config.primary_read_key[0].connection_string
@@ -70,9 +70,9 @@ resource "azurerm_monitor_action_group" "nbs_appts_app_alert_action_group" {
 
   azure_function_receiver {
     name                     = "${var.application}-slack-webhook"
-    function_app_resource_id = azurerm_linux_function_app.nbs_appts_app_func.id
-    function_name            = azurerm_linux_function_app.nbs_appts_app_func.name
-    http_trigger_url         = azurerm_linux_function_app.nbs_appts_app_func.http_trigger_url
+    function_app_resource_id = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.id
+    function_name            = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.name
+    http_trigger_url         = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.http_trigger_url
     use_common_alert_schema  = true
   }
 }
