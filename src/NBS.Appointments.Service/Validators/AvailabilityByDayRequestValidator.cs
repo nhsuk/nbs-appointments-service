@@ -35,8 +35,8 @@ namespace NBS.Appointments.Service.Validators
             RuleFor(x => x.Service)
                 .NotEmpty()
                 .WithMessage("Service must be specified.")
-                .Must(BeValidServiceDescriptor)
-                .WithMessage("Service descriptor is not valid");
+                .MustBeValidDescriptor<AvailabilityByDayRequest, QflowServiceDescriptor>()
+                .WithMessage("Service descriptor is not valid"); 
         }
 
         private bool AfterAnotherDate(DateTime latter, DateTime check)
@@ -68,19 +68,6 @@ namespace NBS.Appointments.Service.Validators
                 return false;
             }
             return true;
-        }
-
-        private bool BeValidServiceDescriptor(string serviceDescriptor)
-        {
-            try
-            {
-                QflowServiceDescriptor.FromString(serviceDescriptor);
-                return true;
-            }
-            catch(FormatException)
-            {
-                return false;
-            }
-        }
+        }        
     }
 }

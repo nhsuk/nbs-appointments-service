@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors;
+using NBS.Appointments.Service.Core.Helpers;
 using NBS.Appointments.Service.Models;
 using System;
 
@@ -12,7 +13,7 @@ namespace NBS.Appointments.Service.Validators
             RuleFor(x => x.Slot)
                 .NotEmpty()
                 .WithMessage("Slot identifier must be provided.")
-                .Must(BeAValidSlotUrn)
+                .MustBeValidDescriptor<BookAppointmentRequest, QflowBookAppointmentDescriptor>()
                 .WithMessage("Slot identifier is not valid.");
 
             RuleFor(x => x.CustomerDetails)
@@ -26,7 +27,7 @@ namespace NBS.Appointments.Service.Validators
             RuleFor(x => x.CustomerDetails.Name)
                 .NotEmpty()
                 .WithMessage("Customer name must be provided")
-                .Must(BeAValidName)
+                .MustBeValidDescriptor<BookAppointmentRequest, QflowNameDescriptor>()
                 .WithMessage("Name not in the correct format.");
 
             RuleFor(x => x.CustomerDetails.Dob)
@@ -36,32 +37,6 @@ namespace NBS.Appointments.Service.Validators
             RuleFor(x => x.CustomerDetails.ContactDetails)
                 .NotEmpty()
                 .WithMessage("Contact details object must be provided.");
-        }
-
-        private bool BeAValidSlotUrn(string slotDescriptor)
-        {
-            try
-            {
-                QflowBookAppointmentDescriptor.FromString(slotDescriptor);
-                return true;
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
-        }
-
-        private bool BeAValidName(string name)
-        {
-            try
-            {
-                QflowNameDescriptor.FromString(name);
-                return true;
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
-        }
+        }                
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors;
+using NBS.Appointments.Service.Core.Helpers;
 using NBS.Appointments.Service.Core.Interfaces.Services;
 using NBS.Appointments.Service.Extensions;
 using NBS.Appointments.Service.Models;
@@ -45,7 +46,7 @@ namespace NBS.Appointments.Service.Controllers
                 return BadRequest(errorMsgs);
             }
 
-            var slotDescriptor = QFlowSlotDescriptor.FromString(request.Slot);
+            var slotDescriptor = DescriptorConverter.Parse<QFlowSlotDescriptor>(request.Slot);
 
             var response = await _qflowService.ReserveSlot(
                 slotDescriptor.CalendarId,

@@ -206,6 +206,22 @@ resource "azurerm_app_configuration_key" "config_qflow_callcentreemailflagid" {
   ]
 }
 
+resource "azurerm_app_configuration_key" "config_qflow_defaultreschedulereasonid" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
+  key                    = "Qflow:DefaultRescheduleReasonId"
+  value                  = "2"
+
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
+
+  depends_on = [
+    azurerm_role_assignment.appconf_dataowner
+  ]
+}
+
 resource "azurerm_app_configuration_key" "config_qflow_userid" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
   key                    = "Qflow:UserId"

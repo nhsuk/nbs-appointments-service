@@ -40,7 +40,7 @@ namespace NBS.Appointments.Service.Api.Tests
         {
             var request = new CancelAppointmentRequest
             {
-                Appointment = "qflow:123:123456",
+                Appointment = "qflow:123:123456:456",
                 Cancelation = "qflow:654:321"
             };
 
@@ -55,7 +55,7 @@ namespace NBS.Appointments.Service.Api.Tests
         {
             var request = new CancelAppointmentRequest
             {
-                Appointment = "qflow:123:456",
+                Appointment = "qflow:123:456:789",
                 Cancelation = "qflow:654:321"
             };
 
