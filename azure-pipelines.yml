@@ -5,7 +5,7 @@ trigger:
       - releases/*
 
 jobs:
-  - job: "Build Alerts Func App"
+  - job: "BuildAlertsFuncApp"
     pool:
       vmImage: "ubuntu-latest"
     steps:
@@ -33,7 +33,7 @@ jobs:
           PathtoPublish: "func_app_output"
           ArtifactName: "drop_funcapp"
           publishLocation: "Container"
-  - job: "Build Appointment Service"
+  - job: "BuildAppointmentService"
     pool:
       vmImage: "ubuntu-latest"
     steps:
