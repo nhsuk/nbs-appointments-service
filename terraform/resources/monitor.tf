@@ -15,40 +15,6 @@ resource "azurerm_application_insights" "nbs_appts_app_insights" {
   retention_in_days   = 30
 }
 
-resource "azurerm_service_plan" "nbs_appts_alert_handler_sp" {
-  name                = "${var.application}-alerts-sp-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  location            = azurerm_resource_group.nbs_appts_rg.location
-  os_type             = "Linux"
-  sku_name            = "Y1"
-}
-
-resource "azurerm_linux_function_app" "nbs_appts_alert_handler_func_app" {
-  name                = "${var.application}-alerts-func-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  location            = azurerm_resource_group.nbs_appts_rg.location
-
-  storage_account_name       = azurerm_storage_account.nbs_appts_stacc.name
-  storage_account_access_key = azurerm_storage_account.nbs_appts_stacc.primary_access_key
-  service_plan_id            = azurerm_service_plan.nbs_appts_alert_handler_sp.id
-
-  site_config {}
-
-  app_settings = {
-    AppConfig = azurerm_app_configuration.nbs_appts_app_config.primary_read_key[0].connection_string
-  }
-
-  identity {
-    type = "SystemAssigned"
-  }
-}
-
-resource "azurerm_role_assignment" "alerts_func_kv_secrets_user_role" {
-  scope = azurerm_key_vault.nbs_appts_key_vault.id
-  role_definition_name = "Key Vault Secrets User"
-  principal_id = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.identity.0.principal_id
-}
-
 resource "azurerm_portal_dashboard" "nbs_appts_dashboard" {
   name                = "${var.application}-dashboard-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
