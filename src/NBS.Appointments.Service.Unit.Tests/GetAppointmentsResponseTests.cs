@@ -36,7 +36,7 @@ namespace NBS.Appointments.Service.Unit.Tests
             {
                 new GetAppointmentsResponse
                 {
-                    Ref = "qflow:987654:15243",
+                    Ref = "qflow:987654:15243:54321",
                     Site = 151,
                     Service = 123,
                     From = new DateTime(2023, 06, 05),
