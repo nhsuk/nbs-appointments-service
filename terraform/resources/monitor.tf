@@ -1,3 +1,10 @@
+data "azurerm_function_app_host_keys" "nbs_appts_alert_handler_func_app_host_keys" {
+  name                = azurerm_function_app.nbs_appts_alert_handler_func_app.name
+  resource_group_name = azurerm_function_app.nbs_appts_alert_handler_rg.name
+
+  depends_on = [azurerm_function_app.nbs_appts_alert_handler_func_app]
+}
+
 resource "azurerm_log_analytics_workspace" "nbs_appts_analytics_workspace" {
   name                = "${var.application}-log-analytics-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
@@ -44,7 +51,7 @@ resource "azurerm_monitor_action_group" "nbs_appts_app_alert_action_group" {
     name                     = "${var.application}-slack-webhook"
     function_app_resource_id = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.id
     function_name            = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.name
-    http_trigger_url         = "https://${azurerm_linux_function_app.nbs_appts_alert_handler_func_app.default_hostname}/api/${azurerm_linux_function_app.nbs_appts_alert_handler_func_app.name}"
+    http_trigger_url         = "https://${azurerm_linux_function_app.nbs_appts_alert_handler_func_app.default_hostname}/api/AzureAlertsHandler?code=${data.azurerm_function_app_host_keys.nbs_appts_alert_handler_func_app_host_keys.default_function_key}"
     use_common_alert_schema  = true
   }
 }
