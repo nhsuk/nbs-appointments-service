@@ -33,7 +33,7 @@ resource "azurerm_linux_function_app" "nbs_appts_alert_handler_func_app" {
 }
 
 resource "azurerm_storage_account" "nbs_appts_alert_handler_stacc" {
-  name                     = "${var.application_short}alerthandler${var.environment}${var.loc}"
+  name                     = "${var.application_short}alerts${var.environment}${var.loc}"
   resource_group_name      = azurerm_resource_group.nbs_appts_alert_handler_rg.name
   location                 = azurerm_resource_group.nbs_appts_alert_handler_rg.location
   account_tier             = "Standard"
@@ -41,7 +41,7 @@ resource "azurerm_storage_account" "nbs_appts_alert_handler_stacc" {
 }
 
 resource "azurerm_storage_container" "nbs_appts_alert_handler_container" {
-  name                  = "${var.application_short}alerthandler${var.environment}${var.loc}"
+  name                  = "${var.application_short}alerts${var.environment}${var.loc}"
   storage_account_name  = azurerm_storage_account.nbs_appts_alert_handler_stacc.name
   container_access_type = "private"
 }
