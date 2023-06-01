@@ -44,11 +44,6 @@ resource "azurerm_monitor_action_group" "nbs_appts_app_alert_action_group" {
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
   short_name          = "${var.environment}-${var.loc}"
 
-  email_receiver {
-    name          = "Kim Crowe"
-    email_address = "kim.crowe4@nhs.net"
-  }  
-
   azure_function_receiver {
     name                     = "${var.application}-slack-webhook"
     function_app_resource_id = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.id
