@@ -32,6 +32,20 @@ resource "azurerm_linux_function_app" "nbs_appts_alert_handler_func_app" {
   }
 }
 
+resource "azurerm_storage_account" "nbs_appts_alert_handler_stacc" {
+  name                     = "${var.application_short}alerthandler${var.environment}${var.loc}"
+  resource_group_name      = azurerm_resource_group.nbs_appts_alert_handler_rg.name
+  location                 = azurerm_resource_group.nbs_appts_alert_handler_rg.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+resource "azurerm_storage_container" "nbs_appts_container" {
+  name                  = "${var.application_short}alerthandler${var.environment}${var.loc}"
+  storage_account_name  = azurerm_storage_account.nbs_appts_alert_handler_stacc.name
+  container_access_type = "private"
+}
+
 resource "azurerm_role_assignment" "alerts_func_kv_secrets_user_role" {
   scope = azurerm_key_vault.nbs_appts_key_vault.id
   role_definition_name = "Key Vault Secrets User"
