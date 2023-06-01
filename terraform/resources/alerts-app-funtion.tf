@@ -25,7 +25,6 @@ resource "azurerm_linux_function_app" "nbs_appts_alert_handler_func_app" {
 
   app_settings = {
     AppConfig = azurerm_app_configuration.nbs_appts_app_config.primary_read_key[0].connection_string
-    FUNCTIONS_WORKER_RUNTIME = "dotnet"
   }
 
   identity {
