@@ -43,11 +43,6 @@ resource "azurerm_linux_function_app" "nbs_appts_alert_handler_func_app" {
   }
 }
 
-data "azurerm_linux_function_app" "nbs_appts_alert_handler_func_app" {
-  name                = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.name
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-}
-
 resource "azurerm_role_assignment" "alerts_func_kv_secrets_user_role" {
   scope = azurerm_key_vault.nbs_appts_key_vault.id
   role_definition_name = "Key Vault Secrets User"
@@ -83,7 +78,7 @@ resource "azurerm_monitor_action_group" "nbs_appts_app_alert_action_group" {
     name                     = "${var.application}-slack-webhook"
     function_app_resource_id = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.id
     function_name            = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.name
-    http_trigger_url         = "https://${data.azurerm_linux_function_app.nbs_appts_alert_handler_func_app.default_hostname}/api/${azurerm_linux_function_app.nbs_appts_alert_handler_func_app.name}"
+    http_trigger_url         = "https://${azurerm_linux_function_app.nbs_appts_alert_handler_func_app.default_hostname}/api/${azurerm_linux_function_app.nbs_appts_alert_handler_func_app.name}"
     use_common_alert_schema  = true
   }
 }
