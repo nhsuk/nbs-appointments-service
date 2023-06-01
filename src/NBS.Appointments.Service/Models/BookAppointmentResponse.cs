@@ -1,4 +1,6 @@
 ﻿using NBS.Appointments.Service.Core.Dtos.Qflow;
+using NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors;
+using NBS.Appointments.Service.Core.Helpers;
 using System.Text.Json.Serialization;
 
 namespace NBS.Appointments.Service.Models
@@ -10,7 +12,12 @@ namespace NBS.Appointments.Service.Models
 
         public static BookedAppointmentResponse FromQflowResponse(int qflowCustomerId, BookAppointmentResponse qflowResponse) => new BookedAppointmentResponse
         {
-            Ref = $"qflow:{qflowCustomerId}:{qflowResponse.ProcessId}:{qflowResponse.CaseId}"
+            Ref = DescriptorConverter.ToString(new QFlowAppointmentReferenceDescriptor
+            {
+                CustomerId= qflowCustomerId,
+                CaseId = qflowResponse.CaseId,
+                ProcessId = qflowResponse.ProcessId
+            })
         };
     }
 }

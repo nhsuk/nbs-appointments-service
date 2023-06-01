@@ -11,40 +11,14 @@ namespace NBS.Appointments.Service.Validators
             RuleFor(x => x.Appointment)
                 .NotEmpty()
                 .WithMessage("Appointment URN must be provided.")
-                .Must(BeAValidAppointmentDescriptor)
+                .MustBeValidDescriptor<CancelAppointmentRequest, QFlowAppointmentReferenceDescriptor>()
                 .WithMessage("Appointment descriptor is invalid.");
 
             RuleFor(x => x.Cancelation)
                 .NotEmpty()
                 .WithMessage("Cancellation URN mus be provided.")
-                .Must(BeAValidCancelationReasonDescriptor)
+                .MustBeValidDescriptor<CancelAppointmentRequest, QflowCancelationReasonDescriptor>()
                 .WithMessage("Cancelation descriptor is invalid.");
-        }
-
-        private bool BeAValidAppointmentDescriptor(string descrpitor)
-        {
-            try
-            {
-                QflowCancelAppointmentDescriptor.FromString(descrpitor);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private bool BeAValidCancelationReasonDescriptor(string descrpitor)
-        {
-            try
-            {
-                QflowCancelationReasonDescriptor.FromString(descrpitor);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+        }               
     }
 }

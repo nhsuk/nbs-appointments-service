@@ -25,7 +25,7 @@ namespace NBS.Appointments.Service.Api.Tests
         {
             var request = new RescheduleAppointmentRequest
             {
-                Appointment = "qflow:invalid:appointment:descriptor"
+                OriginalAppointment = "qflow:invalid:appointment:descriptor"
             };
 
             var payload = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
@@ -39,7 +39,8 @@ namespace NBS.Appointments.Service.Api.Tests
         {
             var request = new RescheduleAppointmentRequest
             {
-                Appointment = "qflow:12:34:56:2023-04-29:545:3"
+                OriginalAppointment = "qflow:12:34:56",
+                RescheduledSlot = "qflow:1080:109429:1:2023-03-31:605:610"
             };
 
             var payload = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
