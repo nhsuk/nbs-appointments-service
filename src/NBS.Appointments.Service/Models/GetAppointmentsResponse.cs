@@ -20,7 +20,7 @@ namespace NBS.Appointments.Service.Models
         {
             return appointments.Select(x => new GetAppointmentsResponse()
             {
-                Ref = $"qflow:{x.CustomerId}:{x.ProcessId}",
+                Ref = $"qflow:{x.CustomerId}:{x.ProcessId}:{x.CaseId}",
                 Site = x.UnitId,
                 Service = x.ServiceId,
                 From = x.AppointmentDate,
