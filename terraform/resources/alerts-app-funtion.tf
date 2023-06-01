@@ -40,7 +40,7 @@ resource "azurerm_storage_account" "nbs_appts_alert_handler_stacc" {
   account_replication_type = "LRS"
 }
 
-resource "azurerm_storage_container" "nbs_appts_container" {
+resource "azurerm_storage_container" "nbs_appts_alert_handler_container" {
   name                  = "${var.application_short}alerthandler${var.environment}${var.loc}"
   storage_account_name  = azurerm_storage_account.nbs_appts_alert_handler_stacc.name
   container_access_type = "private"
