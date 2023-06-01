@@ -17,8 +17,8 @@ resource "azurerm_linux_function_app" "nbs_appts_alert_handler_func_app" {
   resource_group_name = azurerm_resource_group.nbs_appts_alert_handler_rg.name
   location            = azurerm_resource_group.nbs_appts_alert_handler_rg.location
 
-  storage_account_name       = azurerm_storage_account.nbs_appts_stacc.name
-  storage_account_access_key = azurerm_storage_account.nbs_appts_stacc.primary_access_key
+  storage_account_name       = azurerm_storage_account.nbs_appts_alert_handler_stacc.name
+  storage_account_access_key = azurerm_storage_account.nbs_appts_alert_handler_stacc.primary_access_key
   service_plan_id            = azurerm_service_plan.nbs_appts_alert_handler_sp.id
 
   site_config {}
