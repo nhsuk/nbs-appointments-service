@@ -77,6 +77,22 @@ resource "azurerm_key_vault_secret" "kv_nbs_api_key" {
   }
 }
 
+resource "azurerm_key_vault_secret" "kv_alerts_slack_webhook_url" {
+  name         = "alertsslackwebhookurl"
+  value        = "default"
+  key_vault_id = azurerm_key_vault.nbs_appts_key_vault.id
+
+  depends_on = [
+    azurerm_role_assignment.keyvault_dataowner
+  ]
+
+  lifecycle {
+    ignore_changes = [
+      value      
+    ]
+  }
+}
+
 resource "azurerm_app_configuration_key" "config_qflow_username" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
   key                    = "Qflow:UserName"
@@ -104,6 +120,17 @@ resource "azurerm_app_configuration_key" "config_nbs_api_key" {
   key                    = "ApiKey"
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.kv_nbs_api_key.versionless_id
+
+  depends_on = [
+    azurerm_role_assignment.appconf_dataowner
+  ]
+}
+
+resource "azurerm_app_configuration_key" "config_alerts_slack_webhook_url" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
+  key                    = "Alerts:SlackWebhookUrl"
+  type                   = "vault"
+  vault_key_reference    = azurerm_key_vault_secret.kv_alerts_slack_webhook_url.versionless_id
 
   depends_on = [
     azurerm_role_assignment.appconf_dataowner
