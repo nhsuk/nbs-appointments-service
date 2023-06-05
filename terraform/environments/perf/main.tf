@@ -31,6 +31,9 @@ variable "docker_image_tag" {
 }
 
 module "api" {
+  providers = {
+    azurerm = azurerm.shared
+  }
   source             = "../../resources"
   location           = "uksouth"
   environment        = "perf"
