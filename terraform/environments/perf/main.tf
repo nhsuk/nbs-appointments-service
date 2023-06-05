@@ -7,10 +7,10 @@ terraform {
   }
 
   backend "azurerm" {
-    resource_group_name  = "covid19-booking-rg-tfstate-dev-uks"
-    storage_account_name = "nbsapptsdevtf"
+    resource_group_name  = "covid19-booking-rg-tfstate-stag-uks"
+    storage_account_name = "covidbookstagtf"
     container_name       = "tfstate"
-    key                  = "perf.tfstate"
+    key                  = "nbs-appts-perf.tfstate"
   }
 
   required_version = ">= 1.1.0"
