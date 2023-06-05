@@ -68,7 +68,7 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
 
 resource "azurerm_monitor_autoscale_setting" "nbs_appts_sp_autoscale" {
   count               = var.enable_autoscaling ? 1 : 0
-  name                = "${var.application_short}${var.environment}${var.loc}"
+  name                = " ${var.application_short}-scaling-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
   location            = azurerm_resource_group.nbs_appts_rg.location
   target_resource_id  = azurerm_service_plan.nbs_appts_sp.id
