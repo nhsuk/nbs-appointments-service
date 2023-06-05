@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors;
+using NBS.Appointments.Service.Core.Helpers;
 using NBS.Appointments.Service.Core.Interfaces.Services;
 using NBS.Appointments.Service.Extensions;
 using NBS.Appointments.Service.Models;
@@ -15,14 +17,18 @@ namespace NBS.Appointments.Service.Controllers
     {
         private readonly IQflowService _qflowService;
         private readonly RequestValidatorFactory _requestValidatorFactory;
+        private readonly ILogger<SlotController> _logger;
 
-        public SlotController(IQflowService qflowService, RequestValidatorFactory requestValidatorFactory)
+        public SlotController(IQflowService qflowService, RequestValidatorFactory requestValidatorFactory, ILogger<SlotController> logger)
         {
             _qflowService = qflowService
                 ?? throw new ArgumentNullException(nameof(qflowService));
 
             _requestValidatorFactory = requestValidatorFactory
                 ?? throw new ArgumentNullException(nameof(requestValidatorFactory));
+
+            _logger = logger
+                ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [HttpPost]
@@ -35,10 +41,12 @@ namespace NBS.Appointments.Service.Controllers
             if (!validationResult.IsValid)
             {
                 var errorMsgs = validationResult.Errors.ToErrorMessages();
+                _logger.LogWarning("Reserve slot request object failed validation. Errors: {@Errors}. Request object: {@Request}",
+                    errorMsgs, request);
                 return BadRequest(errorMsgs);
             }
 
-            var slotDescriptor = QFlowSlotDescriptor.FromString(request.Slot);
+            var slotDescriptor = DescriptorConverter.Parse<QFlowSlotDescriptor>(request.Slot);
 
             var response = await _qflowService.ReserveSlot(
                 slotDescriptor.CalendarId,

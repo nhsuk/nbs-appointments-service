@@ -1,3 +1,12 @@
+data "azurerm_function_app_host_keys" "nbs_appts_alert_handler_func_app_host_keys" {
+  name                = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.name
+  resource_group_name = azurerm_resource_group.nbs_appts_alert_handler_rg.name
+
+  depends_on = [
+    azurerm_linux_function_app.nbs_appts_alert_handler_func_app
+  ]
+}
+
 resource "azurerm_log_analytics_workspace" "nbs_appts_analytics_workspace" {
   name                = "${var.application}-log-analytics-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
@@ -35,40 +44,13 @@ resource "azurerm_monitor_action_group" "nbs_appts_app_alert_action_group" {
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
   short_name          = "${var.environment}-${var.loc}"
 
-  email_receiver {
-    name          = "Kim Crowe"
-    email_address = "kim.crowe4@nhs.net"
+  azure_function_receiver {
+    name                     = "${var.application}-slack-webhook"
+    function_app_resource_id = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.id
+    function_name            = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.name
+    http_trigger_url         = "https://${azurerm_linux_function_app.nbs_appts_alert_handler_func_app.default_hostname}/api/AzureAlertsHandler?code=${data.azurerm_function_app_host_keys.nbs_appts_alert_handler_func_app_host_keys.default_function_key}"
+    use_common_alert_schema  = true
   }
-
-  email_receiver {
-    name          = "Vincent Crowe"
-    email_address = "vincent.crowe1@nhs.net"
-  }
-
-  email_receiver {
-    name          = "Paul Lewis"
-    email_address = "paul.lewis43@nhs.net"
-  }
-
-  email_receiver {
-    name          = "Usman Iqbal"
-    email_address = "usman.iqbal6@nhs.net"
-  }
-
-  email_receiver {
-    name          = "Anton Forbes"
-    email_address = "anton.forbes1@nhs.net"
-  }
-
-	email_receiver {
-    name          = "Darren Lightfoot"
-    email_address = "darren.lightfoot1@nhs.net"
-  }
-
-	email_receiver {
-    name          = "Leon Bamforth"
-    email_address = "leon.bamforth2@nhs.net"
-  }  
 }
 
 resource "azurerm_monitor_metric_alert" "nbs_appts_app_http_401_alert" {

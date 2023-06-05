@@ -5,7 +5,35 @@ trigger:
       - releases/*
 
 jobs:
-  - job: "Build"
+  - job: "BuildAlertsFuncApp"
+    pool:
+      vmImage: "ubuntu-latest"
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet restore'
+      inputs:
+        command: restore
+        projects: src/NBS.Appointments.Service.Monitoring/NBS.Appointments.Service.Monitoring.csproj
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build'
+      inputs:
+        projects: src/NBS.Appointments.Service.Monitoring/NBS.Appointments.Service.Monitoring.csproj
+        arguments: '--output func_app_output --configuration Release'
+    - task: ArchiveFiles@2
+      displayName: 'Create zip'
+      inputs:
+        rootFolderOrFile: 'func_app_output/'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: 'func_app_package/alerts_function_app.zip'
+        replaceExistingArchive: true
+    - task: PublishBuildArtifacts@1
+      displayName: "Publish Alerts Function App"
+      inputs:
+          PathtoPublish: "func_app_package"
+          ArtifactName: "drop_funcapp"
+          publishLocation: "Container"
+  - job: "BuildAppointmentService"
     pool:
       vmImage: "ubuntu-latest"
     steps:

@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using NBS.Appointments.Service.Core.Dtos.Qflow;
 using NBS.Appointments.Service.Core.Dtos.Qflow.Descriptors;
 using NBS.Appointments.Service.Models;
 using System;
@@ -28,7 +27,7 @@ namespace NBS.Appointments.Service.Validators
             RuleFor(x => x.Service)
                 .NotEmpty()
                 .WithMessage("Service must be specified.")
-                .Must(BeValidServiceDescriptor)
+                .MustBeValidDescriptor<SiteAvailabilityRequest, QflowServiceDescriptor>()
                 .WithMessage("Service descriptor is not valid");
         }
 
@@ -51,19 +50,6 @@ namespace NBS.Appointments.Service.Validators
                 return false;
 
             return int.TryParse(parts[1], out _);
-        }
-
-        private bool BeValidServiceDescriptor(string serviceDescriptor)
-        {
-            try
-            {
-                QflowServiceDescriptor.FromString(serviceDescriptor);
-                return true;
-            }
-            catch(FormatException)
-            {
-                return false;
-            }
-        }
+        }        
     }
 }

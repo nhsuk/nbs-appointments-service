@@ -40,7 +40,7 @@ resource "azurerm_key_vault_secret" "kv_qflow_username" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 }
@@ -56,13 +56,29 @@ resource "azurerm_key_vault_secret" "kv_qflow_password" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 }
 
 resource "azurerm_key_vault_secret" "kv_nbs_api_key" {
   name         = "nbsapikey"
+  value        = "default"
+  key_vault_id = azurerm_key_vault.nbs_appts_key_vault.id
+
+  depends_on = [
+    azurerm_role_assignment.keyvault_dataowner
+  ]
+
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
+}
+
+resource "azurerm_key_vault_secret" "kv_alerts_slack_webhook_url" {
+  name         = "alertsslackwebhookurl"
   value        = "default"
   key_vault_id = azurerm_key_vault.nbs_appts_key_vault.id
 
@@ -110,6 +126,17 @@ resource "azurerm_app_configuration_key" "config_nbs_api_key" {
   ]
 }
 
+resource "azurerm_app_configuration_key" "config_alerts_slack_webhook_url" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
+  key                    = "Alerts:SlackWebhookUrl"
+  type                   = "vault"
+  vault_key_reference    = azurerm_key_vault_secret.kv_alerts_slack_webhook_url.versionless_id
+
+  depends_on = [
+    azurerm_role_assignment.appconf_dataowner
+  ]
+}
+
 resource "azurerm_app_configuration_key" "config_qflow_url" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
   key                    = "Qflow:BaseUrl"
@@ -117,7 +144,7 @@ resource "azurerm_app_configuration_key" "config_qflow_url" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 
@@ -133,7 +160,7 @@ resource "azurerm_app_configuration_key" "config_qflow_url" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 
@@ -149,7 +176,7 @@ resource "azurerm_app_configuration_key" "config_qflow_url" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 
@@ -206,6 +233,22 @@ resource "azurerm_app_configuration_key" "config_qflow_callcentreemailflagid" {
   ]
 }
 
+resource "azurerm_app_configuration_key" "config_qflow_defaultreschedulereasonid" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
+  key                    = "Qflow:DefaultRescheduleReasonId"
+  value                  = "2"
+
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
+
+  depends_on = [
+    azurerm_role_assignment.appconf_dataowner
+  ]
+}
+
 resource "azurerm_app_configuration_key" "config_qflow_userid" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
   key                    = "Qflow:UserId"
@@ -213,7 +256,39 @@ resource "azurerm_app_configuration_key" "config_qflow_userid" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
+    ]
+  }
+
+  depends_on = [
+    azurerm_role_assignment.appconf_dataowner
+  ]
+}
+
+resource "azurerm_app_configuration_key" "config_splunk_host" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
+  key                    = "Splunk:Host"
+  value                  = "default"
+
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
+
+  depends_on = [
+    azurerm_role_assignment.appconf_dataowner
+  ]
+}
+
+resource "azurerm_app_configuration_key" "config_splunk_eventcollectortoken" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
+  key                    = "Splunk:EventCollectorToken"
+  value                  = "00000000-0000-0000-0000-000000000000"
+
+  lifecycle {
+    ignore_changes = [
+      value
     ]
   }
 
