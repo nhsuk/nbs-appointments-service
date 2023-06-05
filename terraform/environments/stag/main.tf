@@ -10,7 +10,7 @@ terraform {
     resource_group_name  = "covid19-booking-rg-tfstate-stag-uks"
     storage_account_name = "covidbookstagtf"
     container_name       = "tfstate"
-    key                  = "nbs-appts-perf.tfstate"
+    key                  = "nbs-appts-stag.tfstate"
   }
 
   required_version = ">= 1.1.0"
@@ -27,7 +27,7 @@ variable "docker_image_tag" {
 module "api" {
   source             = "../../resources"
   location           = "uksouth"
-  environment        = "perf"
+  environment        = "stag"
   loc                = "uks"
   sku_name           = "S1"
   enable_autoscaling = true
