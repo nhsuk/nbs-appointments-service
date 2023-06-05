@@ -1,15 +1,3 @@
-provider "azurerm" {
-  alias = "shared"
-  subscription_id = "07748954-52d6-46ce-95e6-2701bfc715b4"
-  features {}
-}
-
-data "azurerm_container_registry" "container_registry" {
-  provider = azurerm.shared
-  resource_group_name = var.registry_group
-  name                = var.registry_name
-}
-
 data "azurerm_subscription" "current" {}
 
 resource "azurerm_resource_group" "nbs_appts_rg" {
@@ -53,7 +41,7 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
     minimum_tls_version                     = "1.2"
     container_registry_use_managed_identity = true
     application_stack {
-      docker_image     = "${data.azurerm_container_registry.container_registry.login_server}/${var.docker_image}"
+      docker_image     = "${var.container_registry_login_server}/${var.docker_image}"
       docker_image_tag = var.docker_image_tag
     }
   }
@@ -136,7 +124,7 @@ resource "azurerm_monitor_autoscale_setting" "nbs_appts_sp_autoscale" {
 }
 
 resource "azurerm_role_assignment" "acrpull_role" {
-  scope                = data.azurerm_container_registry.container_registry.id
+  scope                = var.container_registry_id
   role_definition_name = "AcrPull"
   principal_id         = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
 }

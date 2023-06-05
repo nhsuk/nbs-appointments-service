@@ -48,6 +48,16 @@ variable "enable_autoscaling" {
   default = false
 }
 
+variable "container_registry_login_server" {
+  type    = string
+  default = "nbsimages.azurecr.io"
+}
+
+variable "container_registry_id" {
+  type    = string
+  default = "/subscriptions/07748954-52d6-46ce-95e6-2701bfc715b4/resourceGroups/covid19-booking-rg-dev-uks/providers/Microsoft.ContainerRegistry/registries/nbsimages"
+}
+
 variable "tags" {
   description = "A map of the tags to use for the resources that are deployed"
   type        = map(string)
