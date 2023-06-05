@@ -1,4 +1,5 @@
 data "azurerm_container_registry" "container_registry" {
+  provider = azurerm.shared
   resource_group_name = var.registry_group
   name                = var.registry_name
 }
