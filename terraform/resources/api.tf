@@ -1,3 +1,9 @@
+provider "azurerm" {
+  alias = "shared"
+  subscription_id = "07748954-52d6-46ce-95e6-2701bfc715b4"
+  features {}
+}
+
 data "azurerm_container_registry" "container_registry" {
   provider = azurerm.shared
   resource_group_name = var.registry_group

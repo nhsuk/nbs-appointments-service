@@ -20,20 +20,11 @@ provider "azurerm" {
   features {}
 }
 
-provider "azurerm" {
-  alias = "shared"
-  subscription_id = "07748954-52d6-46ce-95e6-2701bfc715b4"
-  features {}
-}
-
 variable "docker_image_tag" {
   type = string
 }
 
 module "api" {
-  providers = {
-    azurerm = azurerm.shared
-  }
   source             = "../../resources"
   location           = "uksouth"
   environment        = "perf"
