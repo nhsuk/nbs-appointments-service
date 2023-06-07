@@ -10,7 +10,7 @@ terraform {
     resource_group_name  = "covid19-booking-rg-tfstate-dev-uks"
     storage_account_name = "nbsapptsdevtf"
     container_name       = "tfstate"
-    key                  = "perf.tfstate" 
+    key                  = "perf.tfstate"
   }
 
   required_version = ">= 1.1.0"
@@ -25,10 +25,13 @@ variable "docker_image_tag" {
 }
 
 module "api" {
-  source = "../../resources"
-  location = "uksouth"
-  environment = "perf"
-  loc = "uks"
-  sku_name = "B1"  
-  docker_image_tag = var.docker_image_tag
+  source             = "../../resources"
+  location           = "uksouth"
+  environment        = "perf"
+  loc                = "uks"
+  sku_name           = "S1"
+  enable_autoscaling = true
+  docker_image_tag   = var.docker_image_tag
 }
+
+
