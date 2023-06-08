@@ -8,6 +8,16 @@ variable "application_short" {
   default = "nbsappts"
 }
 
+variable "alert_handler_application" {
+  type    = string
+  default = "nbs-alerthandler"
+}
+
+variable "alert_handler_application_short" {
+  type    = string
+  default = "nbsalerthandler"
+}
+
 variable "environment" {
   type = string
 }
