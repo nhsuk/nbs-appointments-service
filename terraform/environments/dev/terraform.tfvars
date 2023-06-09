@@ -1,3 +1,3 @@
-location = "uksouth"
+location    = "uksouth"
 environment = "dev"
-loc="uks"
+loc         = "uks"

@@ -2,7 +2,7 @@ resource "azurerm_app_configuration" "nbs_appts_wac" {
   name                = "${var.application}-wac-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
   location            = azurerm_resource_group.nbs_appts_rg.location
-  sku = "standard"
+  sku                 = "standard"
 }
 
 data "azurerm_client_config" "current" {}
@@ -14,9 +14,9 @@ resource "azurerm_role_assignment" "appconfdataowner_role" {
 }
 
 resource "azurerm_role_assignment" "keyvaultdataowner_role" {
-  scope = azurerm_key_vault.nbs_appts_kv.id
+  scope                = azurerm_key_vault.nbs_appts_kv.id
   role_definition_name = "Key Vault Secrets Officer"
-  principal_id = data.azurerm_client_config.current.object_id
+  principal_id         = data.azurerm_client_config.current.object_id
 }
 
 resource "azurerm_key_vault" "nbs_appts_kv" {
@@ -88,7 +88,7 @@ resource "azurerm_key_vault_secret" "kv_alerts_slack_webhook_url" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 }
@@ -97,7 +97,7 @@ resource "azurerm_app_configuration_key" "config_qflow_username" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_wac.id
   key                    = "Qflow:UserName"
   type                   = "vault"
-  vault_key_reference    = azurerm_key_vault_secret.kv_qflow_username.versionless_id  
+  vault_key_reference    = azurerm_key_vault_secret.kv_qflow_username.versionless_id
 
   depends_on = [
     azurerm_role_assignment.appconfdataowner_role
@@ -153,7 +153,7 @@ resource "azurerm_app_configuration_key" "config_qflow_url" {
   ]
 }
 
-  resource "azurerm_app_configuration_key" "config_datetimeprovider_type" {
+resource "azurerm_app_configuration_key" "config_datetimeprovider_type" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_wac.id
   key                    = "DateTimeProvider:Type"
   value                  = "system"
@@ -169,7 +169,7 @@ resource "azurerm_app_configuration_key" "config_qflow_url" {
   ]
 }
 
-  resource "azurerm_app_configuration_key" "config_datetimeprovider_timezone" {
+resource "azurerm_app_configuration_key" "config_datetimeprovider_timezone" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_wac.id
   key                    = "DateTimeProvider:TimeZone"
   value                  = "Europe/London"
@@ -304,7 +304,7 @@ resource "azurerm_app_configuration_key" "config_sessionmanager_type" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 
@@ -320,7 +320,7 @@ resource "azurerm_app_configuration_key" "config_sessionmanager_blobendpoint" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 
@@ -336,7 +336,7 @@ resource "azurerm_app_configuration_key" "config_sessionmanager_containername" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 

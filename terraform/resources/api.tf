@@ -47,7 +47,7 @@ resource "azurerm_linux_web_app" "nbs_appts_wa" {
   }
 
   app_settings = {
-    AppConfig = azurerm_app_configuration.nbs_appts_wac.primary_read_key[0].connection_string
+    AppConfig                             = azurerm_app_configuration.nbs_appts_wac.primary_read_key[0].connection_string
     APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.nbs_appts_ai.connection_string
   }
 
@@ -130,9 +130,9 @@ resource "azurerm_role_assignment" "acrpull_role" {
 }
 
 resource "azurerm_role_assignment" "keyvaultsecretsuser_role" {
-  scope = azurerm_key_vault.nbs_appts_key_vault.id
+  scope                = azurerm_key_vault.nbs_appts_key_vault.id
   role_definition_name = "Key Vault Secrets User"
-  principal_id = azurerm_linux_web_app.nbs_appts_wa.identity.0.principal_id
+  principal_id         = azurerm_linux_web_app.nbs_appts_wa.identity.0.principal_id
 }
 
 resource "azurerm_role_assignment" "storageblobdataowner_role" {
