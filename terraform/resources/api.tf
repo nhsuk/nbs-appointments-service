@@ -51,17 +51,17 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
     DOCKER_REGISTRY_SERVER_PASSWORD = var.docker_password
     DOCKER_REGISTRY_SERVER_URL = var.docker_server_url
     DOCKER_REGISTRY_SERVER_USERNAME = var.docker_username
-    "DateTimeProvider:TimeZone" = "Europe/London"
-    "DateTimeProvider:Type" = "system"
-    "Qflow:AppBookingFlagId" = 5
-    "Qflow:BaseUrl" = "<change me>"
-    "Qflow:CallCentreBookingFlagId" = 1
-    "Qflow:CallCentreEmailFlagId" = 3
-    "Qflow:DefaultRescheduleReasonId" = 2
-    "Qflow:UserId" = "<change me>"
-    "SessionManager:ConnectionString" = azurerm_storage_account.nbs_appts_stacc.primary_blob_connection_string
-    "SessionManager:ContainerName" = "${var.application_short}${var.environment}${var.loc}"
-    "SessionManager:Type" = "Azure"
+    "DateTimeProvider__TimeZone" = "Europe/London"
+    "DateTimeProvider__Type" = "system"
+    "Qflow__AppBookingFlagId" = 5
+    "Qflow__BaseUrl" = "<change me>"
+    "Qflow__CallCentreBookingFlagId" = 1
+    "Qflow__CallCentreEmailFlagId" = 3
+    "Qflow__DefaultRescheduleReasonId" = 2
+    "Qflow__UserId" = "<change me>"
+    "SessionManager__ConnectionString" = azurerm_storage_account.nbs_appts_stacc.primary_blob_connection_string
+    "SessionManager__ContainerName" = "${var.application_short}${var.environment}${var.loc}"
+    "SessionManager__Type" = "Azure"
     "ShowException" = true
   }
 
