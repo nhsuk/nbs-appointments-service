@@ -69,10 +69,6 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
     type = "SystemAssigned"
   }
 
-  depends_on = [
-    azurerm_app_configuration.nbs_appts_app_config
-  ]
-
   lifecycle {
     ignore_changes = [
       tags # Ignore changes to tags, avoiding loss of Azure link to App Insights 
