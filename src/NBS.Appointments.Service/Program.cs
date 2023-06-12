@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System;
-using Azure.Identity;
 using Serilog;
 using Serilog.Exceptions;
 using NBS.Appointments.Service.Configuration;
@@ -20,19 +19,12 @@ namespace NBS.Appointments.Service
             Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-                    var settings = config.Build();
-                    var appConfigSetting = settings.GetValue<string>("AppConfig", String.Empty);
+                    var settings = config.Build();                    
+                    var keyVaultUri = settings.GetValue<string>("KeyVaultUri", string.Empty);
 
-                    if (String.IsNullOrEmpty(appConfigSetting) == false)
+                    if (String.IsNullOrEmpty(keyVaultUri) == false)
                     {
-                        config.AddAzureAppConfiguration(options =>
-                        {
-                            options.Connect(appConfigSetting)
-                                    .ConfigureKeyVault(kv =>
-                                    {
-                                        kv.SetCredential(new DefaultAzureCredential());
-                                    });
-                        });
+                        config.AddAzureKeyVault(keyVaultUri);
                     }
                 })
                 .UseSerilog((hostingContext, loggerConfiguration) =>

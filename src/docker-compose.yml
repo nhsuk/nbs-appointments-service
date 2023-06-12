@@ -14,8 +14,8 @@ services:
       - "Qflow:CallCentreBookingFlagId=1"
       - "Qflow:DefaultRescheduleReasonId=2"
       - "SessionManager:Type=InMemory"
-      - "ApiKey=supersecret"
-      - "ShowException=false"
+      - "NbsApiKey=supersecret"
+      - "ShowException=true"
     ports:
       - "4000:80"
 

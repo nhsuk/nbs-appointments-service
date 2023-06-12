@@ -43,6 +43,19 @@ variable "docker_image_tag" {
   type = string
 }
 
+variable "docker_server_url" {
+  type = string
+  default = "nbsimages.azurecr.io"
+}
+
+variable "docker_username" {
+  type = string
+}
+
+variable "docker_password" {
+  type = string
+}
+
 variable "enable_autoscaling" {
   type    = bool
   default = false

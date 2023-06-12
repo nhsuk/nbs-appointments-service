@@ -1,8 +1,3 @@
-data "azurerm_container_registry" "container_registry" {
-  resource_group_name = var.registry_group
-  name                = var.registry_name
-}
-
 data "azurerm_subscription" "current" {}
 
 resource "azurerm_resource_group" "nbs_appts_rg" {
@@ -46,14 +41,29 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
     minimum_tls_version                     = "1.2"
     container_registry_use_managed_identity = true
     application_stack {
-      docker_image     = "${data.azurerm_container_registry.container_registry.login_server}/${var.docker_image}"
+      docker_image     = "${var.docker_server_url}/${var.docker_image}"
       docker_image_tag = var.docker_image_tag
     }
   }
 
   app_settings = {
-    AppConfig = azurerm_app_configuration.nbs_appts_app_config.primary_read_key[0].connection_string
+    KeyVaultUri = azurerm_key_vault.nbs_appts_key_vault.vault_uri    
     APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.nbs_appts_app_insights.connection_string
+    DOCKER_REGISTRY_SERVER_PASSWORD = var.docker_password
+    DOCKER_REGISTRY_SERVER_URL = var.docker_server_url
+    DOCKER_REGISTRY_SERVER_USERNAME = var.docker_username
+    "DateTimeProvider:TimeZone" = "Europe/London"
+    "DateTimeProvider:Type" = "system"
+    "Qflow:AppBookingFlagId" = 5
+    "Qflow:BaseUrl" = "<change me>"
+    "Qflow:CallCentreBookingFlagId" = 1
+    "Qflow:CallCentreEmailFlagId" = 3
+    "Qflow:DefaultRescheduleReasonId" = 2
+    "Qflow:UserId" = "<change me>"
+    "SessionManager:ConnectionString" = azurerm_storage_account.nbs_appts_stacc.primary_blob_connection_string
+    "SessionManager:ContainerName" = "${var.application_short}${var.environment}${var.loc}"
+    "SessionManager:Type" = "Azure"
+    "ShowException" = true
   }
 
   identity {
@@ -126,24 +136,6 @@ resource "azurerm_monitor_autoscale_setting" "nbs_appts_sp_autoscale" {
       }
     }
   }
-}
-
-resource "azurerm_role_assignment" "acrpull_role" {
-  scope                = data.azurerm_container_registry.container_registry.id
-  role_definition_name = "AcrPull"
-  principal_id         = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
-}
-
-resource "azurerm_role_assignment" "keyvault_secrets_user" {
-  scope = azurerm_key_vault.nbs_appts_key_vault.id
-  role_definition_name = "Key Vault Secrets User"
-  principal_id = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
-}
-
-resource "azurerm_role_assignment" "storage_blob_data_owner" {
-  scope                = azurerm_storage_account.nbs_appts_stacc.id
-  role_definition_name = "Storage Blob Data Owner"
-  principal_id         = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
 }
 
 

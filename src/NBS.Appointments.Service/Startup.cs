@@ -34,7 +34,7 @@ namespace NBS.Appointments.Service
             services
                 .Configure<QflowOptions>(Configuration.GetSection("Qflow"))
                 .Configure<DateTimeProviderOptions>(Configuration.GetSection("DateTimeProvider"))
-                .Configure<ApiKeyAuthenticationOptions>(options => options.ApiKey = Configuration.GetValue<string>("ApiKey"));
+                .Configure<ApiKeyAuthenticationOptions>(options => options.ApiKey = Configuration.GetValue<string>("NbsApiKey"));
 
             services
                 .AddApplicationInsightsTelemetry()
