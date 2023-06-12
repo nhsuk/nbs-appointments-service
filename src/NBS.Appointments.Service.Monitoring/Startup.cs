@@ -1,5 +1,4 @@
 using System;
-using Azure.Identity;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,15 +11,8 @@ namespace NBS.Appointments.Service.Monitoring
     {
         public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
         {
-            string appConfigSetting = Environment.GetEnvironmentVariable("AppConfig");
-            builder.ConfigurationBuilder.AddAzureAppConfiguration(options =>
-            {
-                options.Connect(appConfigSetting)
-                        .ConfigureKeyVault(kv =>
-                        {
-                            kv.SetCredential(new DefaultAzureCredential());
-                        });
-            });
+            string keyVaultUri = Environment.GetEnvironmentVariable("KeyVaultUri");
+            builder.ConfigurationBuilder.AddAzureKeyVault(keyVaultUri);
         }
 
         public override void Configure(IFunctionsHostBuilder builder)
