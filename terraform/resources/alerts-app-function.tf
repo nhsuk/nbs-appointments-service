@@ -23,8 +23,7 @@ resource "azurerm_linux_function_app" "nbs_appts_alert_handler_func_app" {
 
   site_config {}
 
-  app_settings = {
-    KeyVaultUri = azurerm_key_vault.nbs_appts_key_vault.vault_uri
+  app_settings = {    
   }
 
   identity {

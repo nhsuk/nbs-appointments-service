@@ -46,8 +46,7 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
     }
   }
 
-  app_settings = {
-    KeyVaultUri = azurerm_key_vault.nbs_appts_key_vault.vault_uri    
+  app_settings = {    
     APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.nbs_appts_app_insights.connection_string
     DOCKER_REGISTRY_SERVER_PASSWORD = var.docker_password
     DOCKER_REGISTRY_SERVER_URL = var.docker_server_url
