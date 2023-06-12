@@ -23,6 +23,21 @@ resource "azurerm_key_vault" "nbs_appts_key_vault" {
       "Get"
     ]
   }
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
+    secret_permissions = [
+      "Backup",
+      "Delete",
+      "Get",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Set",
+    ]
+  }
 }
 
 resource "azurerm_key_vault_secret" "kv_qflow_username" {
