@@ -32,7 +32,7 @@ namespace NBS.Appointments.Service.Unit.Tests
                         new Dictionary<string, string>
                         {
                             ["ShowException"] = "true",
-                            ["ApiKey"] = "secret"
+                            ["NbsApiKey"] = "secret"
                         });
                 });
             }).CreateClient();
@@ -57,7 +57,7 @@ namespace NBS.Appointments.Service.Unit.Tests
                         new Dictionary<string, string>
                         {
                             ["ShowException"] = "false",
-                            ["ApiKey"] = "secret"
+                            ["NbsApiKey"] = "secret"
                         });
                 });
             }).CreateClient();
