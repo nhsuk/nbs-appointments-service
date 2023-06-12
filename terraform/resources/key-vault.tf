@@ -10,7 +10,7 @@ resource "azurerm_key_vault" "nbs_appts_key_vault" {
 
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = azurerm_linux_web_app.nbs_appts_app.principal_id
+    object_id = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
     secret_permissions = [
       "Get"
     ]
@@ -18,7 +18,7 @@ resource "azurerm_key_vault" "nbs_appts_key_vault" {
 
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.principal_id
+    object_id = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.identity.0.principal_id
     secret_permissions = [
       "Get"
     ]
