@@ -52,7 +52,7 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
   }
 
   app_settings = {
-    AppConfig = azurerm_app_configuration.nbs_appts_app_config.primary_read_key[0].connection_string
+    AppConfig                             = azurerm_app_configuration.nbs_appts_app_config.primary_read_key[0].connection_string
     APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.nbs_appts_app_insights.connection_string
   }
 
@@ -126,24 +126,6 @@ resource "azurerm_monitor_autoscale_setting" "nbs_appts_sp_autoscale" {
       }
     }
   }
-}
-
-resource "azurerm_role_assignment" "acrpull_role" {
-  scope                = data.azurerm_container_registry.container_registry.id
-  role_definition_name = "AcrPull"
-  principal_id         = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
-}
-
-resource "azurerm_role_assignment" "keyvault_secrets_user" {
-  scope = azurerm_key_vault.nbs_appts_key_vault.id
-  role_definition_name = "Key Vault Secrets User"
-  principal_id = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
-}
-
-resource "azurerm_role_assignment" "storage_blob_data_owner" {
-  scope                = azurerm_storage_account.nbs_appts_stacc.id
-  role_definition_name = "Storage Blob Data Owner"
-  principal_id         = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
 }
 
 

@@ -45,9 +45,3 @@ resource "azurerm_storage_container" "nbs_appts_alert_handler_container" {
   storage_account_name  = azurerm_storage_account.nbs_appts_alert_handler_stacc.name
   container_access_type = "private"
 }
-
-resource "azurerm_role_assignment" "alerts_func_kv_secrets_user_role" {
-  scope = azurerm_key_vault.nbs_appts_key_vault.id
-  role_definition_name = "Key Vault Secrets User"
-  principal_id = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.identity.0.principal_id
-}

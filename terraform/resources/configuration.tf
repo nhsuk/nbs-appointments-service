@@ -2,22 +2,10 @@ resource "azurerm_app_configuration" "nbs_appts_app_config" {
   name                = "${var.application}-app-config-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
   location            = azurerm_resource_group.nbs_appts_rg.location
-  sku = "standard"
+  sku                 = "standard"
 }
 
 data "azurerm_client_config" "current" {}
-
-resource "azurerm_role_assignment" "appconf_dataowner" {
-  scope                = azurerm_app_configuration.nbs_appts_app_config.id
-  role_definition_name = "App Configuration Data Owner"
-  principal_id         = data.azurerm_client_config.current.object_id
-}
-
-resource "azurerm_role_assignment" "keyvault_dataowner" {
-  scope = azurerm_key_vault.nbs_appts_key_vault.id
-  role_definition_name = "Key Vault Secrets Officer"
-  principal_id = data.azurerm_client_config.current.object_id
-}
 
 resource "azurerm_key_vault" "nbs_appts_key_vault" {
   name                       = "${var.application}kv${var.environment}${var.loc}"
@@ -34,10 +22,6 @@ resource "azurerm_key_vault_secret" "kv_qflow_username" {
   value        = "default"
   key_vault_id = azurerm_key_vault.nbs_appts_key_vault.id
 
-  depends_on = [
-    azurerm_role_assignment.keyvault_dataowner
-  ]
-
   lifecycle {
     ignore_changes = [
       value
@@ -49,10 +33,6 @@ resource "azurerm_key_vault_secret" "kv_qflow_password" {
   name         = "qflowpassword"
   value        = "default"
   key_vault_id = azurerm_key_vault.nbs_appts_key_vault.id
-
-  depends_on = [
-    azurerm_role_assignment.keyvault_dataowner
-  ]
 
   lifecycle {
     ignore_changes = [
@@ -66,10 +46,6 @@ resource "azurerm_key_vault_secret" "kv_nbs_api_key" {
   value        = "default"
   key_vault_id = azurerm_key_vault.nbs_appts_key_vault.id
 
-  depends_on = [
-    azurerm_role_assignment.keyvault_dataowner
-  ]
-
   lifecycle {
     ignore_changes = [
       value
@@ -82,13 +58,9 @@ resource "azurerm_key_vault_secret" "kv_alerts_slack_webhook_url" {
   value        = "default"
   key_vault_id = azurerm_key_vault.nbs_appts_key_vault.id
 
-  depends_on = [
-    azurerm_role_assignment.keyvault_dataowner
-  ]
-
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 }
@@ -97,11 +69,7 @@ resource "azurerm_app_configuration_key" "config_qflow_username" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
   key                    = "Qflow:UserName"
   type                   = "vault"
-  vault_key_reference    = azurerm_key_vault_secret.kv_qflow_username.versionless_id  
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
+  vault_key_reference    = azurerm_key_vault_secret.kv_qflow_username.versionless_id
 }
 
 resource "azurerm_app_configuration_key" "config_qflow_password" {
@@ -109,10 +77,6 @@ resource "azurerm_app_configuration_key" "config_qflow_password" {
   key                    = "Qflow:Password"
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.kv_qflow_password.versionless_id
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
 
 resource "azurerm_app_configuration_key" "config_nbs_api_key" {
@@ -120,10 +84,6 @@ resource "azurerm_app_configuration_key" "config_nbs_api_key" {
   key                    = "ApiKey"
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.kv_nbs_api_key.versionless_id
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
 
 resource "azurerm_app_configuration_key" "config_alerts_slack_webhook_url" {
@@ -131,10 +91,6 @@ resource "azurerm_app_configuration_key" "config_alerts_slack_webhook_url" {
   key                    = "Alerts:SlackWebhookUrl"
   type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.kv_alerts_slack_webhook_url.versionless_id
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
 
 resource "azurerm_app_configuration_key" "config_qflow_url" {
@@ -147,13 +103,9 @@ resource "azurerm_app_configuration_key" "config_qflow_url" {
       value
     ]
   }
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
 
-  resource "azurerm_app_configuration_key" "config_datetimeprovider_type" {
+resource "azurerm_app_configuration_key" "config_datetimeprovider_type" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
   key                    = "DateTimeProvider:Type"
   value                  = "system"
@@ -163,13 +115,9 @@ resource "azurerm_app_configuration_key" "config_qflow_url" {
       value
     ]
   }
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
 
-  resource "azurerm_app_configuration_key" "config_datetimeprovider_timezone" {
+resource "azurerm_app_configuration_key" "config_datetimeprovider_timezone" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
   key                    = "DateTimeProvider:TimeZone"
   value                  = "Europe/London"
@@ -179,10 +127,6 @@ resource "azurerm_app_configuration_key" "config_qflow_url" {
       value
     ]
   }
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
 
 resource "azurerm_app_configuration_key" "config_qflow_appbookingflagid" {
@@ -195,10 +139,6 @@ resource "azurerm_app_configuration_key" "config_qflow_appbookingflagid" {
       value
     ]
   }
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
 
 resource "azurerm_app_configuration_key" "config_qflow_callcentrebookingflagid" {
@@ -211,10 +151,6 @@ resource "azurerm_app_configuration_key" "config_qflow_callcentrebookingflagid" 
       value
     ]
   }
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
 
 resource "azurerm_app_configuration_key" "config_qflow_callcentreemailflagid" {
@@ -227,10 +163,6 @@ resource "azurerm_app_configuration_key" "config_qflow_callcentreemailflagid" {
       value
     ]
   }
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
 
 resource "azurerm_app_configuration_key" "config_qflow_defaultreschedulereasonid" {
@@ -243,10 +175,6 @@ resource "azurerm_app_configuration_key" "config_qflow_defaultreschedulereasonid
       value
     ]
   }
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
 
 resource "azurerm_app_configuration_key" "config_qflow_userid" {
@@ -259,10 +187,6 @@ resource "azurerm_app_configuration_key" "config_qflow_userid" {
       value
     ]
   }
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
 
 resource "azurerm_app_configuration_key" "config_splunk_host" {
@@ -275,10 +199,6 @@ resource "azurerm_app_configuration_key" "config_splunk_host" {
       value
     ]
   }
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
 
 resource "azurerm_app_configuration_key" "config_splunk_eventcollectortoken" {
@@ -291,10 +211,6 @@ resource "azurerm_app_configuration_key" "config_splunk_eventcollectortoken" {
       value
     ]
   }
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
 
 resource "azurerm_app_configuration_key" "config_sessionmanager_type" {
@@ -304,13 +220,9 @@ resource "azurerm_app_configuration_key" "config_sessionmanager_type" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
 
 resource "azurerm_app_configuration_key" "config_sessionmanager_blobendpoint" {
@@ -320,13 +232,9 @@ resource "azurerm_app_configuration_key" "config_sessionmanager_blobendpoint" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
 
 resource "azurerm_app_configuration_key" "config_sessionmanager_containername" {
@@ -336,11 +244,7 @@ resource "azurerm_app_configuration_key" "config_sessionmanager_containername" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
-
-  depends_on = [
-    azurerm_role_assignment.appconf_dataowner
-  ]
 }
