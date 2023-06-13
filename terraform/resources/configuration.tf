@@ -244,39 +244,3 @@ resource "azurerm_app_configuration_key" "config_splunk_eventcollectortoken" {
     ]
   }
 }
-
-resource "azurerm_app_configuration_key" "config_sessionmanager_type" {
-  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
-  key                    = "SessionManager:Type"
-  value                  = "AzureStorage"
-
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
-}
-
-resource "azurerm_app_configuration_key" "config_sessionmanager_blobendpoint" {
-  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
-  key                    = "SessionManager:BlobEndpoint"
-  value                  = azurerm_storage_account.nbs_appts_stacc.primary_blob_endpoint
-
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
-}
-
-resource "azurerm_app_configuration_key" "config_sessionmanager_containername" {
-  configuration_store_id = azurerm_app_configuration.nbs_appts_app_config.id
-  key                    = "SessionManager:ContainerName"
-  value                  = azurerm_storage_container.nbs_appts_container.name
-
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
-}
