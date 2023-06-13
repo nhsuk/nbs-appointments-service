@@ -52,9 +52,9 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
     DOCKER_REGISTRY_SERVER_PASSWORD       = var.docker_password
     DOCKER_REGISTRY_SERVER_URL            = var.docker_server_url
     DOCKER_REGISTRY_SERVER_USERNAME       = var.docker_username
-    "SessionManager:ConnectionString"     = azurerm_storage_account.nbs_appts_stacc.primary_blob_connection_string
-    "SessionManager:ContainerName"        = "${var.application_short}${var.environment}${var.loc}"
-    "SessionManager:Type"                 = "AzureStorage"
+    "SessionManager__ConnectionString"     = azurerm_storage_account.nbs_appts_stacc.primary_blob_connection_string
+    "SessionManager__ContainerName"        = "${var.application_short}${var.environment}${var.loc}"
+    "SessionManager__Type"                 = "AzureStorage"
   }
 
   identity {
