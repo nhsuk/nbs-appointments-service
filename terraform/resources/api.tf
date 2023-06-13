@@ -1,8 +1,3 @@
-data "azurerm_container_registry" "container_registry" {
-  resource_group_name = var.registry_group
-  name                = var.registry_name
-}
-
 data "azurerm_subscription" "current" {}
 
 resource "azurerm_resource_group" "nbs_appts_rg" {
@@ -44,9 +39,9 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
 
   site_config {
     minimum_tls_version                     = "1.2"
-    container_registry_use_managed_identity = true
+    container_registry_use_managed_identity = false
     application_stack {
-      docker_image     = "${data.azurerm_container_registry.container_registry.login_server}/${var.docker_image}"
+      docker_image     = "${var.docker_server_url}/${var.docker_image}"
       docker_image_tag = var.docker_image_tag
     }
   }
