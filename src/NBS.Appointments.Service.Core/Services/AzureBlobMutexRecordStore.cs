@@ -122,7 +122,7 @@ namespace NBS.Appointments.Service.Core
         public static string InMemory => nameof(InMemory);
 
         public string Type { get; set; }
-        public string BlobEndpoint { get; set; }
+        public string ConnectionString { get; set; }
         public string ContainerName { get; set; }
     }
 }

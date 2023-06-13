@@ -22,14 +22,14 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddSessionManager(this IServiceCollection services, SessionManagerOptions options)
         {
             if (options.Type == SessionManagerOptions.AzureStorage)
-                return services.AddAzureBlobStoreMutex(options.BlobEndpoint, options.ContainerName);
+                return services.AddAzureBlobStoreMutex(options.ConnectionString, options.ContainerName);
             else if (options.Type == SessionManagerOptions.InMemory)
                 return services.AddInMemoryStoreMutex();
 
             throw new ArgumentOutOfRangeException($"No session manage of type {options.Type} is available");
         }
 
-        public static IServiceCollection AddAzureBlobStoreMutex(this IServiceCollection services, string blobEndpoint, string containerName)
+        public static IServiceCollection AddAzureBlobStoreMutex(this IServiceCollection services, string connectionString, string containerName)
         {
             services.Configure<SessionManagerOptions>(opts => {
                 opts.Type = SessionManagerOptions.AzureStorage;
@@ -37,8 +37,7 @@ namespace Microsoft.Extensions.DependencyInjection
             });
             services.AddAzureClients(x =>
             {
-                x.AddBlobServiceClient(new Uri(blobEndpoint));
-                x.UseCredential(new DefaultAzureCredential());
+                x.AddBlobServiceClient(connectionString);
             });
             return services.AddSingleton<IMutexRecordStore, AzureBlobMutexRecordStore>();
         }
