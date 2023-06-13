@@ -14,7 +14,39 @@ resource "azurerm_key_vault" "nbs_appts_key_vault" {
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "standard"
   soft_delete_retention_days = 7
-  enable_rbac_authorization  = true
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
+    secret_permissions = [
+      "Get",
+      "List"
+    ]
+  }
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.identity.0.principal_id
+    secret_permissions = [
+      "Get",
+      "List"
+    ]
+  }
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
+    secret_permissions = [
+      "Backup",
+      "Delete",
+      "Get",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Set",
+    ]
+  }
 }
 
 resource "azurerm_key_vault_secret" "kv_qflow_username" {
