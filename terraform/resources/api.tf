@@ -39,7 +39,7 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
 
   site_config {
     minimum_tls_version                     = "1.2"
-    container_registry_use_managed_identity = true
+    container_registry_use_managed_identity = false
     application_stack {
       docker_image     = "${var.docker_server_url}/${var.docker_image}"
       docker_image_tag = var.docker_image_tag
@@ -61,7 +61,7 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
     "Qflow__UserId" = "<change me>"
     "SessionManager__ConnectionString" = azurerm_storage_account.nbs_appts_stacc.primary_blob_connection_string
     "SessionManager__ContainerName" = "${var.application_short}${var.environment}${var.loc}"
-    "SessionManager__Type" = "Azure"
+    "SessionManager__Type" = "AzureStorage"
     "ShowException" = true
   }
 
