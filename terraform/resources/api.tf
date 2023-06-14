@@ -1,7 +1,7 @@
 data "azurerm_subscription" "current" {}
 
 data "azurerm_resource_group" "nbs_appts_rg" {
-  name     = "${var.application}-rg-${var.environment}-${var.loc}"
+  name = "${var.application}-rg-${var.environment}-${var.loc}"
 }
 
 resource "azurerm_storage_account" "nbs_appts_strg" {
