@@ -25,10 +25,10 @@ variable "docker_image_tag" {
 }
 
 module "api" {
-  source = "../../resources"
-  location = "uksouth"
-  environment = "exp"
-  loc = "uks"
-  sku_name = "B1"
+  source           = "../../resources"
+  location         = "uksouth"
+  environment      = "exp"
+  loc              = "uks"
+  sku_name         = "B1"
   docker_image_tag = var.docker_image_tag
 }

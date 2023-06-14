@@ -6,8 +6,8 @@ resource "azurerm_resource_group" "nbs_appts_rg" {
   tags     = local.allTags
 }
 
-resource "azurerm_storage_account" "nbs_appts_stacc" {
-  name                     = "${var.application_short}${var.environment}${var.loc}"
+resource "azurerm_storage_account" "nbs_appts_strg" {
+  name                     = "${var.application_short}strg${var.environment}${var.loc}"
   resource_group_name      = azurerm_resource_group.nbs_appts_rg.name
   location                 = azurerm_resource_group.nbs_appts_rg.location
   account_tier             = "Standard"
@@ -15,9 +15,9 @@ resource "azurerm_storage_account" "nbs_appts_stacc" {
   account_replication_type = "LRS"
 }
 
-resource "azurerm_storage_container" "nbs_appts_container" {
-  name                  = "${var.application_short}${var.environment}${var.loc}"
-  storage_account_name  = azurerm_storage_account.nbs_appts_stacc.name
+resource "azurerm_storage_container" "nbs_appts_strgcont" {
+  name                  = "${var.application_short}strgcont${var.environment}${var.loc}"
+  storage_account_name  = azurerm_storage_account.nbs_appts_strg.name
   container_access_type = "blob"
 }
 
@@ -30,8 +30,8 @@ resource "azurerm_service_plan" "nbs_appts_sp" {
   tags                = local.allTags
 }
 
-resource "azurerm_linux_web_app" "nbs_appts_app" {
-  name                = "${var.application}-app-${var.environment}-${var.loc}"
+resource "azurerm_linux_web_app" "nbs_appts_wa" {
+  name                = "${var.application}-wa-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
   location            = azurerm_resource_group.nbs_appts_rg.location
   service_plan_id     = azurerm_service_plan.nbs_appts_sp.id
@@ -47,12 +47,12 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
   }
 
   app_settings = {
-    AppConfig                             = azurerm_app_configuration.nbs_appts_app_config.primary_read_key[0].connection_string
-    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.nbs_appts_app_insights.connection_string
+    AppConfig                             = azurerm_app_configuration.nbs_appts_wac.primary_read_key[0].connection_string
+    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.nbs_appts_ai.connection_string
     DOCKER_REGISTRY_SERVER_PASSWORD       = var.docker_password
     DOCKER_REGISTRY_SERVER_URL            = var.docker_server_url
     DOCKER_REGISTRY_SERVER_USERNAME       = var.docker_username
-    "SessionManager__ConnectionString"     = azurerm_storage_account.nbs_appts_stacc.primary_blob_connection_string
+    "SessionManager__ConnectionString"     = azurerm_storage_account.nbs_appts_strg.primary_blob_connection_string
     "SessionManager__ContainerName"        = "${var.application_short}${var.environment}${var.loc}"
     "SessionManager__Type"                 = "AzureStorage"
   }
@@ -62,7 +62,7 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
   }
 
   depends_on = [
-    azurerm_app_configuration.nbs_appts_app_config
+    azurerm_app_configuration.nbs_appts_wac
   ]
 
   lifecycle {
@@ -72,9 +72,9 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
   }
 }
 
-resource "azurerm_monitor_autoscale_setting" "nbs_appts_sp_autoscale" {
+resource "azurerm_monitor_autoscale_setting" "nbs_appts_autoscale" {
   count               = var.enable_autoscaling ? 1 : 0
-  name                = " ${var.application_short}-scaling-${var.environment}-${var.loc}"
+  name                = " ${var.application}-autoscale-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_appts_rg.name
   location            = azurerm_resource_group.nbs_appts_rg.location
   target_resource_id  = azurerm_service_plan.nbs_appts_sp.id

@@ -8,6 +8,16 @@ variable "application_short" {
   default = "nbsappts"
 }
 
+variable "alert_handler_application" {
+  type    = string
+  default = "nbs-alerthandler"
+}
+
+variable "alert_handler_application_short" {
+  type    = string
+  default = "nbsalerthandler"
+}
+
 variable "environment" {
   type = string
 }
@@ -59,6 +69,16 @@ variable "docker_password" {
 variable "enable_autoscaling" {
   type    = bool
   default = false
+}
+
+variable "container_registry_login_server" {
+  type    = string
+  default = "nbsimages.azurecr.io"
+}
+
+variable "container_registry_id" {
+  type    = string
+  default = "/subscriptions/07748954-52d6-46ce-95e6-2701bfc715b4/resourceGroups/covid19-booking-rg-dev-uks/providers/Microsoft.ContainerRegistry/registries/nbsimages"
 }
 
 variable "tags" {
