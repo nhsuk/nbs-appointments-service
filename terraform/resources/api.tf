@@ -1,15 +1,13 @@
 data "azurerm_subscription" "current" {}
 
-resource "azurerm_resource_group" "nbs_appts_rg" {
+data "azurerm_resource_group" "nbs_appts_rg" {
   name     = "${var.application}-rg-${var.environment}-${var.loc}"
-  location = var.location
-  tags     = local.allTags
 }
 
 resource "azurerm_storage_account" "nbs_appts_strg" {
   name                     = "${var.application_short}strg${var.environment}${var.loc}"
-  resource_group_name      = azurerm_resource_group.nbs_appts_rg.name
-  location                 = azurerm_resource_group.nbs_appts_rg.location
+  resource_group_name      = data.azurerm_resource_group.nbs_appts_rg.name
+  location                 = data.azurerm_resource_group.nbs_appts_rg.location
   account_tier             = "Standard"
   account_kind             = "BlobStorage"
   account_replication_type = "LRS"
@@ -23,8 +21,8 @@ resource "azurerm_storage_container" "nbs_appts_strgcont" {
 
 resource "azurerm_service_plan" "nbs_appts_sp" {
   name                = "${var.application}-sp-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  location            = azurerm_resource_group.nbs_appts_rg.location
+  resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
+  location            = data.azurerm_resource_group.nbs_appts_rg.location
   os_type             = "Linux"
   sku_name            = var.sku_name
   tags                = local.allTags
@@ -36,8 +34,8 @@ resource "azurerm_service_plan" "nbs_appts_sp" {
 
 resource "azurerm_linux_web_app" "nbs_appts_wa" {
   name                = "${var.application}-wa-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  location            = azurerm_resource_group.nbs_appts_rg.location
+  resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
+  location            = data.azurerm_resource_group.nbs_appts_rg.location
   service_plan_id     = azurerm_service_plan.nbs_appts_sp.id
   https_only          = true
 
@@ -79,8 +77,8 @@ resource "azurerm_linux_web_app" "nbs_appts_wa" {
 resource "azurerm_monitor_autoscale_setting" "nbs_appts_autoscale" {
   count               = var.enable_autoscaling ? 1 : 0
   name                = " ${var.application}-autoscale-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  location            = azurerm_resource_group.nbs_appts_rg.location
+  resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
+  location            = data.azurerm_resource_group.nbs_appts_rg.location
   target_resource_id  = azurerm_service_plan.nbs_appts_sp.id
 
   profile {

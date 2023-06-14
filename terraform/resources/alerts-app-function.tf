@@ -1,15 +1,15 @@
 resource "azurerm_service_plan" "nbs_alerthandler_sp" {
   name                = "${var.alert_handler_application}-sp-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  location            = azurerm_resource_group.nbs_appts_rg.location
+  resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
+  location            = data.azurerm_resource_group.nbs_appts_rg.location
   os_type             = "Linux"
   sku_name            = "Y1"
 }
 
 resource "azurerm_linux_function_app" "nbs_alerthandler_func" {
   name                = "${var.alert_handler_application}-func-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  location            = azurerm_resource_group.nbs_appts_rg.location
+  resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
+  location            = data.azurerm_resource_group.nbs_appts_rg.location
 
   storage_account_name       = azurerm_storage_account.nbs_alerthandler_strg.name
   storage_account_access_key = azurerm_storage_account.nbs_alerthandler_strg.primary_access_key
@@ -32,8 +32,8 @@ resource "azurerm_linux_function_app" "nbs_alerthandler_func" {
 
 resource "azurerm_storage_account" "nbs_alerthandler_strg" {
   name                     = "${var.alert_handler_application_short}strg${var.environment}${var.loc}"
-  resource_group_name      = azurerm_resource_group.nbs_appts_rg.name
-  location                 = azurerm_resource_group.nbs_appts_rg.location
+  resource_group_name      = data.azurerm_resource_group.nbs_appts_rg.name
+  location                 = data.azurerm_resource_group.nbs_appts_rg.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
 }

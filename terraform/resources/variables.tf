@@ -85,7 +85,7 @@ variable "tags" {
   description = "A map of the tags to use for the resources that are deployed"
   type        = map(string)
   default = {
-    product           = "covid19-booking"
+    "product"         = "covid19-booking"
     "cost code"       = "PO724/34"
     "created by"      = "Terraform"
     "created date"    = "2021-02-15"

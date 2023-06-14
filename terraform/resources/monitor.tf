@@ -1,6 +1,6 @@
 data "azurerm_function_app_host_keys" "nbs_alerthandler_func_app_host_keys" {
   name                = azurerm_linux_function_app.nbs_alerthandler_func.name
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
+  resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
 
   depends_on = [
     azurerm_linux_function_app.nbs_alerthandler_func
@@ -9,16 +9,16 @@ data "azurerm_function_app_host_keys" "nbs_alerthandler_func_app_host_keys" {
 
 resource "azurerm_log_analytics_workspace" "nbs_appts_log" {
   name                = "${var.application}-log-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  location            = azurerm_resource_group.nbs_appts_rg.location
+  resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
+  location            = data.azurerm_resource_group.nbs_appts_rg.location
   sku                 = "PerGB2018"
   retention_in_days   = 30
 }
 
 resource "azurerm_application_insights" "nbs_appts_ai" {
   name                = "${var.application}-ai-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  location            = azurerm_resource_group.nbs_appts_rg.location
+  resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
+  location            = data.azurerm_resource_group.nbs_appts_rg.location
   workspace_id        = azurerm_log_analytics_workspace.nbs_appts_log.id
   application_type    = "web"
   retention_in_days   = 30
@@ -26,8 +26,8 @@ resource "azurerm_application_insights" "nbs_appts_ai" {
 
 resource "azurerm_portal_dashboard" "nbs_appts_dash" {
   name                = "${var.application}-dash-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  location            = azurerm_resource_group.nbs_appts_rg.location
+  resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
+  location            = data.azurerm_resource_group.nbs_appts_rg.location
   tags = {
     hidden-title = "Appointment Service Metrics for ${var.environment}"
   }
@@ -41,7 +41,7 @@ resource "azurerm_portal_dashboard" "nbs_appts_dash" {
 
 resource "azurerm_monitor_action_group" "nbs_appts_ag" {
   name                = "${var.application}-ag-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
+  resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
   short_name          = "${var.environment}-${var.loc}"
 
   azure_function_receiver {
@@ -55,7 +55,7 @@ resource "azurerm_monitor_action_group" "nbs_appts_ag" {
 
 resource "azurerm_monitor_metric_alert" "nbs_appts_http_401_alert" {
   name                = "${var.application}-http-401-alert-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
+  resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
   scopes              = [azurerm_linux_web_app.nbs_appts_wa.id]
   description         = "Alert will be triggered when http 401 error count is greater than 0"
 
