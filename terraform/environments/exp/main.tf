@@ -24,6 +24,14 @@ variable "docker_image_tag" {
   type = string
 }
 
+variable "docker_username" {
+  type = string
+}
+
+variable "docker_password" {
+  type = string
+}
+
 module "api" {
   source           = "../../resources"
   location         = "uksouth"
