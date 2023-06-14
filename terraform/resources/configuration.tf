@@ -17,7 +17,7 @@ resource "azurerm_key_vault" "nbs_appts_kv" {
 
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
+    object_id = azurerm_linux_web_app.nbs_appts_wa.identity.0.principal_id
     secret_permissions = [
       "Get",
       "List"
@@ -26,7 +26,7 @@ resource "azurerm_key_vault" "nbs_appts_kv" {
 
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.identity.0.principal_id
+    object_id = azurerm_linux_function_app.nbs_alerthandler_func.identity.0.principal_id
     secret_permissions = [
       "Get",
       "List"
@@ -260,7 +260,7 @@ resource "azurerm_app_configuration_key" "config_sessionmanager_type" {
 resource "azurerm_app_configuration_key" "config_sessionmanager_blobendpoint" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_wac.id
   key                    = "SessionManager:BlobEndpoint"
-  value                  = azurerm_storage_account.nbs_appts_stacc.primary_blob_endpoint
+  value                  = azurerm_storage_account.nbs_appts_strg.primary_blob_endpoint
 
   lifecycle {
     ignore_changes = [
@@ -272,7 +272,7 @@ resource "azurerm_app_configuration_key" "config_sessionmanager_blobendpoint" {
 resource "azurerm_app_configuration_key" "config_sessionmanager_containername" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_wac.id
   key                    = "SessionManager:ContainerName"
-  value                  = azurerm_storage_container.nbs_appts_container.name
+  value                  = azurerm_storage_container.nbs_appts_strgcont.name
 
   lifecycle {
     ignore_changes = [
