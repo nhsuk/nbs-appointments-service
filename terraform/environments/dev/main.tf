@@ -10,7 +10,7 @@ terraform {
     resource_group_name  = "covid19-booking-rg-tfstate-dev-uks"
     storage_account_name = "nbsapptsdevtf"
     container_name       = "tfstate"
-    key                  = "terraform.tfstate"
+    key                  = "dev.tfstate"
   }
 
   required_version = ">= 1.1.0"

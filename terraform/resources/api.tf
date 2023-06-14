@@ -28,6 +28,10 @@ resource "azurerm_service_plan" "nbs_appts_sp" {
   os_type             = "Linux"
   sku_name            = var.sku_name
   tags                = local.allTags
+
+  depends_on = [
+    azurerm_service_plan.nbs_alerthandler_sp
+  ]
 }
 
 resource "azurerm_linux_web_app" "nbs_appts_wa" {
@@ -52,9 +56,9 @@ resource "azurerm_linux_web_app" "nbs_appts_wa" {
     DOCKER_REGISTRY_SERVER_PASSWORD       = var.docker_password
     DOCKER_REGISTRY_SERVER_URL            = var.docker_server_url
     DOCKER_REGISTRY_SERVER_USERNAME       = var.docker_username
-    "SessionManager__ConnectionString"     = azurerm_storage_account.nbs_appts_strg.primary_blob_connection_string
-    "SessionManager__ContainerName"        = "${var.application_short}${var.environment}${var.loc}"
-    "SessionManager__Type"                 = "AzureStorage"
+    "SessionManager__ConnectionString"    = azurerm_storage_account.nbs_appts_strg.primary_blob_connection_string
+    "SessionManager__ContainerName"       = "${var.application_short}${var.environment}${var.loc}"
+    "SessionManager__Type"                = "AzureStorage"
   }
 
   identity {

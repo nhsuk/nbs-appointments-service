@@ -1,9 +1,3 @@
-resource "azurerm_resource_group" "nbs_alerthandler_rg" {
-  name     = "${var.alert_handler_application}-rg-${var.environment}-${var.loc}"
-  location = var.location
-  tags     = local.allTags
-}
-
 resource "azurerm_service_plan" "nbs_alerthandler_sp" {
   name                = "${var.alert_handler_application}-sp-${var.environment}-${var.loc}"
   resource_group_name = azurerm_resource_group.nbs_alerthandler_rg.name
@@ -30,6 +24,10 @@ resource "azurerm_linux_function_app" "nbs_alerthandler_func" {
   identity {
     type = "SystemAssigned"
   }
+
+  depends_on = [
+    azurerm_app_configuration.nbs_appts_wac
+  ]
 }
 
 resource "azurerm_storage_account" "nbs_alerthandler_strg" {

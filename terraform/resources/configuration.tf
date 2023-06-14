@@ -252,7 +252,7 @@ resource "azurerm_app_configuration_key" "config_sessionmanager_type" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 }
@@ -264,7 +264,7 @@ resource "azurerm_app_configuration_key" "config_sessionmanager_blobendpoint" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 }
@@ -276,7 +276,7 @@ resource "azurerm_app_configuration_key" "config_sessionmanager_containername" {
 
   lifecycle {
     ignore_changes = [
-      value      
+      value
     ]
   }
 }

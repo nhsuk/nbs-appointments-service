@@ -92,6 +92,6 @@ variable "tags" {
     "product owner"   = "James Spirit"
     "requested by"    = "NBS"
     "service-product" = "National Booking Service"
-    team              = "NBS"
+    "team"            = "NBS"
   }
 }

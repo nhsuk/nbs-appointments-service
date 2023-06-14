@@ -10,7 +10,7 @@ terraform {
     resource_group_name  = "covid19-booking-rg-tfstate-stag-uks"
     storage_account_name = "covidbookstagtf"
     container_name       = "tfstate"
-    key                  = "nbs-appts-stag.tfstate"
+    key                  = "stag.tfstate"
   }
 
   required_version = ">= 1.1.0"
@@ -32,6 +32,8 @@ module "api" {
   sku_name           = "S1"
   enable_autoscaling = true
   docker_image_tag   = var.docker_image_tag
+  docker_username    = var.docker_username
+  docker_password    = var.docker_password
 }
 
 
