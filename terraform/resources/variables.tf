@@ -10,12 +10,12 @@ variable "application_short" {
 
 variable "alert_handler_application" {
   type    = string
-  default = "nbs-alerthandler"
+  default = "nbs-alerts"
 }
 
 variable "alert_handler_application_short" {
   type    = string
-  default = "nbsalerthandler"
+  default = "nbsalerts"
 }
 
 variable "environment" {
