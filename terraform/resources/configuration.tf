@@ -14,39 +14,45 @@ resource "azurerm_key_vault" "nbs_appts_kv" {
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "standard"
   soft_delete_retention_days = 7
+}
 
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = azurerm_linux_web_app.nbs_appts_wa.identity.0.principal_id
-    secret_permissions = [
-      "Get",
-      "List"
-    ]
-  }
+resource "azurerm_key_vault_access_policy" "key_vault_access_policy_serviceprinciple" {
+  key_vault_id = azurerm_key_vault.nbs_appts_kv.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
 
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = azurerm_linux_function_app.nbs_alerthandler_func.identity.0.principal_id
-    secret_permissions = [
-      "Get",
-      "List"
-    ]
-  }
+  secret_permissions = [
+    "Backup",
+    "Delete",
+    "Get",
+    "List",
+    "Purge",
+    "Recover",
+    "Restore",
+    "Set",
+  ]
+}
 
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-    secret_permissions = [
-      "Backup",
-      "Delete",
-      "Get",
-      "List",
-      "Purge",
-      "Recover",
-      "Restore",
-      "Set",
-    ]
-  }
+resource "azurerm_key_vault_access_policy" "key_vault_access_policy_alerthandler_func" {
+  key_vault_id = azurerm_key_vault.nbs_appts_kv.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = azurerm_linux_function_app.nbs_alerthandler_func.identity.0.principal_id
+
+  secret_permissions = [
+    "Get",
+    "List"
+  ]
+}
+
+resource "azurerm_key_vault_access_policy" "key_vault_access_policy_wa" {
+  key_vault_id = azurerm_key_vault.nbs_appts_kv.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = azurerm_linux_web_app.nbs_appts_wa.identity.0.principal_id
+
+  secret_permissions = [
+    "Get",
+    "List"
+  ]
 }
 
 resource "azurerm_key_vault_secret" "kv_qflow_username" {
