@@ -22,6 +22,11 @@ variable "environment" {
   type = string
 }
 
+variable "instance" {
+  type     = string
+  nullable = true
+}
+
 variable "location" {
   type = string
 }

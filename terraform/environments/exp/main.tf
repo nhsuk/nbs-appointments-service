@@ -35,7 +35,8 @@ variable "docker_password" {
 module "api" {
   source           = "../../resources"
   location         = "uksouth"
-  environment      = "exp"
+  environment      = "dev"
+  instance         = "exp"
   loc              = "uks"
   sku_name         = "B1"
   docker_image_tag = var.docker_image_tag

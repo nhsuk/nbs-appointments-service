@@ -1,5 +1,5 @@
 resource "azurerm_app_configuration" "nbs_appts_wac" {
-  name                = "${var.application}-wac-${var.environment}-${var.loc}"
+  name                = (var.instance == null) ? "${var.application}-wac-${var.environment}-${var.loc}" : "${var.application}-wac-${var.environment}-${var.loc}-${var.instance}"
   resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
   location            = data.azurerm_resource_group.nbs_appts_rg.location
   sku                 = "standard"
@@ -8,7 +8,7 @@ resource "azurerm_app_configuration" "nbs_appts_wac" {
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "nbs_appts_kv" {
-  name                       = "${var.application}kv${var.environment}${var.loc}"
+  name                       = (var.instance == null) ? "${var.application}kv${var.environment}${var.loc}" : "${var.application}kv${var.environment}${var.loc}${var.instance}"
   resource_group_name        = data.azurerm_resource_group.nbs_appts_rg.name
   location                   = data.azurerm_resource_group.nbs_appts_rg.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id

@@ -1,5 +1,5 @@
 resource "azurerm_service_plan" "nbs_alerthandler_sp" {
-  name                = "${var.alert_handler_application}-sp-${var.environment}-${var.loc}"
+  name                = (var.instance == null) ? "${var.alert_handler_application}-sp-${var.environment}-${var.loc}" : "${var.alert_handler_application}-sp-${var.environment}-${var.loc}-${var.instance}"
   resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
   location            = data.azurerm_resource_group.nbs_appts_rg.location
   os_type             = "Linux"
@@ -7,7 +7,7 @@ resource "azurerm_service_plan" "nbs_alerthandler_sp" {
 }
 
 resource "azurerm_linux_function_app" "nbs_alerthandler_func" {
-  name                = "${var.alert_handler_application}-func-${var.environment}-${var.loc}"
+  name                = (var.instance == null) ? "${var.alert_handler_application}-func-${var.environment}-${var.loc}" : "${var.alert_handler_application}-func-${var.environment}-${var.loc}-${var.instance}"
   resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
   location            = data.azurerm_resource_group.nbs_appts_rg.location
 
@@ -31,7 +31,7 @@ resource "azurerm_linux_function_app" "nbs_alerthandler_func" {
 }
 
 resource "azurerm_storage_account" "nbs_alerthandler_strg" {
-  name                     = "${var.alert_handler_application_short}strg${var.environment}${var.loc}"
+  name                     = (var.instance == null) ? "${var.alert_handler_application_short}strg${var.environment}${var.loc}${var.instance}" : "${var.alert_handler_application_short}strg${var.environment}${var.loc}${var.instance}"
   resource_group_name      = data.azurerm_resource_group.nbs_appts_rg.name
   location                 = data.azurerm_resource_group.nbs_appts_rg.location
   account_tier             = "Standard"
@@ -39,7 +39,7 @@ resource "azurerm_storage_account" "nbs_alerthandler_strg" {
 }
 
 resource "azurerm_storage_container" "nbs_alerthandler_strgcont" {
-  name                  = "${var.alert_handler_application_short}strgcont${var.environment}${var.loc}"
+  name                  = (var.instance == null) ? "${var.alert_handler_application_short}strgcont${var.environment}${var.loc}" : "${var.alert_handler_application_short}strgcont${var.environment}${var.loc}${var.instance}"
   storage_account_name  = azurerm_storage_account.nbs_alerthandler_strg.name
   container_access_type = "private"
 }

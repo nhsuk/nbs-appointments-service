@@ -36,6 +36,7 @@ module "api" {
   source             = "../../resources"
   location           = "uksouth"
   environment        = "stag"
+  instance           = null
   loc                = "uks"
   sku_name           = "S1"
   enable_autoscaling = true
