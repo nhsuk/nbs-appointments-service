@@ -32,6 +32,10 @@ variable "docker_password" {
   type = string
 }
 
+variable "nbsapikey" {
+  type = string
+}
+
 module "api" {
   source           = "../../resources"
   location         = "uksouth"
