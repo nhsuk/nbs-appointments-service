@@ -54,7 +54,7 @@ resource "azurerm_key_vault" "nbs_appts_kv" {
 
 resource "azurerm_key_vault_secret" "kv_qflow_username" {
   name         = "qflowusername"
-  value        = "default"
+  value        = var.qflowusername
   key_vault_id = azurerm_key_vault.nbs_appts_kv.id
 
   lifecycle {
@@ -66,7 +66,7 @@ resource "azurerm_key_vault_secret" "kv_qflow_username" {
 
 resource "azurerm_key_vault_secret" "kv_qflow_password" {
   name         = "qflowpassword"
-  value        = "default"
+  value        = var.qflowpassword
   key_vault_id = azurerm_key_vault.nbs_appts_kv.id
 
   lifecycle {
@@ -92,19 +92,25 @@ resource "azurerm_key_vault_secret" "kv_alerts_slack_webhook_url" {
   name         = "alertsslackwebhookurl"
   value        = var.alertsslackwebhookurl
   key_vault_id = azurerm_key_vault.nbs_appts_kv.id
+
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
 }
 
 resource "azurerm_app_configuration_key" "config_qflow_username" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_wac.id
   key                    = "Qflow:UserName"
-  type                   = var.qflowusername
+  type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.kv_qflow_username.versionless_id
 }
 
 resource "azurerm_app_configuration_key" "config_qflow_password" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_wac.id
   key                    = "Qflow:Password"
-  type                   = var.qflowpassword
+  type                   = "vault"
   vault_key_reference    = azurerm_key_vault_secret.kv_qflow_password.versionless_id
 }
 
