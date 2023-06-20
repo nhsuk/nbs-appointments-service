@@ -59,11 +59,33 @@ variable "docker_server_url" {
 }
 
 variable "docker_username" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "docker_password" {
-  type = string
+  type      = string
+  sensitive = true
+}
+
+variable "nbsapikey" {
+  type      = string
+  sensitive = true
+}
+
+variable "qflowusername" {
+  type      = string
+  sensitive = true
+}
+
+variable "qflowpassword" {
+  type      = string
+  sensitive = true
+}
+
+variable "alertsslackwebhookurl" {
+  type      = string
+  sensitive = true
 }
 
 variable "enable_autoscaling" {
@@ -79,10 +101,6 @@ variable "container_registry_login_server" {
 variable "container_registry_id" {
   type    = string
   default = "/subscriptions/07748954-52d6-46ce-95e6-2701bfc715b4/resourceGroups/covid19-booking-rg-dev-uks/providers/Microsoft.ContainerRegistry/registries/nbsimages"
-}
-
-variable "nbsapikey" {
-  type = string
 }
 
 variable "tags" {

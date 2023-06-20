@@ -25,25 +25,46 @@ variable "docker_image_tag" {
 }
 
 variable "docker_username" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "docker_password" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "nbsapikey" {
-  type = string
+  type      = string
+  sensitive = true
+}
+
+variable "qflowusername" {
+  type      = string
+  sensitive = true
+}
+
+variable "qflowpassword" {
+  type      = string
+  sensitive = true
+}
+
+variable "alertsslackwebhookurl" {
+  type      = string
+  sensitive = true
 }
 
 module "api" {
-  source           = "../../resources"
-  location         = "uksouth"
-  environment      = "exp"
-  loc              = "uks"
-  sku_name         = "B1"
-  docker_image_tag = var.docker_image_tag
-  docker_username  = var.docker_username
-  docker_password  = var.docker_password
-  nbsapikey        = var.nbsapikey
+  source                = "../../resources"
+  location              = "uksouth"
+  environment           = "exp"
+  loc                   = "uks"
+  sku_name              = "B1"
+  docker_image_tag      = var.docker_image_tag
+  docker_username       = var.docker_username
+  docker_password       = var.docker_password
+  nbsapikey             = var.nbsapikey
+  qflowusername         = var.qflowusername
+  qflowpassword         = var.qflowpassword
+  alertsslackwebhookurl = var.alertsslackwebhookurl
 }
