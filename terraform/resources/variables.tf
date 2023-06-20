@@ -82,8 +82,7 @@ variable "container_registry_id" {
 }
 
 variable "nbsapikey" {
-  type    = string
-  default = "default"
+  type = string
 }
 
 variable "tags" {
