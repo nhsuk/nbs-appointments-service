@@ -78,7 +78,7 @@ resource "azurerm_key_vault_secret" "kv_qflow_password" {
 
 resource "azurerm_key_vault_secret" "kv_nbs_api_key" {
   name         = "nbsapikey"
-  value        = "default"
+  value        = var.nbsapikey
   key_vault_id = azurerm_key_vault.nbs_appts_kv.id
 
   lifecycle {

@@ -81,6 +81,11 @@ variable "container_registry_id" {
   default = "/subscriptions/07748954-52d6-46ce-95e6-2701bfc715b4/resourceGroups/covid19-booking-rg-dev-uks/providers/Microsoft.ContainerRegistry/registries/nbsimages"
 }
 
+variable "nbsapikey" {
+  type    = string
+  default = "default"
+}
+
 variable "tags" {
   description = "A map of the tags to use for the resources that are deployed"
   type        = map(string)
