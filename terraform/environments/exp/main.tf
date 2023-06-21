@@ -64,11 +64,11 @@ variable "splunk_event_collector_token" {
   sensitive = true
 }
 
-variable "qflow_base_url" {
+variable "QFLOW_BASE_URL" {
   type = string
 }
 
-variable "qflow_user_id" {
+variable "QFLOW_USER_ID" {
   type = string
 }
 
@@ -87,6 +87,6 @@ module "api" {
   alerts_slack_webhook_url     = var.alerts_slack_webhook_url
   splunk_host                  = var.splunk_host
   splunk_event_collector_token = var.splunk_event_collector_token
-  qflow_base_url               = var.qflow_base_url
-  qflow_user_id                = var.qflow_user_id
+  qflow_base_url               = var.QFLOW_BASE_URL
+  qflow_user_id                = var.QFLOW_USER_ID
 }
