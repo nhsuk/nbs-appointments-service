@@ -34,7 +34,7 @@ variable "docker_password" {
   sensitive = true
 }
 
-variable "NBS_API_KEY" {
+variable "nbs_api_key" {
   type      = string
   sensitive = true
 }
@@ -81,7 +81,7 @@ module "api" {
   docker_image_tag             = var.docker_image_tag
   docker_username              = var.docker_username
   docker_password              = var.docker_password
-  nbs_api_key                  = var.NBS_API_KEY
+  nbs_api_key                  = var.nbs_api_key
   qflow_username               = var.qflow_username
   qflow_password               = var.qflow_password
   alerts_slack_webhook_url     = var.alerts_slack_webhook_url
