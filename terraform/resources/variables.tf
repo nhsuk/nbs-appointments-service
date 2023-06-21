@@ -58,6 +58,16 @@ variable "docker_server_url" {
   default = "nbsimages.azurecr.io"
 }
 
+variable "qflow_base_url" {
+  type      = string
+  sensitive = true
+}
+
+variable "qflow_user_id" {
+  type      = string
+  sensitive = true
+}
+
 variable "docker_username" {
   type      = string
   sensitive = true
@@ -68,22 +78,32 @@ variable "docker_password" {
   sensitive = true
 }
 
-variable "nbsapikey" {
+variable "nbs_api_key" {
   type      = string
   sensitive = true
 }
 
-variable "qflowusername" {
+variable "qflow_username" {
   type      = string
   sensitive = true
 }
 
-variable "qflowpassword" {
+variable "qflow_password" {
   type      = string
   sensitive = true
 }
 
-variable "alertsslackwebhookurl" {
+variable "alerts_slack_webhook_url" {
+  type      = string
+  sensitive = true
+}
+
+variable "splunk_host" {
+  type      = string
+  sensitive = true
+}
+
+variable "splunk_event_collector_token" {
   type      = string
   sensitive = true
 }

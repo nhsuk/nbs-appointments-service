@@ -7,8 +7,8 @@ terraform {
   }
 
   backend "azurerm" {
-    resource_group_name  = "covid19-booking-rg-tfstate-dev-uks"
-    storage_account_name = "nbsapptsdevtf"
+    resource_group_name  = "nbs-appts-rg-exp-uks"
+    storage_account_name = "apptstfdevuks"
     container_name       = "tfstate"
     key                  = "exp.tfstate"
   }
@@ -34,37 +34,59 @@ variable "docker_password" {
   sensitive = true
 }
 
-variable "nbsapikey" {
+variable "nbs_api_key" {
   type      = string
   sensitive = true
 }
 
-variable "qflowusername" {
+variable "qflow_username" {
   type      = string
   sensitive = true
 }
 
-variable "qflowpassword" {
+variable "qflow_password" {
   type      = string
   sensitive = true
 }
 
-variable "alertsslackwebhookurl" {
+variable "alerts_slack_webhook_url" {
   type      = string
   sensitive = true
+}
+
+variable "splunk_host" {
+  type      = string
+  sensitive = true
+}
+
+variable "splunk_event_collector_token" {
+  type      = string
+  sensitive = true
+}
+
+variable "qflow_base_url" {
+  type = string
+}
+
+variable "qflow_user_id" {
+  type = string
 }
 
 module "api" {
-  source                = "../../resources"
-  location              = "uksouth"
-  environment           = "exp"
-  loc                   = "uks"
-  sku_name              = "B1"
-  docker_image_tag      = var.docker_image_tag
-  docker_username       = var.docker_username
-  docker_password       = var.docker_password
-  nbsapikey             = var.nbsapikey
-  qflowusername         = var.qflowusername
-  qflowpassword         = var.qflowpassword
-  alertsslackwebhookurl = var.alertsslackwebhookurl
+  source                       = "../../resources"
+  location                     = "uksouth"
+  environment                  = "exp"
+  loc                          = "uks"
+  sku_name                     = "B1"
+  docker_image_tag             = var.docker_image_tag
+  docker_username              = var.docker_username
+  docker_password              = var.docker_password
+  nbs_api_key                  = var.nbs_api_key
+  qflow_username               = var.qflow_username
+  qflow_password               = var.qflow_password
+  alerts_slack_webhook_url     = var.alerts_slack_webhook_url
+  splunk_host                  = var.splunk_host
+  splunk_event_collector_token = var.splunk_event_collector_token
+  qflow_base_url               = var.qflow_base_url
+  qflow_user_id                = var.qflow_user_id
 }

@@ -54,50 +54,38 @@ resource "azurerm_key_vault" "nbs_appts_kv" {
 
 resource "azurerm_key_vault_secret" "kv_qflow_username" {
   name         = "qflowusername"
-  value        = var.qflowusername
+  value        = var.qflow_username
   key_vault_id = azurerm_key_vault.nbs_appts_kv.id
-
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
 }
 
 resource "azurerm_key_vault_secret" "kv_qflow_password" {
   name         = "qflowpassword"
-  value        = var.qflowpassword
+  value        = var.qflow_password
   key_vault_id = azurerm_key_vault.nbs_appts_kv.id
-
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
 }
 
 resource "azurerm_key_vault_secret" "kv_nbs_api_key" {
   name         = "nbsapikey"
-  value        = var.nbsapikey
+  value        = var.nbs_api_key
   key_vault_id = azurerm_key_vault.nbs_appts_kv.id
-
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
 }
 
 resource "azurerm_key_vault_secret" "kv_alerts_slack_webhook_url" {
   name         = "alertsslackwebhookurl"
-  value        = var.alertsslackwebhookurl
+  value        = var.alerts_slack_webhook_url
   key_vault_id = azurerm_key_vault.nbs_appts_kv.id
+}
 
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
+resource "azurerm_key_vault_secret" "kv_splunk_host" {
+  name         = "splunkhost"
+  value        = var.splunk_host
+  key_vault_id = azurerm_key_vault.nbs_appts_kv.id
+}
+
+resource "azurerm_key_vault_secret" "kv_splunk_event_collector_token" {
+  name         = "splunkeventcollectortoken"
+  value        = var.splunk_event_collector_token
+  key_vault_id = azurerm_key_vault.nbs_appts_kv.id
 }
 
 resource "azurerm_app_configuration_key" "config_qflow_username" {
@@ -128,16 +116,30 @@ resource "azurerm_app_configuration_key" "config_alerts_slack_webhook_url" {
   vault_key_reference    = azurerm_key_vault_secret.kv_alerts_slack_webhook_url.versionless_id
 }
 
+resource "azurerm_app_configuration_key" "config_splunk_host" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_wac.id
+  key                    = "Splunk:Host"
+  type                   = "vault"
+  vault_key_reference    = azurerm_key_vault_secret.kv_splunk_host.versionless_id
+}
+
+resource "azurerm_app_configuration_key" "config_splunk_eventcollectortoken" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_wac.id
+  key                    = "Splunk:EventCollectorToken"
+  type                   = "vault"
+  vault_key_reference    = azurerm_key_vault_secret.kv_splunk_event_collector_token.versionless_id
+}
+
 resource "azurerm_app_configuration_key" "config_qflow_url" {
   configuration_store_id = azurerm_app_configuration.nbs_appts_wac.id
   key                    = "Qflow:BaseUrl"
-  value                  = "default"
+  value                  = var.qflow_base_url
+}
 
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
+resource "azurerm_app_configuration_key" "config_qflow_userid" {
+  configuration_store_id = azurerm_app_configuration.nbs_appts_wac.id
+  key                    = "Qflow:UserId"
+  value                  = var.qflow_user_id
 }
 
 resource "azurerm_app_configuration_key" "config_datetimeprovider_type" {
@@ -204,42 +206,6 @@ resource "azurerm_app_configuration_key" "config_qflow_defaultreschedulereasonid
   configuration_store_id = azurerm_app_configuration.nbs_appts_wac.id
   key                    = "Qflow:DefaultRescheduleReasonId"
   value                  = "2"
-
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
-}
-
-resource "azurerm_app_configuration_key" "config_qflow_userid" {
-  configuration_store_id = azurerm_app_configuration.nbs_appts_wac.id
-  key                    = "Qflow:UserId"
-  value                  = "0000"
-
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
-}
-
-resource "azurerm_app_configuration_key" "config_splunk_host" {
-  configuration_store_id = azurerm_app_configuration.nbs_appts_wac.id
-  key                    = "Splunk:Host"
-  value                  = "default"
-
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
-}
-
-resource "azurerm_app_configuration_key" "config_splunk_eventcollectortoken" {
-  configuration_store_id = azurerm_app_configuration.nbs_appts_wac.id
-  key                    = "Splunk:EventCollectorToken"
-  value                  = "00000000-0000-0000-0000-000000000000"
 
   lifecycle {
     ignore_changes = [
