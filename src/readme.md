@@ -31,18 +31,6 @@ Once the services are running open a terminal in the `./src/NBS.Appointments.Ser
 ```
 dotnet test
 ```
-
-## Application Configuration and Key Vault  
-The appointments service uses Azure App Configuration to store configuration values and Key Vault to store secrets.
-
-### Managing environmental config
-*Environment specific* config values, as needed by Terraform, are defined as variables in a pipeline variable group with the TF_VAR_ prefix, these are mapped as environmental variables in the pipeline agent. The variables with the TF_VAR_prefix will then get mapped to it's corresponding input variable in Terraform. 
-For Terraform to pick up these variables, they also needed to be declared in the `main.tf` 
-
-### Secret management
-
-
-
 ## Metrics Monitoring using Azure Dashboards
 An Azure shared dashboard has been created as a single place to view key metrics for the appointments service across all deployed regions. Each environment will have a dashboard. The metrics chosen follow the RED pattern for monitoring applications with a micro-service architecture. 
 * Rate: the number of requests the service is serving per second;
