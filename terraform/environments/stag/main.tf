@@ -17,7 +17,16 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
+  features {
+    app_configuration {
+      purge_soft_delete_on_destroy = false
+      recover_soft_deleted         = false
+    }
+    key_vault {
+      purge_soft_delete_on_destroy    = false
+      recover_soft_deleted_key_vaults = false
+    }
+  }
 }
 
 variable "docker_image_tag" {
