@@ -7,10 +7,10 @@ terraform {
   }
 
   backend "azurerm" {
-    resource_group_name  = "nbs-appts-rg-exp-uks"
-    storage_account_name = "apptstfexpuks"
+    resource_group_name  = "nbs-appts-rg-stag-uks"
+    storage_account_name = "apptstfstaguks"
     container_name       = "tfstate"
-    key                  = "exp.tfstate"
+    key                  = "stag.tfstate"
   }
 
   required_version = ">= 1.1.0"
@@ -82,9 +82,10 @@ variable "QFLOW_USER_ID" {
 module "api" {
   source                       = "../../resources"
   location                     = "uksouth"
-  environment                  = "exp"
+  environment                  = "stag"
   loc                          = "uks"
-  sku_name                     = "B1"
+  sku_name                     = "S1"
+  enable_autoscaling           = true
   docker_image_tag             = var.docker_image_tag
   docker_username              = var.docker_username
   docker_password              = var.docker_password
@@ -97,3 +98,5 @@ module "api" {
   qflow_base_url               = var.QFLOW_BASE_URL
   qflow_user_id                = var.QFLOW_USER_ID
 }
+
+

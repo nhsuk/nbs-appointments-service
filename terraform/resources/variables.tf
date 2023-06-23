@@ -8,6 +8,16 @@ variable "application_short" {
   default = "nbsappts"
 }
 
+variable "alert_handler_application" {
+  type    = string
+  default = "nbs-alerts"
+}
+
+variable "alert_handler_application_short" {
+  type    = string
+  default = "nbsalerts"
+}
+
 variable "environment" {
   type = string
 }
@@ -43,22 +53,85 @@ variable "docker_image_tag" {
   type = string
 }
 
+variable "docker_server_url" {
+  type    = string
+  default = "nbsimages.azurecr.io"
+}
+
+variable "qflow_base_url" {
+  type      = string
+}
+
+variable "qflow_user_id" {
+  type      = string
+}
+
+variable "docker_username" {
+  type      = string
+  sensitive = true
+}
+
+variable "docker_password" {
+  type      = string
+  sensitive = true
+}
+
+variable "nbs_api_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "qflow_username" {
+  type      = string
+  sensitive = true
+}
+
+variable "qflow_password" {
+  type      = string
+  sensitive = true
+}
+
+variable "alerts_slack_webhook_url" {
+  type      = string
+  sensitive = true
+}
+
+variable "splunk_host" {
+  type      = string
+  sensitive = true
+}
+
+variable "splunk_event_collector_token" {
+  type      = string
+  sensitive = true
+}
+
 variable "enable_autoscaling" {
   type    = bool
   default = false
+}
+
+variable "container_registry_login_server" {
+  type    = string
+  default = "nbsimages.azurecr.io"
+}
+
+variable "container_registry_id" {
+  type    = string
+  default = "/subscriptions/07748954-52d6-46ce-95e6-2701bfc715b4/resourceGroups/covid19-booking-rg-dev-uks/providers/Microsoft.ContainerRegistry/registries/nbsimages"
 }
 
 variable "tags" {
   description = "A map of the tags to use for the resources that are deployed"
   type        = map(string)
   default = {
-    product           = "covid19-booking"
+    "product"         = "covid19-booking"
     "cost code"       = "PO724/34"
     "created by"      = "Terraform"
     "created date"    = "2021-02-15"
     "product owner"   = "James Spirit"
     "requested by"    = "NBS"
     "service-product" = "National Booking Service"
-    team              = "NBS"
+    "team"            = "NBS"
   }
 }
