@@ -60,12 +60,10 @@ variable "docker_server_url" {
 
 variable "qflow_base_url" {
   type      = string
-  sensitive = true
 }
 
 variable "qflow_user_id" {
   type      = string
-  sensitive = true
 }
 
 variable "docker_username" {
