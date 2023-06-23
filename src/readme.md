@@ -56,14 +56,14 @@ variable "QFLOW_USER_ID" {
 
 ```
 module "api" {
-  source                       = "../../resources"
-  qflow_user_id                = var.QFLOW_USER_ID
+  source        = "../../resources"
+  qflow_user_id = var.QFLOW_USER_ID
 }
 ```
 4. Finally, the variable will need to be defined in `variables.tf` of the module itself   
 ```
 variable "qflow_user_id" {
-  type      = string
+  type = string
 }
 ```
 
@@ -96,8 +96,8 @@ variable "qflow_password" {
 
 ```
 module "api" {
-  source                       = "../../resources"
-  qflow_password               = var.qflow_password
+  source         = "../../resources"
+  qflow_password = var.qflow_password
 }
 ```
 
