@@ -31,6 +31,10 @@ resource "azurerm_service_plan" "nbs_appts_sp" {
   os_type             = "Linux"
   sku_name            = var.sku_name
   tags                = local.allTags
+
+  depends_on = [
+    azurerm_service_plan.nbs_alerthandler_sp
+  ]
 }
 
 resource "azurerm_linux_web_app" "nbs_appts_app" {
