@@ -26,7 +26,7 @@ resource "azurerm_linux_function_app" "nbs_appts_alert_handler_func_app" {
   }
 
   depends_on = [
-    azurerm_app_configuration.nbs_appts_wac
+    azurerm_app_configuration.nbs_appts_app_config
   ]
 }
 
