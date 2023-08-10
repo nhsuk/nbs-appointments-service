@@ -1,6 +1,6 @@
 data "azurerm_function_app_host_keys" "nbs_appts_alert_handler_func_app_host_keys" {
   name                = azurerm_linux_function_app.nbs_appts_alert_handler_func_app.name
-  resource_group_name = azurerm_resource_group.nbs_appts_alert_handler_rg.name
+  resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
 
   depends_on = [
     azurerm_linux_function_app.nbs_appts_alert_handler_func_app
