@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.58.0"
+      version = "~> 3.61.0"
     }
   }
 
@@ -17,7 +17,14 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
+  features {
+    app_configuration {
+      recover_soft_deleted = false
+    }
+    key_vault {
+      recover_soft_deleted_key_vaults = false
+    }
+  }
 }
 
 variable "docker_image_tag" {
@@ -25,10 +32,10 @@ variable "docker_image_tag" {
 }
 
 module "api" {
-  source = "../../resources"
-  location = "uksouth"
-  environment = "exp"
-  loc = "uks"
-  sku_name = "B1"
+  source           = "../../resources"
+  location         = "uksouth"
+  environment      = "exp"
+  loc              = "uks"
+  sku_name         = "B1"
   docker_image_tag = var.docker_image_tag
 }

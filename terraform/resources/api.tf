@@ -33,7 +33,7 @@ resource "azurerm_service_plan" "nbs_appts_sp" {
   tags                = local.allTags
 
   depends_on = [
-    azurerm_service_plan.nbs_alerthandler_sp
+    azurerm_service_plan.nbs_appts_alert_handler_sp
   ]
 }
 
