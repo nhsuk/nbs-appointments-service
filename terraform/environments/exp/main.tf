@@ -7,8 +7,8 @@ terraform {
   }
 
   backend "azurerm" {
-    resource_group_name  = "covid19-booking-rg-tfstate-dev-uks"
-    storage_account_name = "nbsapptsdevtf"
+    resource_group_name  = "nbs-appts-rg-exp-uks"
+    storage_account_name = "apptstfexpuks"
     container_name       = "tfstate"
     key                  = "exp.tfstate"
   }

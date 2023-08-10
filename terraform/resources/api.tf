@@ -5,16 +5,14 @@ data "azurerm_container_registry" "container_registry" {
 
 data "azurerm_subscription" "current" {}
 
-resource "azurerm_resource_group" "nbs_appts_rg" {
-  name     = "${var.application}-rg-${var.environment}-${var.loc}"
-  location = var.location
-  tags     = local.allTags
+data "azurerm_resource_group" "nbs_appts_rg" {
+  name = "${var.application}-rg-${var.environment}-${var.loc}"
 }
 
 resource "azurerm_storage_account" "nbs_appts_stacc" {
   name                     = "${var.application_short}${var.environment}${var.loc}"
-  resource_group_name      = azurerm_resource_group.nbs_appts_rg.name
-  location                 = azurerm_resource_group.nbs_appts_rg.location
+  resource_group_name      = data.azurerm_resource_group.nbs_appts_rg.name
+  location                 = data.azurerm_resource_group.nbs_appts_rg.location
   account_tier             = "Standard"
   account_kind             = "BlobStorage"
   account_replication_type = "LRS"
@@ -28,8 +26,8 @@ resource "azurerm_storage_container" "nbs_appts_container" {
 
 resource "azurerm_service_plan" "nbs_appts_sp" {
   name                = "${var.application}-sp-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  location            = azurerm_resource_group.nbs_appts_rg.location
+  resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
+  location            = data.azurerm_resource_group.nbs_appts_rg.location
   os_type             = "Linux"
   sku_name            = var.sku_name
   tags                = local.allTags
@@ -37,8 +35,8 @@ resource "azurerm_service_plan" "nbs_appts_sp" {
 
 resource "azurerm_linux_web_app" "nbs_appts_app" {
   name                = "${var.application}-app-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  location            = azurerm_resource_group.nbs_appts_rg.location
+  resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
+  location            = data.azurerm_resource_group.nbs_appts_rg.location
   service_plan_id     = azurerm_service_plan.nbs_appts_sp.id
   https_only          = true
 
@@ -52,7 +50,7 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
   }
 
   app_settings = {
-    AppConfig = azurerm_app_configuration.nbs_appts_app_config.primary_read_key[0].connection_string
+    AppConfig                             = azurerm_app_configuration.nbs_appts_app_config.primary_read_key[0].connection_string
     APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.nbs_appts_app_insights.connection_string
   }
 
@@ -74,8 +72,8 @@ resource "azurerm_linux_web_app" "nbs_appts_app" {
 resource "azurerm_monitor_autoscale_setting" "nbs_appts_sp_autoscale" {
   count               = var.enable_autoscaling ? 1 : 0
   name                = " ${var.application_short}-scaling-${var.environment}-${var.loc}"
-  resource_group_name = azurerm_resource_group.nbs_appts_rg.name
-  location            = azurerm_resource_group.nbs_appts_rg.location
+  resource_group_name = data.azurerm_resource_group.nbs_appts_rg.name
+  location            = data.azurerm_resource_group.nbs_appts_rg.location
   target_resource_id  = azurerm_service_plan.nbs_appts_sp.id
 
   profile {
@@ -135,9 +133,9 @@ resource "azurerm_role_assignment" "acrpull_role" {
 }
 
 resource "azurerm_role_assignment" "keyvault_secrets_user" {
-  scope = azurerm_key_vault.nbs_appts_key_vault.id
+  scope                = azurerm_key_vault.nbs_appts_key_vault.id
   role_definition_name = "Key Vault Secrets User"
-  principal_id = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
+  principal_id         = azurerm_linux_web_app.nbs_appts_app.identity.0.principal_id
 }
 
 resource "azurerm_role_assignment" "storage_blob_data_owner" {
