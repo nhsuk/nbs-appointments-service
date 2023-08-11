@@ -70,3 +70,8 @@ jobs:
           PathtoPublish: "terraform"
           ArtifactName: "drop_terraform"
           publishLocation: "Container"
+    - task: CopyFiles@2
+      displayName: 'Copy pipeline scripts to artifacts'
+      inputs:
+        SourceFolder: releasePipelineScripts
+        TargetFolder: '$(build.artifactstagingdirectory)/scripts'
